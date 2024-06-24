@@ -1,0 +1,1001 @@
+{"image_path": "val2014\\val2014\\COCO_val2014_000000146042.jpg", "text_segment": [2017, 171, 451, 9, 4, 12686, 130], "labels": [709], "scores": [0.6], "qid": 1460425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000310035.jpg", "text_segment": [333, 1168, 9, 1423, 18, 41, 130], "labels": [539], "scores": [1.0], "qid": 3100355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181586.jpg", "text_segment": [333, 11564, 9, 2528, 18, 4, 61, 6672, 17784, 130], "labels": [1092, 739, 383], "scores": [1.0, 0.6, 0.6], "qid": 1815865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000275744.jpg", "text_segment": [772, 1229, 64, 61, 9, 174, 1316, 130], "labels": [288], "scores": [1.0], "qid": 2757445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000439840.jpg", "text_segment": [2975, 64, 732, 101, 10, 2034, 1110, 80, 41, 130], "labels": [2188, 1904, 1120, 2889], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4398405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000241453.jpg", "text_segment": [333, 1620, 18, 41, 130], "labels": [1682, 1681, 870, 1680], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2414535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000163309.jpg", "text_segment": [333, 1168, 9, 503, 18, 1839, 130], "labels": [2547, 153], "scores": [1.0, 0.6], "qid": 1633095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474078.jpg", "text_segment": [12064, 61, 403, 60, 19, 2394, 12, 41, 2858, 130], "labels": [2167], "scores": [1.0], "qid": 4740785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000503951.jpg", "text_segment": [333, 1168, 9, 11564, 37, 4, 97, 4198, 12, 4, 1127, 130], "labels": [2898, 1004, 1003, 1370], "scores": [0.6, 0.6, 0.6, 0.6], "qid": 5039515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000026507.jpg", "text_segment": [333, 18, 4, 8740, 1294, 9, 4, 244, 12, 4, 649, 10003, 130], "labels": [2835, 1217, 1150], "scores": [1.0, 0.6, 0.6], "qid": 265075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000288944.jpg", "text_segment": [333, 633, 421, 327, 41, 578, 1709, 130], "labels": [2531, 144], "scores": [1.0, 0.6], "qid": 2889445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000457461.jpg", "text_segment": [333, 2371, 327, 4, 3337, 12, 41, 1129, 224, 35, 130], "labels": [2743], "scores": [1.0], "qid": 4574615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000532381.jpg", "text_segment": [12064, 4, 1384, 241, 7, 135, 41, 2758, 1839, 12, 41, 1129, 130], "labels": [2095, 1141, 1140], "scores": [1.0, 0.6, 0.6], "qid": 5323815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000076384.jpg", "text_segment": [333, 18, 12, 4, 2295, 20, 4, 243, 130], "labels": [2242, 126, 32], "scores": [1.0, 0.6, 0.6], "qid": 763845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000009378.jpg", "text_segment": [333, 215, 2118, 4, 7, 229, 41, 244, 18, 672, 24, 130], "labels": [1476, 1917], "scores": [1.0, 0.6], "qid": 93785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000515540.jpg", "text_segment": [333, 2212, 18, 12, 41, 5794, 438, 130], "labels": [924], "scores": [1.0], "qid": 5155405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000368559.jpg", "text_segment": [333, 428, 9, 1682, 18, 15, 130], "labels": [1998], "scores": [1.0], "qid": 3685595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000415194.jpg", "text_segment": [333, 90, 38, 90, 197, 130], "labels": [1673, 1252], "scores": [1.0, 1.0], "qid": 4151945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000435957.jpg", "text_segment": [333, 428, 9, 9012, 7, 229, 18, 12, 4, 1129, 130], "labels": [143, 1527], "scores": [1.0, 0.6], "qid": 4359575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000061862.jpg", "text_segment": [333, 428, 9, 1704, 18, 65, 457, 130], "labels": [579], "scores": [1.0], "qid": 618625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000326582.jpg", "text_segment": [772, 1229, 64, 174, 7858, 2702, 130], "labels": [253, 1619], "scores": [0.6, 0.6], "qid": 3265825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000527497.jpg", "text_segment": [14, 11, 41, 10, 10340, 54, 6422, 1591, 130], "labels": [2615], "scores": [1.0], "qid": 5274975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000392048.jpg", "text_segment": [333, 138, 9, 4, 204, 18, 23, 130], "labels": [1702], "scores": [1.0], "qid": 3920485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000448181.jpg", "text_segment": [772, 196, 327, 41, 11564, 9, 2186, 2926, 483, 130], "labels": [1698, 1753, 1697], "scores": [1.0, 0.6, 0.6], "qid": 4481815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000278032.jpg", "text_segment": [333, 96, 298, 1262, 18, 462, 5338, 58, 4, 213, 8546, 28, 41, 1262, 130], "labels": [2751, 867], "scores": [1.0, 0.6], "qid": 2780325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000150703.jpg", "text_segment": [333, 18, 4, 12405, 12, 4, 3487, 270, 130], "labels": [276], "scores": [1.0], "qid": 1507035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000411405.jpg", "text_segment": [333, 104, 18, 41, 1591, 35, 130], "labels": [2165, 969], "scores": [1.0, 1.0], "qid": 4114055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000070943.jpg", "text_segment": [2975, 70, 38, 277, 4, 2371, 12, 4, 2644, 12, 4, 2660, 130], "labels": [1042, 2613], "scores": [1.0, 0.6], "qid": 709435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000541909.jpg", "text_segment": [333, 18, 4, 25162, 1924, 7, 4, 243, 403, 27, 11, 3068, 130], "labels": [722, 1355, 1147, 166], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5419095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000252629.jpg", "text_segment": [772, 164, 10373, 37, 12, 41, 11709, 130], "labels": [178, 2555, 176], "scores": [1.0, 0.6, 0.6], "qid": 2526295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000002640.jpg", "text_segment": [333, 248, 327, 41, 1262, 582, 130], "labels": [2798], "scores": [1.0], "qid": 26405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000388009.jpg", "text_segment": [333, 18, 220, 1924, 15, 41, 2371, 18, 462, 236, 12, 130], "labels": [1355, 1209, 850], "scores": [1.0, 0.6, 0.6], "qid": 3880095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000331875.jpg", "text_segment": [772, 462, 90, 174, 93, 101, 384, 17, 10, 1127, 130], "labels": [1832], "scores": [1.0], "qid": 3318755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000143644.jpg", "text_segment": [2017, 18, 41, 11960, 957, 84, 130], "labels": [17, 16], "scores": [1.0, 0.6], "qid": 1436445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000440895.jpg", "text_segment": [333, 18, 41, 596, 137, 9, 130], "labels": [942], "scores": [1.0], "qid": 4408955}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000088846.jpg", "text_segment": [333, 1384, 18, 145, 1138, 12, 4, 3077, 130], "labels": [248, 2052], "scores": [1.0, 0.6], "qid": 888465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000320336.jpg", "text_segment": [333, 428, 9, 1782, 18, 12, 4, 1129, 130], "labels": [2030], "scores": [1.0], "qid": 3203365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000202201.jpg", "text_segment": [2975, 37, 174, 31284, 133, 137, 130], "labels": [556, 452], "scores": [1.0, 0.6], "qid": 2022015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000452122.jpg", "text_segment": [2017, 11224, 4, 1779, 1839, 20, 41, 1129, 130], "labels": [2169, 2170], "scores": [1.0, 0.6], "qid": 4521225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581451.jpg", "text_segment": [333, 12038, 37, 20, 4, 1289, 17965, 130], "labels": [350], "scores": [0.6], "qid": 5814515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000102947.jpg", "text_segment": [333, 2540, 9, 5654, 37, 241, 7, 135, 1523, 16724, 130], "labels": [1141], "scores": [1.0], "qid": 1029475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000472102.jpg", "text_segment": [333, 3371, 9, 1316, 18, 4, 771, 12, 4, 1129, 1224, 17, 130], "labels": [2648, 527, 791], "scores": [1.0, 1.0, 0.6], "qid": 4721025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000249815.jpg", "text_segment": [333, 838, 18, 41, 130], "labels": [1104, 960], "scores": [1.0, 0.6], "qid": 2498155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000044604.jpg", "text_segment": [333, 289, 2479, 5667, 80, 41, 130], "labels": [1081, 2189, 1972], "scores": [1.0, 0.6, 0.6], "qid": 446045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000277498.jpg", "text_segment": [333, 59971, 15926, 90, 4, 2124, 12, 41, 1129, 6284, 7, 130], "labels": [1365, 257], "scores": [0.6, 0.6], "qid": 2774985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000057086.jpg", "text_segment": [333, 104, 19, 41, 2858, 11224, 130], "labels": [824, 1649, 188], "scores": [1.0, 0.6, 0.6], "qid": 570865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000460652.jpg", "text_segment": [333, 18, 41, 680, 241, 17, 130], "labels": [229], "scores": [1.0], "qid": 4606525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000531735.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 1387, 12, 4, 105, 3682, 130], "labels": [1288, 1462, 2324], "scores": [1.0, 1.0, 0.6], "qid": 5317355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000523869.jpg", "text_segment": [2975, 103, 732, 277, 41, 130], "labels": [377, 97, 1329], "scores": [1.0, 0.6, 0.6], "qid": 5238695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581422.jpg", "text_segment": [333, 3337, 536, 35, 41, 2371, 130], "labels": [747, 152], "scores": [1.0, 0.6], "qid": 5814225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031049.jpg", "text_segment": [333, 11564, 9, 1152, 18, 1839, 12, 4, 1129, 130], "labels": [738, 2894], "scores": [1.0, 1.0], "qid": 310495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000030080.jpg", "text_segment": [333, 1168, 9, 5722, 18, 41, 130], "labels": [2432, 2592, 2591], "scores": [1.0, 0.6, 0.6], "qid": 300805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000276731.jpg", "text_segment": [333, 58255, 326, 18, 41, 12, 130], "labels": [638], "scores": [1.0], "qid": 2767315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000366031.jpg", "text_segment": [333, 135, 8, 1246, 18, 41, 2486, 130], "labels": [2180, 2438], "scores": [1.0, 0.6], "qid": 3660315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000024396.jpg", "text_segment": [2017, 18, 4, 8882, 12896, 130], "labels": [1205, 846, 944], "scores": [1.0, 0.6, 0.6], "qid": 243965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000137297.jpg", "text_segment": [333, 18, 4, 2476, 9, 41, 501, 137, 35, 130], "labels": [695], "scores": [1.0], "qid": 1372975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000414578.jpg", "text_segment": [1299, 18, 4, 244, 4055, 20, 4, 3434, 130], "labels": [2523, 883], "scores": [1.0, 1.0], "qid": 4145785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000000139.jpg", "text_segment": [333, 18, 4, 215, 15, 5831, 4, 1665, 130], "labels": [1095, 547, 2073], "scores": [1.0, 0.6, 0.6], "qid": 1395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000434693.jpg", "text_segment": [2017, 2479, 41, 698, 4587, 130], "labels": [2353, 2738, 2354, 2410], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4346935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000358024.jpg", "text_segment": [772, 164, 2823, 18, 41, 17447, 5697, 17, 130], "labels": [1494, 1458, 1217, 1924], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3580245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000083656.jpg", "text_segment": [333, 18, 4, 2047, 9, 41, 2371, 270, 130], "labels": [1978], "scores": [1.0], "qid": 836565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409725.jpg", "text_segment": [333, 1545, 18, 41, 130], "labels": [1261, 1262, 613], "scores": [1.0, 0.6, 0.6], "qid": 4097255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000024721.jpg", "text_segment": [333, 428, 9, 10340, 11, 37, 165, 7350, 130], "labels": [783, 2128], "scores": [1.0, 0.6], "qid": 247215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000361430.jpg", "text_segment": [772, 18, 41, 8169, 130], "labels": [123], "scores": [0.6], "qid": 3614305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000141755.jpg", "text_segment": [1794, 38, 396, 46, 2371, 15, 815, 12, 4, 213, 1706, 28, 165, 1839, 197, 130], "labels": [763, 294, 42], "scores": [1.0, 0.6, 0.6], "qid": 1417555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000115300.jpg", "text_segment": [1299, 64, 38, 43, 1802, 4, 7623, 130], "labels": [2029, 650, 385], "scores": [1.0, 0.6, 0.6], "qid": 1153005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000160480.jpg", "text_segment": [333, 4392, 1779, 18, 4, 403, 457, 29, 4, 697, 130], "labels": [362, 203], "scores": [1.0, 0.6], "qid": 1604805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000216618.jpg", "text_segment": [333, 18, 4, 4891, 9, 15, 1682, 130], "labels": [1674, 262], "scores": [1.0, 1.0], "qid": 2166185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000192788.jpg", "text_segment": [3297, 215, 230, 41, 55802, 130], "labels": [526, 1188], "scores": [1.0, 0.6], "qid": 1927885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000565031.jpg", "text_segment": [333, 37, 174, 5919, 596, 130], "labels": [2244, 1087, 2947], "scores": [0.6, 0.6, 0.6], "qid": 5650315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000490022.jpg", "text_segment": [333, 1681, 9, 14771, 37, 3538, 148, 4, 244, 11, 960, 3068, 130], "labels": [1874, 2739], "scores": [0.6, 0.6], "qid": 4900225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000124018.jpg", "text_segment": [333, 2540, 9, 2641, 34, 174, 130], "labels": [2821, 2718], "scores": [0.6, 0.6], "qid": 1240185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000224557.jpg", "text_segment": [772, 164, 10373, 327, 41, 3341, 34, 130], "labels": [1671, 725], "scores": [0.6, 0.6], "qid": 2245575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000460266.jpg", "text_segment": [333, 428, 9, 3965, 18, 20, 4, 3663, 130], "labels": [401, 2155], "scores": [1.0, 0.6], "qid": 4602665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000442040.jpg", "text_segment": [2613, 174, 93, 323, 759, 54, 18, 4, 1127, 10337, 130], "labels": [586], "scores": [1.0], "qid": 4420405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474388.jpg", "text_segment": [14, 11, 4, 1484, 12509, 1408, 7, 4, 7660, 54, 430, 36, 4, 7538, 130], "labels": [3060], "scores": [1.0], "qid": 4743885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000473153.jpg", "text_segment": [333, 428, 9, 1782, 18, 806, 4, 596, 130], "labels": [450], "scores": [1.0], "qid": 4731535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000353028.jpg", "text_segment": [1299, 292, 41, 1129, 717, 4, 1681, 9714, 81, 11, 7, 647, 130], "labels": [2022], "scores": [0.6], "qid": 3530285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000518287.jpg", "text_segment": [333, 205, 9, 4, 387, 18, 4, 32175, 12, 130], "labels": [335, 1403], "scores": [1.0, 0.6], "qid": 5182875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000220224.jpg", "text_segment": [333, 18, 41, 2166, 20, 4, 596, 241, 17, 130], "labels": [2272, 2504, 2911], "scores": [1.0, 1.0, 0.6], "qid": 2202245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000529698.jpg", "text_segment": [333, 1714, 9, 8882, 18, 41, 270, 130], "labels": [2172], "scores": [1.0], "qid": 5296985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000163589.jpg", "text_segment": [333, 23225, 18, 3503, 36, 41, 52671, 4370, 130], "labels": [199, 104, 209, 364], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1635895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000354832.jpg", "text_segment": [333, 1681, 37, 4, 1534, 6356, 130], "labels": [859, 2876], "scores": [1.0, 0.6], "qid": 3548325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000030448.jpg", "text_segment": [2975, 70, 38, 171, 41, 130], "labels": [1368, 2176], "scores": [1.0, 0.6], "qid": 304485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000158254.jpg", "text_segment": [333, 1230, 9, 1408, 4036, 18, 41, 924, 11971, 7, 130], "labels": [2999, 2940], "scores": [1.0, 0.6], "qid": 1582545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000241889.jpg", "text_segment": [12064, 4, 248, 131, 41, 403, 18, 1839, 12, 41, 1129, 130], "labels": [1073, 2292, 5], "scores": [1.0, 0.6, 0.6], "qid": 2418895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000450182.jpg", "text_segment": [2975, 64, 732, 147, 7, 142, 17564, 11, 80, 41, 130], "labels": [1174], "scores": [1.0], "qid": 4501825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000232627.jpg", "text_segment": [12064, 4, 6630, 15, 64, 32, 2148, 457, 41, 5939, 130], "labels": [1396], "scores": [1.0], "qid": 2326275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000480000.jpg", "text_segment": [333, 7164, 37, 20, 41, 3663, 130], "labels": [2304, 1260, 297, 57], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4800005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409009.jpg", "text_segment": [772, 1229, 327, 41, 1651, 444, 130], "labels": [483, 2008, 253], "scores": [1.0, 0.6, 0.6], "qid": 4090095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000407355.jpg", "text_segment": [333, 18, 4, 1175, 17, 4, 428, 9, 5624, 12, 480, 9, 4, 5167, 130], "labels": [2973, 1541], "scores": [1.0, 0.6], "qid": 4073555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000486008.jpg", "text_segment": [333, 37, 12, 4, 4016, 130], "labels": [2105], "scores": [1.0], "qid": 4860085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000434261.jpg", "text_segment": [333, 90, 732, 90, 24, 41, 290, 130], "labels": [2516], "scores": [1.0], "qid": 4342615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000318754.jpg", "text_segment": [2017, 19, 4, 89, 215, 7, 135, 41, 1168, 9, 14127, 130], "labels": [80], "scores": [1.0], "qid": 3187545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000022304.jpg", "text_segment": [14, 11, 4, 3619, 4, 21270, 54, 26999, 130], "labels": [1801], "scores": [1.0], "qid": 223045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000080737.jpg", "text_segment": [333, 428, 9, 3711, 90, 38, 201, 7, 958, 41, 1262, 12, 4, 10189, 972, 130], "labels": [1732], "scores": [0.6], "qid": 807375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000502963.jpg", "text_segment": [1794, 38, 1400, 4, 1246, 9, 10521, 1839, 12, 41, 1129, 130], "labels": [573, 1721], "scores": [1.0, 0.6], "qid": 5029635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000419408.jpg", "text_segment": [25, 48780, 12, 41, 1127, 18, 2632, 10, 1836, 15, 292, 1592, 83, 205, 9, 4, 1551, 130], "labels": [2783, 1982], "scores": [1.0, 0.6], "qid": 4194085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000571865.jpg", "text_segment": [333, 18, 2839, 7, 4, 642, 48987, 130], "labels": [2268], "scores": [1.0], "qid": 5718655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000013659.jpg", "text_segment": [25, 1432, 1349, 4, 6451, 35, 73, 215, 130], "labels": [945, 2306], "scores": [1.0, 0.6], "qid": 136595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000232309.jpg", "text_segment": [772, 251, 64, 10, 29104, 147, 130], "labels": [2959], "scores": [1.0], "qid": 2323095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000487612.jpg", "text_segment": [333, 607, 18, 41, 29, 130], "labels": [1961], "scores": [0.6], "qid": 4876125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000222094.jpg", "text_segment": [420, 73, 297, 9, 729, 1364, 18, 41, 1645, 1005, 2682, 130], "labels": [2633, 2491, 2343], "scores": [1.0, 0.6, 0.6], "qid": 2220945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000322143.jpg", "text_segment": [333, 1230, 9, 7255, 37, 174, 130], "labels": [566, 1269], "scores": [1.0, 0.6], "qid": 3221435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000423498.jpg", "text_segment": [333, 37, 51, 3619, 130], "labels": [2704], "scores": [1.0], "qid": 4234985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000498286.jpg", "text_segment": [333, 503, 327, 4, 2371, 1333, 130], "labels": [2398, 2397, 2733], "scores": [1.0, 0.6, 0.6], "qid": 4982865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000525247.jpg", "text_segment": [333, 1168, 9, 566, 488, 1760, 18, 4, 2528, 6442, 130], "labels": [1918], "scores": [1.0], "qid": 5252475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000001138.jpg", "text_segment": [3297, 1828, 187, 4, 3856, 20, 4, 6012, 20805, 130], "labels": [992], "scores": [0.6], "qid": 11385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000353180.jpg", "text_segment": [1299, 292, 51, 32, 2951, 41, 1262, 130], "labels": [211], "scores": [0.6], "qid": 3531805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000212077.jpg", "text_segment": [333, 18, 4, 17026, 2418, 9, 4, 5932, 4, 244, 19, 3619, 20, 130], "labels": [486], "scores": [1.0], "qid": 2120775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000100000.jpg", "text_segment": [333, 11564, 9, 2528, 18, 41, 130], "labels": [1091, 1090, 2818], "scores": [1.0, 0.6, 0.6], "qid": 1000005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000133061.jpg", "text_segment": [333, 1168, 9, 2371, 18, 41, 130], "labels": [1979], "scores": [1.0], "qid": 1330615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000164497.jpg", "text_segment": [2975, 12, 4, 218, 90, 174, 2540, 9, 2124, 483, 130], "labels": [541], "scores": [1.0], "qid": 1644975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000222235.jpg", "text_segment": [333, 1230, 9, 503, 70, 41, 2371, 1333, 130], "labels": [1656, 193], "scores": [1.0, 0.6], "qid": 2222355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000270815.jpg", "text_segment": [333, 18, 4, 3149, 1291, 9, 4, 244, 12, 4, 1127, 130], "labels": [1423, 992], "scores": [1.0, 1.0], "qid": 2708155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000024566.jpg", "text_segment": [333, 428, 9, 1682, 18, 82, 130], "labels": [3068, 1329], "scores": [1.0, 1.0], "qid": 245665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000288769.jpg", "text_segment": [333, 327, 41, 215, 712, 130], "labels": [407, 1034], "scores": [0.6, 0.6], "qid": 2887695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000508440.jpg", "text_segment": [2613, 649, 4912, 42, 7, 717, 160, 3704, 54, 590, 3704, 130], "labels": [656, 1797], "scores": [1.0, 0.6], "qid": 5084405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000356298.jpg", "text_segment": [333, 7, 90, 38, 399, 41, 848, 9, 1340, 1387, 130], "labels": [1289, 2361], "scores": [1.0, 1.0], "qid": 3562985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000148620.jpg", "text_segment": [333, 1681, 9, 1591, 18, 41, 130], "labels": [783, 1533, 392, 1692], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1486205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000324845.jpg", "text_segment": [333, 1168, 9, 7759, 18, 20, 41, 9398, 130], "labels": [1311, 199], "scores": [1.0, 0.6], "qid": 3248455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000565245.jpg", "text_segment": [333, 18, 4, 26790, 2390, 17, 61, 1475, 29273, 1839, 12, 4, 1677, 130], "labels": [1924, 813], "scores": [1.0, 0.6], "qid": 5652455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000168837.jpg", "text_segment": [333, 1168, 9, 332, 18, 41, 1129, 465, 12, 130], "labels": [1010], "scores": [1.0], "qid": 1688375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000035504.jpg", "text_segment": [333, 208, 18, 133, 561, 130], "labels": [1963, 395], "scores": [1.0, 0.6], "qid": 355045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000084870.jpg", "text_segment": [333, 1168, 9, 3379, 24970, 37, 1839, 130], "labels": [1269, 566], "scores": [1.0, 0.6], "qid": 848705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000304099.jpg", "text_segment": [333, 18, 4, 2166, 12, 4, 1677, 241, 17, 130], "labels": [2731], "scores": [0.6], "qid": 3040995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000317018.jpg", "text_segment": [2975, 70, 41, 403, 32, 130], "labels": [1752], "scores": [1.0], "qid": 3170185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000068852.jpg", "text_segment": [333, 1329, 18, 41, 380, 130], "labels": [845, 1203], "scores": [1.0, 0.6], "qid": 688525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000545155.jpg", "text_segment": [333, 327, 41, 578, 1391, 20, 7, 1709, 41, 2371, 130], "labels": [1870], "scores": [1.0], "qid": 5451555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000089071.jpg", "text_segment": [333, 246, 18, 41, 130], "labels": [1789], "scores": [1.0], "qid": 890715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000405945.jpg", "text_segment": [333, 18, 4, 2352, 9, 4, 2843, 47784, 20, 4, 349, 9, 41, 596, 130], "labels": [1818], "scores": [1.0], "qid": 4059455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000451693.jpg", "text_segment": [333, 14754, 12, 41, 1129, 18, 241, 17, 20949, 130], "labels": [2539, 2394], "scores": [1.0, 1.0], "qid": 4516935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000251888.jpg", "text_segment": [333, 540, 326, 18, 41, 130], "labels": [3026, 2885, 1174], "scores": [1.0, 0.6, 0.6], "qid": 2518885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000059614.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 3341, 15, 44, 174, 5939, 130], "labels": [788, 378], "scores": [0.6, 0.6], "qid": 596145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000418109.jpg", "text_segment": [772, 164, 9, 174, 2540, 9, 2124, 483, 12, 24203, 130], "labels": [969, 2314], "scores": [1.0, 0.6], "qid": 4181095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000536183.jpg", "text_segment": [333, 503, 18, 41, 130], "labels": [2905, 1396, 1482, 2396], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5361835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000190753.jpg", "text_segment": [333, 208, 37, 51, 672, 130], "labels": [3063], "scores": [1.0], "qid": 1907535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000229599.jpg", "text_segment": [333, 33753, 11, 327, 41, 4079, 4139, 130], "labels": [2428], "scores": [1.0], "qid": 2295995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409211.jpg", "text_segment": [772, 18, 41, 2858, 1167, 130], "labels": [461], "scores": [1.0], "qid": 4092115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000465463.jpg", "text_segment": [333, 18, 46, 8734, 80, 41, 241, 17, 130], "labels": [141], "scores": [1.0], "qid": 4654635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000398236.jpg", "text_segment": [333, 18, 10, 160, 349, 6630, 17, 41, 3341, 130], "labels": [910, 1102], "scores": [1.0, 0.6], "qid": 3982365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000422833.jpg", "text_segment": [333, 1681, 18, 41, 1591, 130], "labels": [1692, 133, 392], "scores": [1.0, 0.6, 0.6], "qid": 4228335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181403.jpg", "text_segment": [333, 428, 9, 1384, 37, 174, 574, 137, 35, 130], "labels": [858, 1141], "scores": [1.0, 0.6], "qid": 1814035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000546987.jpg", "text_segment": [12064, 4, 2023, 1246, 1839, 12, 41, 1129, 130], "labels": [1447, 654, 1387, 1095], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5469875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000401157.jpg", "text_segment": [333, 1261, 18, 20, 4, 303, 5208, 9, 4, 943, 130], "labels": [1018], "scores": [0.6], "qid": 4011575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113246.jpg", "text_segment": [333, 37, 4, 2295, 2957, 270, 130], "labels": [199], "scores": [0.6], "qid": 1132465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000231942.jpg", "text_segment": [2613, 174, 1138, 34534, 11, 54, 1739, 10, 25303, 4674, 34534, 11, 130], "labels": [2975], "scores": [1.0], "qid": 2319425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000516798.jpg", "text_segment": [333, 428, 9, 2031, 18, 41, 130], "labels": [471, 1203, 1202, 2625], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5167985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000482910.jpg", "text_segment": [14, 2143, 83, 18, 4, 4907, 633, 9, 41, 208, 130], "labels": [347, 325], "scores": [1.0, 0.6], "qid": 4829105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000272738.jpg", "text_segment": [3850, 4, 403, 324, 54, 491, 130], "labels": [1490, 2553], "scores": [1.0, 0.6], "qid": 2727385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000487925.jpg", "text_segment": [333, 208, 37, 174, 93, 672, 130], "labels": [872], "scores": [1.0], "qid": 4879255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000422383.jpg", "text_segment": [333, 18, 4, 3507, 80, 130], "labels": [1384, 1295, 1195, 2989], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4223835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000188918.jpg", "text_segment": [266, 19, 4, 89, 1246, 9, 41, 848, 9, 4121, 254, 86, 234, 130], "labels": [478, 479, 1748], "scores": [1.0, 0.6, 0.6], "qid": 1889185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000234328.jpg", "text_segment": [12064, 4, 14221, 1246, 1839, 12, 41, 1129, 130], "labels": [1404, 545], "scores": [1.0, 0.6], "qid": 2343285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000289941.jpg", "text_segment": [333, 18, 4, 1779, 12, 4, 578, 27, 11, 438, 241, 17, 130], "labels": [224], "scores": [1.0], "qid": 2899415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000126701.jpg", "text_segment": [333, 1168, 9, 1782, 18, 41, 130], "labels": [449], "scores": [1.0], "qid": 1267015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000344888.jpg", "text_segment": [333, 428, 9, 2559, 18, 41, 130], "labels": [438], "scores": [1.0], "qid": 3448885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000383621.jpg", "text_segment": [127, 2486, 18, 2474, 36, 10, 205, 9, 83, 1168, 9, 1262, 130], "labels": [1535], "scores": [1.0], "qid": 3836215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000185807.jpg", "text_segment": [333, 428, 9, 13250, 18, 41, 810, 2155, 130], "labels": [2996], "scores": [1.0], "qid": 1858075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000022236.jpg", "text_segment": [333, 90, 38, 399, 174, 4156, 9, 6791, 130], "labels": [262, 124], "scores": [1.0, 0.6], "qid": 222365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000088983.jpg", "text_segment": [333, 4392, 1779, 18, 133, 2664, 12, 41, 1127, 130], "labels": [1992], "scores": [1.0], "qid": 889835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000281976.jpg", "text_segment": [333, 13290, 18, 41, 503, 137, 35, 130], "labels": [953], "scores": [1.0], "qid": 2819765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000345027.jpg", "text_segment": [2017, 608, 15, 649, 2031, 130], "labels": [1653, 935, 864, 2277], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3450275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000422212.jpg", "text_segment": [333, 2858, 37, 4, 1781, 940, 4, 1662, 241, 17, 130], "labels": [421], "scores": [1.0], "qid": 4222125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000443038.jpg", "text_segment": [2017, 23241, 3198, 20, 41, 1709, 130], "labels": [1504], "scores": [1.0], "qid": 4430385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000048419.jpg", "text_segment": [14, 11, 41, 10, 2254, 54, 2660, 2528, 130], "labels": [1620], "scores": [1.0], "qid": 484195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000293166.jpg", "text_segment": [333, 327, 41, 920, 1483, 130], "labels": [2602], "scores": [1.0], "qid": 2931665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000428231.jpg", "text_segment": [333, 1778, 12, 41, 383, 130], "labels": [500, 225], "scores": [0.6, 0.6], "qid": 4282315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000329687.jpg", "text_segment": [333, 18, 4, 1168, 9, 1152, 20, 4, 470, 27, 11, 4834, 130], "labels": [2039, 2628], "scores": [1.0, 0.6], "qid": 3296875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000399790.jpg", "text_segment": [333, 212, 18, 672, 4, 2896, 208, 130], "labels": [1176, 1163], "scores": [1.0, 0.6], "qid": 3997905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000295589.jpg", "text_segment": [2017, 18, 4, 835, 12, 41, 2858, 130], "labels": [2006, 872], "scores": [1.0, 0.6], "qid": 2955895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000518615.jpg", "text_segment": [87, 73, 1828, 18, 4, 1937, 8510, 130], "labels": [542, 1814, 2764], "scores": [1.0, 1.0, 0.6], "qid": 5186155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000192701.jpg", "text_segment": [1794, 38, 1400, 4, 2753, 1246, 1839, 12, 41, 1129, 130], "labels": [1776, 1255], "scores": [0.6, 0.6], "qid": 1927015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000376393.jpg", "text_segment": [333, 37, 51, 3619, 20, 130], "labels": [1064, 792], "scores": [1.0, 0.6], "qid": 3763935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000462687.jpg", "text_segment": [772, 164, 44739, 90, 174, 6950, 34, 130], "labels": [175, 2152], "scores": [1.0, 0.6], "qid": 4626875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000178994.jpg", "text_segment": [333, 428, 9, 1782, 18, 41, 130], "labels": [320, 1279, 1596], "scores": [1.0, 0.6, 0.6], "qid": 1789945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000349021.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 2394, 1651, 7350, 130], "labels": [2506, 365], "scores": [1.0, 0.6], "qid": 3490215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000529004.jpg", "text_segment": [333, 428, 9, 7384, 18, 15, 130], "labels": [192, 747], "scores": [1.0, 0.6], "qid": 5290045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581829.jpg", "text_segment": [333, 4079, 18, 2926, 430, 7, 4, 294, 9, 13250, 130], "labels": [1215, 344, 2150], "scores": [1.0, 0.6, 0.6], "qid": 5818295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000364743.jpg", "text_segment": [2017, 11224, 4, 89, 61, 9, 174, 130], "labels": [1690, 2506, 820], "scores": [1.0, 0.6, 0.6], "qid": 3647435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000280413.jpg", "text_segment": [2975, 70, 38, 277, 41, 1005, 130], "labels": [221, 1667, 531], "scores": [1.0, 0.6, 0.6], "qid": 2804135}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000224111.jpg", "text_segment": [333, 2540, 9, 7255, 37, 8602, 12, 4, 3188, 130], "labels": [1269, 538, 566, 1270], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2241115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000432732.jpg", "text_segment": [3297, 61, 9, 174, 2124, 18, 3024, 7, 1583, 190, 48962, 130], "labels": [2243], "scores": [1.0], "qid": 4327325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000115571.jpg", "text_segment": [333, 37, 4, 2288, 12, 4, 105, 876, 3682, 270, 130], "labels": [2030], "scores": [1.0], "qid": 1155715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000519691.jpg", "text_segment": [772, 146, 327, 41, 2031, 8419, 130], "labels": [2641], "scores": [1.0], "qid": 5196915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000062355.jpg", "text_segment": [2017, 55563, 11, 174, 459, 130], "labels": [570, 2006], "scores": [0.6, 0.6], "qid": 623555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000050829.jpg", "text_segment": [333, 1168, 9, 4200, 18, 20, 41, 9398, 130], "labels": [3011, 669], "scores": [1.0, 1.0], "qid": 508295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000103161.jpg", "text_segment": [772, 164, 24298, 10373, 18, 12, 41, 3341, 130], "labels": [725, 2596], "scores": [0.6, 0.6], "qid": 1031615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000207611.jpg", "text_segment": [333, 103, 41, 12440, 32, 2670, 12, 15, 960, 2119, 130], "labels": [621, 407, 378, 1855], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2076115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000231655.jpg", "text_segment": [772, 18, 41, 244, 21154, 599, 130], "labels": [1220, 162], "scores": [1.0, 0.6], "qid": 2316555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000347982.jpg", "text_segment": [266, 19, 41, 3962, 9, 4121, 11224, 130], "labels": [1114, 1101], "scores": [1.0, 1.0], "qid": 3479825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000274708.jpg", "text_segment": [333, 18, 5537, 58, 41, 1127, 130], "labels": [1376, 2952], "scores": [1.0, 0.6], "qid": 2747085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000493386.jpg", "text_segment": [333, 18, 41, 11709, 270, 130], "labels": [798], "scores": [1.0], "qid": 4933865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000010192.jpg", "text_segment": [25, 2871, 18, 1373, 227, 83, 1038, 1421, 48, 41, 290, 63, 3154, 200, 130], "labels": [1790], "scores": [1.0], "qid": 101925}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000085814.jpg", "text_segment": [333, 18, 4, 3589, 9, 15, 26098, 270, 130], "labels": [1016, 1018], "scores": [1.0, 0.6], "qid": 858145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000492608.jpg", "text_segment": [2975, 37, 51, 18875, 130], "labels": [617, 1286, 32], "scores": [1.0, 0.6, 0.6], "qid": 4926085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000515025.jpg", "text_segment": [772, 164, 24345, 9, 41, 2371, 90, 49, 34, 130], "labels": [1494, 1014], "scores": [1.0, 0.6], "qid": 5150255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000280810.jpg", "text_segment": [333, 29674, 229, 13542, 18, 241, 7, 1313, 41, 6630, 130], "labels": [419], "scores": [1.0], "qid": 2808105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000547630.jpg", "text_segment": [333, 37, 4, 5939, 9, 41, 2212, 130], "labels": [117], "scores": [1.0], "qid": 5476305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000183364.jpg", "text_segment": [333, 979, 18, 4, 243, 1591, 853, 20, 130], "labels": [1353, 945], "scores": [1.0, 0.6], "qid": 1833645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000476894.jpg", "text_segment": [16064, 54, 5562, 130], "labels": [2761], "scores": [1.0], "qid": 4768945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000067966.jpg", "text_segment": [333, 12038, 18, 20, 41, 5303, 130], "labels": [1840], "scores": [1.0], "qid": 679665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000218365.jpg", "text_segment": [333, 327, 41, 1489, 35, 130], "labels": [2660, 2960], "scores": [1.0, 0.6], "qid": 2183655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000194755.jpg", "text_segment": [15040, 336, 210, 41, 18, 160, 7, 4, 116, 1693, 130], "labels": [117], "scores": [1.0], "qid": 1947555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000237060.jpg", "text_segment": [2975, 70, 38, 277, 41, 3962, 9, 4121, 130], "labels": [636], "scores": [1.0], "qid": 2370605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000492785.jpg", "text_segment": [1299, 18, 41, 503, 20, 15, 1168, 9, 1292, 130], "labels": [2547, 2129], "scores": [1.0, 0.6], "qid": 4927855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000257685.jpg", "text_segment": [333, 1384, 18, 4, 40096, 11, 137, 35, 130], "labels": [1786, 2135], "scores": [1.0, 0.6], "qid": 2576855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302716.jpg", "text_segment": [333, 1168, 9, 2212, 18, 556, 12, 174, 6642, 130], "labels": [276, 800], "scores": [1.0, 0.6], "qid": 3027165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000546569.jpg", "text_segment": [333, 2849, 18, 41, 5624, 35, 130], "labels": [583, 1794], "scores": [1.0, 0.6], "qid": 5465695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000410670.jpg", "text_segment": [333, 1168, 9, 1897, 18, 15, 130], "labels": [2867, 3019], "scores": [1.0, 0.6], "qid": 4106705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000148508.jpg", "text_segment": [127, 6002, 9, 960, 172, 10, 2007, 9, 649, 8, 698, 19, 11960, 241, 12, 83, 1041, 58, 4, 60320, 130], "labels": [2115], "scores": [1.0], "qid": 1485085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000364884.jpg", "text_segment": [333, 607, 18, 41, 270, 130], "labels": [2430, 1068, 389], "scores": [1.0, 0.6, 0.6], "qid": 3648845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000429679.jpg", "text_segment": [12064, 10, 2843, 1839, 130], "labels": [414, 1803, 1020, 1802], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4296795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000123639.jpg", "text_segment": [333, 90, 38, 254, 12, 41, 2166, 7, 3863, 23, 130], "labels": [1599, 520, 1600], "scores": [1.0, 0.6, 0.6], "qid": 1236395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000532285.jpg", "text_segment": [333, 37, 4, 10498, 137, 9, 130], "labels": [313], "scores": [1.0], "qid": 5322855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000367860.jpg", "text_segment": [333, 428, 9, 2371, 18, 4, 403, 12, 4, 1127, 389, 29, 144, 4, 1523, 130], "labels": [59], "scores": [1.0], "qid": 3678605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000468866.jpg", "text_segment": [333, 27, 11, 12, 4, 1064, 9, 15, 2232, 130], "labels": [2913, 741, 404], "scores": [0.6, 0.6, 0.6], "qid": 4688665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000252403.jpg", "text_segment": [266, 19, 4, 215, 20, 41, 32175, 3027, 130], "labels": [1113, 1551], "scores": [0.6, 0.6], "qid": 2524035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000129595.jpg", "text_segment": [1299, 70, 41, 403, 32, 1373, 41, 1005, 130], "labels": [1579, 2523], "scores": [1.0, 0.6], "qid": 1295955}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000389753.jpg", "text_segment": [333, 64, 38, 90, 12, 41, 383, 130], "labels": [1673], "scores": [1.0], "qid": 3897535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134542.jpg", "text_segment": [333, 18, 4, 145, 1158, 6708, 1839, 197, 130], "labels": [2774], "scores": [0.6], "qid": 1345425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000147667.jpg", "text_segment": [333, 327, 41, 444, 34, 12, 1138, 24, 83, 10, 18773, 327, 130], "labels": [1604, 664], "scores": [1.0, 1.0], "qid": 1476675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000313093.jpg", "text_segment": [333, 18, 569, 7, 234, 41, 1262, 130], "labels": [2680, 2470, 2393], "scores": [1.0, 0.6, 0.6], "qid": 3130935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000067207.jpg", "text_segment": [333, 1766, 37, 51, 354, 130], "labels": [1035, 395, 412], "scores": [1.0, 1.0, 0.6], "qid": 672075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000446835.jpg", "text_segment": [333, 215, 10707, 4, 1704, 368, 197, 130], "labels": [580, 2073], "scores": [1.0, 0.6], "qid": 4468355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031041.jpg", "text_segment": [333, 607, 18, 41, 130], "labels": [2359], "scores": [1.0], "qid": 310415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000525762.jpg", "text_segment": [333, 215, 54, 1505, 327, 4, 6451, 20, 41, 25998, 3191, 130], "labels": [80], "scores": [1.0], "qid": 5257625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000256769.jpg", "text_segment": [333, 428, 9, 3337, 18, 4, 244, 12, 4, 1129, 2155, 130], "labels": [2333, 838, 747], "scores": [1.0, 0.6, 0.6], "qid": 2567695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000163666.jpg", "text_segment": [333, 19926, 1033, 64, 2124, 9, 41, 1924, 34, 130], "labels": [513], "scores": [1.0], "qid": 1636665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000122302.jpg", "text_segment": [87, 83, 289, 18, 41, 1168, 9, 4121, 1158, 130], "labels": [1081, 2189, 1972], "scores": [1.0, 0.6, 0.6], "qid": 1223025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000162634.jpg", "text_segment": [333, 1168, 9, 924, 18, 41, 130], "labels": [1821, 5, 833], "scores": [1.0, 1.0, 0.6], "qid": 1626345}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000480780.jpg", "text_segment": [333, 428, 9, 4079, 18, 41, 1782, 1068, 130], "labels": [1215], "scores": [1.0], "qid": 4807805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000434089.jpg", "text_segment": [333, 18, 10, 2047, 9, 41, 2371, 270, 130], "labels": [2728], "scores": [1.0], "qid": 4340895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000222458.jpg", "text_segment": [333, 1714, 9, 6213, 18, 41, 596, 130], "labels": [2324, 2899], "scores": [1.0, 1.0], "qid": 2224585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000133969.jpg", "text_segment": [333, 700, 327, 4, 244, 24, 4, 5696, 293, 130], "labels": [1314, 1688, 1313], "scores": [1.0, 0.6, 0.6], "qid": 1339695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000420610.jpg", "text_segment": [333, 18, 41, 2157, 9, 503, 2926, 270, 130], "labels": [1616, 839], "scores": [1.0, 0.6], "qid": 4206105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000232160.jpg", "text_segment": [333, 208, 18, 133, 561, 130], "labels": [872, 1612], "scores": [1.0, 0.6], "qid": 2321605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000046889.jpg", "text_segment": [127, 379, 403, 27, 11, 89, 268, 9, 3913, 37, 270, 4, 83, 3913, 130], "labels": [200], "scores": [1.0], "qid": 468895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000468784.jpg", "text_segment": [2017, 18, 65, 130], "labels": [3006], "scores": [0.6], "qid": 4687845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000485532.jpg", "text_segment": [772, 150, 41, 101, 80, 41, 130], "labels": [1724, 558], "scores": [1.0, 0.6], "qid": 4855325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000560756.jpg", "text_segment": [333, 90, 93, 90, 12, 41, 383, 130], "labels": [1265, 1640], "scores": [1.0, 0.6], "qid": 5607565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000578237.jpg", "text_segment": [333, 1168, 9, 3068, 327, 4, 3603, 244, 34, 20, 130], "labels": [1196, 2735, 1824], "scores": [1.0, 0.6, 0.6], "qid": 5782375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000518440.jpg", "text_segment": [333, 4079, 18, 15, 130], "labels": [1470], "scores": [0.6], "qid": 5184405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000372983.jpg", "text_segment": [333, 18, 162, 4, 2528, 27, 11, 2797, 130], "labels": [2477], "scores": [1.0], "qid": 3729835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474502.jpg", "text_segment": [333, 18, 41, 2371, 27, 11, 1408, 10966, 130], "labels": [2293], "scores": [1.0], "qid": 4745025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000108208.jpg", "text_segment": [333, 1639, 90, 38, 481, 137, 41, 503, 130], "labels": [2104, 270, 199, 271], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1082085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000379310.jpg", "text_segment": [333, 37, 4, 8193, 270, 130], "labels": [1634], "scores": [0.6], "qid": 3793105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000209613.jpg", "text_segment": [87, 83, 289, 37, 174, 2124, 12, 130], "labels": [2326, 2562], "scores": [1.0, 1.0], "qid": 2096135}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000143418.jpg", "text_segment": [333, 3337, 90, 49, 101, 35, 174, 2124, 130], "labels": [747], "scores": [1.0], "qid": 1434185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000526555.jpg", "text_segment": [772, 324, 327, 61, 34, 7, 32, 7, 31966, 12, 41, 1766, 130], "labels": [182], "scores": [1.0], "qid": 5265555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000076529.jpg", "text_segment": [333, 29815, 18, 2393, 24, 4, 4079, 368, 197, 130], "labels": [1183], "scores": [1.0], "qid": 765295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000252748.jpg", "text_segment": [333, 3468, 327, 4, 698, 12038, 1105, 34, 130], "labels": [906, 427], "scores": [1.0, 0.6], "qid": 2527485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000391728.jpg", "text_segment": [333, 289, 18, 41, 130], "labels": [981, 2189, 721, 543], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3917285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000505035.jpg", "text_segment": [333, 18, 41, 810, 2155, 20, 130], "labels": [1906], "scores": [0.6], "qid": 5050355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000331883.jpg", "text_segment": [333, 428, 9, 943, 18, 15, 130], "labels": [1486], "scores": [0.6], "qid": 3318835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000141256.jpg", "text_segment": [87, 83, 696, 18, 15, 1055, 14698, 11536, 130], "labels": [2721, 2885], "scores": [1.0, 0.6], "qid": 1412565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000571497.jpg", "text_segment": [333, 96, 2540, 9, 503, 103, 32, 4609, 197, 130], "labels": [1711, 190, 2304, 1701], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5714975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000012047.jpg", "text_segment": [12064, 4, 1384, 241, 7, 135, 174, 23393, 1839, 12, 41, 1129, 130], "labels": [1013], "scores": [1.0], "qid": 120475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000236996.jpg", "text_segment": [333, 2858, 18, 5919, 11285, 24, 41, 503, 130], "labels": [872], "scores": [1.0], "qid": 2369965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000430056.jpg", "text_segment": [333, 1168, 9, 9398, 18, 41, 130], "labels": [746, 1731], "scores": [0.6, 0.6], "qid": 4300565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000336658.jpg", "text_segment": [333, 1168, 9, 2416, 18, 241, 36, 4, 6791, 130], "labels": [1193, 2680], "scores": [1.0, 1.0], "qid": 3366585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000056036.jpg", "text_segment": [333, 1766, 64, 32, 365, 457, 4, 1781, 940, 4, 3904, 130], "labels": [2747, 2517], "scores": [1.0, 0.6], "qid": 560365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000526778.jpg", "text_segment": [772, 90, 38, 3492, 12, 41, 2858, 130], "labels": [26, 389, 789], "scores": [1.0, 0.6, 0.6], "qid": 5267785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000254277.jpg", "text_segment": [2975, 64, 732, 869, 4201, 80, 174, 130], "labels": [1904], "scores": [0.6], "qid": 2542775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000416930.jpg", "text_segment": [333, 428, 9, 332, 130], "labels": [3010, 283], "scores": [1.0, 0.6], "qid": 4169305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000074798.jpg", "text_segment": [333, 4472, 18, 41, 130], "labels": [550, 625], "scores": [1.0, 1.0], "qid": 747985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000253426.jpg", "text_segment": [2975, 19, 4, 3589, 20, 41, 3663, 10707, 130], "labels": [104, 69, 1435, 608], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2534265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000532901.jpg", "text_segment": [3297, 1168, 9, 8675, 18, 241, 17, 352, 4, 11088, 1839, 12, 41, 1127, 130], "labels": [631, 1141], "scores": [1.0, 0.6], "qid": 5329015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000185935.jpg", "text_segment": [333, 18, 41, 4955, 241, 17, 130], "labels": [245, 1244, 1169], "scores": [1.0, 0.6, 0.6], "qid": 1859355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000332205.jpg", "text_segment": [2975, 70, 38, 277, 41, 12264, 130], "labels": [2446, 1231], "scores": [1.0, 0.6], "qid": 3322055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000575719.jpg", "text_segment": [982, 38, 154, 41, 403, 44, 295, 54, 535, 10, 208, 130], "labels": [3061], "scores": [1.0], "qid": 5757195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000216863.jpg", "text_segment": [3297, 7835, 9, 41, 2858, 44, 10, 581, 208, 957, 84, 85, 130], "labels": [2671], "scores": [1.0], "qid": 2168635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000172935.jpg", "text_segment": [333, 18, 4, 547, 3507, 130], "labels": [2373], "scores": [0.6], "qid": 1729355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000344314.jpg", "text_segment": [1299, 18, 41, 1005, 197, 130], "labels": [385, 822], "scores": [0.6, 0.6], "qid": 3443145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000491106.jpg", "text_segment": [333, 48, 1468, 4, 1651, 7, 147, 3343, 130], "labels": [1263], "scores": [1.0], "qid": 4911065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000044964.jpg", "text_segment": [333, 327, 41, 2371, 1333, 130], "labels": [2998, 1712, 90, 1701], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 449645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000058647.jpg", "text_segment": [333, 2371, 3869, 7, 776, 5794, 354, 41, 1766, 130], "labels": [795, 1463], "scores": [1.0, 0.6], "qid": 586475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302498.jpg", "text_segment": [333, 18, 4, 208, 51, 37, 672, 130], "labels": [1476, 1475], "scores": [1.0, 0.6], "qid": 3024985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000124614.jpg", "text_segment": [333, 1168, 9, 2948, 327, 4, 470, 12, 4, 1600, 3068, 8, 698, 10003, 34, 20, 130], "labels": [2408, 1586, 1272], "scores": [1.0, 0.6, 0.6], "qid": 1246145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031446.jpg", "text_segment": [2975, 70, 732, 142, 174, 130], "labels": [983, 2331, 305], "scores": [1.0, 0.6, 0.6], "qid": 314465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000144941.jpg", "text_segment": [333, 5037, 37, 236, 1105, 12, 41, 428, 9, 383, 130], "labels": [31], "scores": [0.6], "qid": 1449415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000525211.jpg", "text_segment": [772, 164, 10373, 327, 41, 1230, 9, 503, 4139, 130], "labels": [1924, 176], "scores": [1.0, 0.6], "qid": 5252115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000163728.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [2749, 1076, 193, 1657], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1637285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000539326.jpg", "text_segment": [333, 18, 4, 3359, 396, 17, 10, 578, 9, 4, 2280, 1839, 130], "labels": [179], "scores": [1.0], "qid": 5393265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000255483.jpg", "text_segment": [25, 4007, 5037, 37, 354, 83, 130], "labels": [648], "scores": [1.0], "qid": 2554835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000578498.jpg", "text_segment": [333, 428, 9, 669, 18, 1839, 12, 41, 1127, 130], "labels": [199, 599, 2770, 2436], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5784985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000117396.jpg", "text_segment": [982, 431, 54, 337, 234, 174, 130], "labels": [473], "scores": [1.0], "qid": 1173965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000446812.jpg", "text_segment": [772, 164, 523, 285, 6208, 327, 4, 4472, 12, 4, 470, 27, 11, 813, 34, 7, 32, 8169, 130], "labels": [1523], "scores": [1.0], "qid": 4468125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000221893.jpg", "text_segment": [333, 2212, 18, 41, 130], "labels": [276, 800], "scores": [1.0, 1.0], "qid": 2218935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000549048.jpg", "text_segment": [333, 18, 4, 13846, 20, 4, 1682, 241, 17, 130], "labels": [2126, 2731, 2127], "scores": [1.0, 0.6, 0.6], "qid": 5490485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000045535.jpg", "text_segment": [333, 23049, 1297, 18, 5919, 2393, 24, 41, 130], "labels": [3044], "scores": [1.0], "qid": 455355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000278576.jpg", "text_segment": [333, 104, 52, 4, 1262, 130], "labels": [1551, 1649, 965, 1795], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2785765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000402639.jpg", "text_segment": [14, 11, 41, 10, 383, 17, 10, 1055, 54, 771, 130], "labels": [814], "scores": [1.0], "qid": 4026395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000456865.jpg", "text_segment": [3297, 1681, 9, 55802, 18, 1839, 12, 41, 1129, 130], "labels": [526], "scores": [1.0], "qid": 4568655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000126137.jpg", "text_segment": [14, 11, 41, 5915, 779, 672, 5915, 54, 79, 133, 4492, 130], "labels": [587, 1643], "scores": [1.0, 0.6], "qid": 1261375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000082263.jpg", "text_segment": [2975, 90, 38, 920, 41, 1262, 130], "labels": [729, 804, 1780, 32], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 822635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000364557.jpg", "text_segment": [333, 2858, 18, 41, 130], "labels": [9], "scores": [1.0], "qid": 3645575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000432239.jpg", "text_segment": [87, 83, 428, 9, 4301, 18, 41, 2858, 561, 130], "labels": [872, 44, 82], "scores": [1.0, 0.6, 0.6], "qid": 4322395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000365385.jpg", "text_segment": [772, 462, 187, 460, 234, 41, 130], "labels": [967], "scores": [1.0], "qid": 3653855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000012887.jpg", "text_segment": [333, 39344, 21230, 241, 12, 39, 726, 130], "labels": [1238], "scores": [1.0], "qid": 128875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000043261.jpg", "text_segment": [333, 13290, 18, 12, 4, 35684, 6630, 130], "labels": [1470, 1260, 2304], "scores": [1.0, 0.6, 0.6], "qid": 432615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000295491.jpg", "text_segment": [333, 18, 4, 1484, 14810, 20, 4, 18691, 137, 59, 9, 130], "labels": [3085], "scores": [1.0], "qid": 2954915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000535808.jpg", "text_segment": [333, 1766, 64, 32, 365, 24, 4, 1781, 20, 4, 8840, 130], "labels": [2517, 2747], "scores": [1.0, 0.6], "qid": 5358085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000020912.jpg", "text_segment": [333, 37, 4, 3780, 137, 9, 130], "labels": [1140, 1013, 1153], "scores": [1.0, 0.6, 0.6], "qid": 209125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000283698.jpg", "text_segment": [333, 607, 103, 41, 32, 475, 248, 29, 130], "labels": [1379, 36, 1380, 2322], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2836985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000289152.jpg", "text_segment": [2017, 957, 41, 9012, 7, 229, 130], "labels": [16, 200, 1364, 1434], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2891525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000248087.jpg", "text_segment": [333, 289, 18, 41, 1682, 12, 130], "labels": [1972, 979, 2705], "scores": [1.0, 0.6, 0.6], "qid": 2480875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000315384.jpg", "text_segment": [333, 1622, 37, 1300, 7, 4, 61, 9854, 197, 130], "labels": [614, 2430], "scores": [1.0, 0.6], "qid": 3153845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000091402.jpg", "text_segment": [333, 1384, 37, 165, 10003, 137, 59, 9, 130], "labels": [2567, 319, 2254], "scores": [1.0, 0.6, 0.6], "qid": 914025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000260020.jpg", "text_segment": [333, 205, 9, 10, 380, 18, 241, 76, 50908, 41, 1005, 130], "labels": [1346], "scores": [1.0], "qid": 2600205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000278747.jpg", "text_segment": [333, 18, 41, 1651, 2670, 130], "labels": [213], "scores": [1.0], "qid": 2787475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000213276.jpg", "text_segment": [14, 11, 41, 403, 27, 11, 1022, 1924, 6394, 54, 17534, 3721, 130], "labels": [3072], "scores": [1.0], "qid": 2132765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000323925.jpg", "text_segment": [333, 7164, 37, 1839, 130], "labels": [57, 1260], "scores": [1.0, 0.6], "qid": 3239255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000008190.jpg", "text_segment": [333, 157, 2309, 18, 41, 1766, 145, 2393, 24, 130], "labels": [1286], "scores": [1.0], "qid": 81905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000109900.jpg", "text_segment": [14, 11, 41, 4, 5952, 54, 2724, 130], "labels": [833], "scores": [1.0], "qid": 1099005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000230501.jpg", "text_segment": [2975, 64, 38, 869, 41, 3948, 130], "labels": [2142, 2558], "scores": [1.0, 1.0], "qid": 2305015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000111434.jpg", "text_segment": [333, 1168, 9, 607, 18, 2087, 130], "labels": [37, 834], "scores": [1.0, 0.6], "qid": 1114345}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000052746.jpg", "text_segment": [333, 1168, 9, 4200, 18, 20, 174, 7164, 130], "labels": [2222], "scores": [1.0], "qid": 527465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000389986.jpg", "text_segment": [333, 8546, 9, 1484, 18, 4, 25998, 130], "labels": [2527], "scores": [1.0], "qid": 3899865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000461973.jpg", "text_segment": [333, 18, 4, 1651, 2474, 237, 130], "labels": [1975], "scores": [1.0], "qid": 4619735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000218204.jpg", "text_segment": [333, 428, 9, 1897, 18, 41, 130], "labels": [1017, 581], "scores": [1.0, 1.0], "qid": 2182045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000266866.jpg", "text_segment": [1299, 327, 65, 34, 46, 11150, 130], "labels": [1989, 538], "scores": [1.0, 0.6], "qid": 2668665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000095770.jpg", "text_segment": [2975, 64, 4, 1681, 32, 2920, 130], "labels": [1904], "scores": [1.0], "qid": 957705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000489739.jpg", "text_segment": [333, 920, 37, 51, 2365, 29, 130], "labels": [2190], "scores": [1.0], "qid": 4897395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000534274.jpg", "text_segment": [14, 11, 41, 1168, 9, 1289, 1152, 66, 2394, 12, 16209, 11544, 54, 108, 16171, 7755, 130], "labels": [1175], "scores": [1.0], "qid": 5342745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000354829.jpg", "text_segment": [1299, 150, 33, 613, 39, 380, 203, 7, 10, 642, 48987, 130], "labels": [1989, 1752, 173], "scores": [0.6, 0.6, 0.6], "qid": 3548295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581726.jpg", "text_segment": [1299, 18, 41, 12686, 3144, 99, 2220, 130], "labels": [1914], "scores": [1.0], "qid": 5817265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000093766.jpg", "text_segment": [333, 488, 18, 41, 2771, 137, 35, 130], "labels": [1021, 1022, 1803], "scores": [1.0, 1.0, 0.6], "qid": 937665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000267802.jpg", "text_segment": [333, 1168, 9, 248, 18, 41, 130], "labels": [221, 706], "scores": [1.0, 0.6], "qid": 2678025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000564419.jpg", "text_segment": [333, 1553, 37, 174, 1921, 1133, 12, 130], "labels": [424, 423], "scores": [1.0, 0.6], "qid": 5644195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000060677.jpg", "text_segment": [772, 146, 18, 41, 2031, 874, 130], "labels": [1733, 768], "scores": [0.6, 0.6], "qid": 606775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000126123.jpg", "text_segment": [333, 985, 70, 38, 277, 41, 1168, 9, 3326, 130], "labels": [1074, 608], "scores": [1.0, 0.6], "qid": 1261235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000236162.jpg", "text_segment": [9826, 27, 11, 830, 1574, 13602, 16758, 1370, 24, 174, 130], "labels": [1348], "scores": [1.0], "qid": 2361625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000397211.jpg", "text_segment": [2975, 18, 41, 1129, 465, 130], "labels": [1152, 1151], "scores": [1.0, 0.6], "qid": 3972115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000552842.jpg", "text_segment": [333, 700, 18, 4, 779, 672, 130], "labels": [1688], "scores": [1.0], "qid": 5528425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000308504.jpg", "text_segment": [333, 18, 4, 7030, 13290, 806, 4, 23356, 18606, 130], "labels": [2762], "scores": [1.0], "qid": 3085045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000368821.jpg", "text_segment": [333, 18, 4, 1714, 9, 4, 383, 130], "labels": [583, 376, 2899], "scores": [1.0, 1.0, 0.6], "qid": 3688215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000367905.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 2858, 12, 4, 1129, 130], "labels": [9, 1683], "scores": [1.0, 0.6], "qid": 3679055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000503278.jpg", "text_segment": [333, 1766, 37, 51, 354, 130], "labels": [1928], "scores": [1.0], "qid": 5032785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000315810.jpg", "text_segment": [333, 1168, 9, 472, 18, 133, 1153, 25900, 130], "labels": [1604], "scores": [1.0], "qid": 3158105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000033006.jpg", "text_segment": [333, 21426, 37, 4, 93, 130], "labels": [161, 2514], "scores": [1.0, 0.6], "qid": 330065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000222407.jpg", "text_segment": [772, 90, 49, 124, 41, 18, 43, 10, 59724, 130], "labels": [2116, 2897], "scores": [1.0, 0.6], "qid": 2224075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000202178.jpg", "text_segment": [355, 9, 4, 294, 540, 503, 1010, 130], "labels": [741, 343], "scores": [1.0, 0.6], "qid": 2021785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000401123.jpg", "text_segment": [333, 90, 27675, 11, 80, 7, 1333, 130], "labels": [1701, 89], "scores": [1.0, 0.6], "qid": 4011235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000544590.jpg", "text_segment": [333, 18, 4, 396, 17, 41, 6950, 18168, 130], "labels": [298, 1374], "scores": [1.0, 0.6], "qid": 5445905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000315467.jpg", "text_segment": [333, 383, 327, 23, 263, 80, 4, 2528, 18, 12, 130], "labels": [1009], "scores": [1.0], "qid": 3154675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000112160.jpg", "text_segment": [2975, 292, 732, 869, 10, 3960, 15, 18913, 41, 1127, 130], "labels": [1904, 1121, 1120], "scores": [0.6, 0.6, 0.6], "qid": 1121605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000285773.jpg", "text_segment": [333, 2124, 142, 12, 174, 4584, 130], "labels": [435, 1374], "scores": [1.0, 0.6], "qid": 2857735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000173183.jpg", "text_segment": [1794, 38, 455, 74, 83, 4, 6190, 12, 4, 863, 7270, 130], "labels": [1028, 2673, 221], "scores": [1.0, 0.6, 0.6], "qid": 1731835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000509641.jpg", "text_segment": [333, 70, 928, 98, 174, 1781, 889, 7, 4, 845, 130], "labels": [171], "scores": [0.6], "qid": 5096415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000240501.jpg", "text_segment": [2975, 103, 38, 6255, 102, 813, 130], "labels": [163, 660], "scores": [1.0, 0.6], "qid": 2405015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000116037.jpg", "text_segment": [3297, 289, 5147, 41, 2858, 28, 99, 644, 2858, 130], "labels": [981, 1877, 543], "scores": [1.0, 0.6, 0.6], "qid": 1160375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000296676.jpg", "text_segment": [333, 428, 9, 6821, 18, 12, 4, 2644, 130], "labels": [893, 2095], "scores": [1.0, 0.6], "qid": 2966765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000396863.jpg", "text_segment": [333, 1766, 18, 41, 130], "labels": [2239, 2535], "scores": [1.0, 0.6], "qid": 3968635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000182441.jpg", "text_segment": [333, 1766, 18, 41, 244, 6857, 12, 130], "labels": [1914], "scores": [0.6], "qid": 1824415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113282.jpg", "text_segment": [333, 428, 9, 3780, 37, 51, 457, 130], "labels": [2731], "scores": [1.0], "qid": 1132825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000434129.jpg", "text_segment": [333, 11179, 18, 12, 41, 6451, 130], "labels": [1279, 2292], "scores": [1.0, 0.6], "qid": 4341295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000046775.jpg", "text_segment": [333, 383, 18, 41, 130], "labels": [237], "scores": [1.0], "qid": 467755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000478550.jpg", "text_segment": [2975, 292, 46, 1766, 80, 174, 171, 248, 130], "labels": [4, 1420, 2083, 5], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4785505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000210149.jpg", "text_segment": [772, 18, 4, 2610, 12, 4, 1129, 23203, 130], "labels": [3065, 708, 144], "scores": [1.0, 0.6, 0.6], "qid": 2101495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000011099.jpg", "text_segment": [3297, 61, 9, 174, 2095, 44, 4, 4482, 1853, 11, 19253, 130], "labels": [373, 765], "scores": [1.0, 0.6], "qid": 110995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000339177.jpg", "text_segment": [333, 2540, 9, 2685, 37, 174, 130], "labels": [319], "scores": [1.0], "qid": 3391775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000504152.jpg", "text_segment": [333, 428, 9, 5037, 37, 174, 130], "labels": [2771], "scores": [1.0], "qid": 5041525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000226256.jpg", "text_segment": [2613, 4, 5037, 22184, 54, 3554, 130], "labels": [1543], "scores": [1.0], "qid": 2262565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000158635.jpg", "text_segment": [333, 1168, 9, 5952, 18, 41, 130], "labels": [798, 322], "scores": [1.0, 0.6], "qid": 1586355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000567877.jpg", "text_segment": [333, 37, 51, 3291, 130], "labels": [798], "scores": [1.0], "qid": 5678775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000437284.jpg", "text_segment": [333, 18, 4, 1008, 20, 4, 1651, 1105, 270, 130], "labels": [1289, 2361], "scores": [1.0, 0.6], "qid": 4372845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000513615.jpg", "text_segment": [333, 1168, 9, 12014, 18, 41, 130], "labels": [528, 2591], "scores": [1.0, 0.6], "qid": 5136155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000251801.jpg", "text_segment": [333, 12, 17395, 14830, 31, 11, 37, 12, 41, 503, 130], "labels": [1043], "scores": [1.0], "qid": 2518015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000489358.jpg", "text_segment": [333, 1168, 9, 3711, 18, 1353, 7, 958, 4, 1262, 130], "labels": [1372, 2633], "scores": [1.0, 0.6], "qid": 4893585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000556369.jpg", "text_segment": [333, 1168, 9, 2371, 18, 556, 7, 32, 23452, 12, 4, 1706, 1839, 130], "labels": [1983, 1076, 2243, 763], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5563695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000483897.jpg", "text_segment": [333, 11564, 9, 2771, 18, 15, 130], "labels": [1334, 438], "scores": [1.0, 0.6], "qid": 4838975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000115361.jpg", "text_segment": [2017, 535, 41, 30489, 3326, 130], "labels": [1434], "scores": [1.0], "qid": 1153615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000003001.jpg", "text_segment": [333, 37, 174, 40339, 137, 9, 130], "labels": [1520, 368], "scores": [1.0, 0.6], "qid": 30015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000042501.jpg", "text_segment": [333, 18, 2087, 7, 4, 244, 130], "labels": [1149, 1817], "scores": [1.0, 0.6], "qid": 425015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475159.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 2144, 4, 244, 18, 1697, 130], "labels": [316, 315, 1968], "scores": [1.0, 0.6, 0.6], "qid": 4751595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000441736.jpg", "text_segment": [772, 90, 49, 124, 61, 9, 174, 1919, 18, 3072, 36, 10, 1659, 1382, 15, 1003, 93, 131, 51, 177, 7, 147, 130], "labels": [743], "scores": [1.0], "qid": 4417365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000390134.jpg", "text_segment": [333, 1168, 9, 11059, 953, 327, 41, 29273, 34, 130], "labels": [334, 741, 512, 2449], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3901345}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000416184.jpg", "text_segment": [333, 37, 51, 354, 667, 41, 383, 130], "labels": [245, 1244, 1169, 1243], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4161845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000339253.jpg", "text_segment": [333, 428, 9, 3068, 18, 41, 771, 1697, 130], "labels": [1741], "scores": [1.0], "qid": 3392535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000218362.jpg", "text_segment": [333, 77, 18, 23, 130], "labels": [1339], "scores": [0.6], "qid": 2183625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000067342.jpg", "text_segment": [333, 428, 9, 4472, 18, 15, 130], "labels": [658], "scores": [1.0], "qid": 673425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000077479.jpg", "text_segment": [333, 289, 103, 41, 34534, 32, 236, 12, 130], "labels": [1294, 1042], "scores": [1.0, 0.6], "qid": 774795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000034567.jpg", "text_segment": [333, 18, 137, 35, 8993, 130], "labels": [910, 1048], "scores": [1.0, 0.6], "qid": 345675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000368648.jpg", "text_segment": [5418, 41, 428, 9, 4121, 32, 12, 10, 3403, 54, 3958, 386, 130], "labels": [2570, 2010], "scores": [1.0, 1.0], "qid": 3686485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000214109.jpg", "text_segment": [333, 928, 197, 130], "labels": [156, 832], "scores": [0.6, 0.6], "qid": 2141095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000228309.jpg", "text_segment": [333, 428, 9, 1152, 18, 15, 130], "labels": [19, 1686, 21], "scores": [1.0, 0.6, 0.6], "qid": 2283095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000462845.jpg", "text_segment": [772, 19, 4, 2476, 9, 41, 5915, 501, 9077, 130], "labels": [832, 348, 722], "scores": [1.0, 0.6, 0.6], "qid": 4628455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000280242.jpg", "text_segment": [772, 90, 38, 1507, 41, 130], "labels": [1246], "scores": [1.0], "qid": 2802425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000136227.jpg", "text_segment": [333, 1168, 9, 1897, 18, 20, 4, 5303, 130], "labels": [1408, 1410], "scores": [1.0, 0.6], "qid": 1362275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000478356.jpg", "text_segment": [333, 104, 18, 15, 1129, 130], "labels": [1794, 2845, 168], "scores": [0.6, 0.6, 0.6], "qid": 4783565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000158628.jpg", "text_segment": [333, 18, 145, 556, 4, 396, 9, 4, 1168, 9, 516, 9, 366, 174, 11, 93, 37, 203, 7, 130], "labels": [617], "scores": [1.0], "qid": 1586285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000309402.jpg", "text_segment": [333, 18, 4, 396, 9, 41, 2119, 130], "labels": [357, 2731], "scores": [1.0, 1.0], "qid": 3094025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000542777.jpg", "text_segment": [772, 18, 41, 349, 6630, 137, 130], "labels": [1173, 346], "scores": [1.0, 0.6], "qid": 5427775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000250164.jpg", "text_segment": [333, 1714, 18, 41, 1110, 268, 57, 12, 130], "labels": [2324, 722], "scores": [1.0, 0.6], "qid": 2501645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000300732.jpg", "text_segment": [333, 1168, 9, 2528, 503, 103, 15, 32, 130], "labels": [1968, 1578], "scores": [0.6, 0.6], "qid": 3007325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000578545.jpg", "text_segment": [333, 32327, 18, 4, 470, 12, 4, 1127, 853, 12, 130], "labels": [2054], "scores": [1.0], "qid": 5785455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000472509.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 212, 130], "labels": [279], "scores": [1.0], "qid": 4725095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000557916.jpg", "text_segment": [333, 1294, 9, 943, 18, 41, 130], "labels": [1910, 1285, 782], "scores": [1.0, 0.6, 0.6], "qid": 5579165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000512240.jpg", "text_segment": [333, 104, 19, 41, 1168, 9, 6242, 1216, 11224, 130], "labels": [1551], "scores": [0.6], "qid": 5122405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000453001.jpg", "text_segment": [333, 292, 32, 10, 1138, 4587, 7, 3445, 12, 41, 26673, 3856, 130], "labels": [621, 2745], "scores": [1.0, 1.0], "qid": 4530015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000091751.jpg", "text_segment": [333, 18, 4, 779, 145, 556, 7478, 4, 1044, 1047, 130], "labels": [2013], "scores": [1.0], "qid": 917515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000128051.jpg", "text_segment": [333, 1924, 70, 41, 32, 23, 23, 55, 21154, 563, 130], "labels": [165, 850], "scores": [1.0, 0.6], "qid": 1280515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000553998.jpg", "text_segment": [333, 64, 38, 1035, 24, 174, 130], "labels": [1429], "scores": [1.0], "qid": 5539985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000567552.jpg", "text_segment": [6204, 54, 293, 130], "labels": [1133, 1959], "scores": [1.0, 0.6], "qid": 5675525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000416271.jpg", "text_segment": [3297, 1681, 9, 55802, 18, 1839, 12, 41, 1129, 130], "labels": [526], "scores": [1.0], "qid": 4162715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000575544.jpg", "text_segment": [333, 2849, 327, 41, 1262, 224, 35, 130], "labels": [1794, 1879, 964, 1694], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5755445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000056158.jpg", "text_segment": [333, 1732, 32514, 18, 146, 66, 556, 7, 30708, 2252, 9, 174, 2124, 130], "labels": [2717], "scores": [1.0], "qid": 561585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000473133.jpg", "text_segment": [333, 29951, 37, 1353, 7, 2146, 10, 2671, 80, 41, 130], "labels": [2769, 2688], "scores": [1.0, 0.6], "qid": 4731335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000229000.jpg", "text_segment": [333, 103, 4, 4739, 9, 174, 93, 32, 130], "labels": [1403, 10], "scores": [1.0, 0.6], "qid": 2290005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000356043.jpg", "text_segment": [333, 150, 51, 234, 83, 33, 19, 1373, 17, 130], "labels": [1960], "scores": [1.0], "qid": 3560435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000423740.jpg", "text_segment": [333, 18, 4, 33686, 3676, 207, 174, 97, 93, 130], "labels": [1223, 441], "scores": [1.0, 0.6], "qid": 4237405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000016030.jpg", "text_segment": [333, 37, 174, 241, 17, 130], "labels": [1929, 800], "scores": [1.0, 0.6], "qid": 160305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000291048.jpg", "text_segment": [333, 240, 18, 435, 17, 1697, 11828, 80, 41, 130], "labels": [1720], "scores": [1.0], "qid": 2910485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000084693.jpg", "text_segment": [772, 196, 44, 41, 1651, 4798, 63, 12, 524, 130], "labels": [2936, 490, 1223], "scores": [1.0, 0.6, 0.6], "qid": 846935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000573072.jpg", "text_segment": [1299, 18, 4, 10165, 9289, 130], "labels": [137], "scores": [1.0], "qid": 5730725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000021686.jpg", "text_segment": [333, 96, 2540, 9, 4079, 292, 32, 241, 12, 41, 5952, 130], "labels": [402, 2452, 404], "scores": [1.0, 0.6, 0.6], "qid": 216865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000326837.jpg", "text_segment": [333, 48389, 2055, 1349, 46, 397, 2093, 24, 4734, 4426, 386, 193, 28, 41, 130], "labels": [2290], "scores": [1.0], "qid": 3268375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000160661.jpg", "text_segment": [333, 1168, 9, 53447, 11, 37, 20, 4, 3904, 130], "labels": [584, 1371], "scores": [1.0, 0.6], "qid": 1606615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000575156.jpg", "text_segment": [333, 607, 37, 51, 1654, 17, 130], "labels": [2359], "scores": [1.0], "qid": 5751565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000114744.jpg", "text_segment": [2975, 12, 4, 218, 18, 41, 1129, 465, 130], "labels": [104, 662, 70], "scores": [1.0, 1.0, 0.6], "qid": 1147445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000013348.jpg", "text_segment": [333, 5586, 18, 41, 130], "labels": [526], "scores": [0.6], "qid": 133485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000179642.jpg", "text_segment": [1794, 38, 1400, 4, 248, 131, 41, 403, 18, 672, 130], "labels": [1652, 1292, 2309, 1175], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1796425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000036678.jpg", "text_segment": [333, 77, 9, 138, 18, 23, 130], "labels": [1282, 2827, 1284], "scores": [1.0, 1.0, 0.6], "qid": 366785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000147415.jpg", "text_segment": [333, 18, 4, 190, 62155, 125, 80, 130], "labels": [2214, 718], "scores": [0.6, 0.6], "qid": 1474155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000209290.jpg", "text_segment": [333, 428, 9, 3989, 21381, 2623, 18, 41, 1993, 1373, 12, 217, 813, 130], "labels": [328], "scores": [1.0], "qid": 2092905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000049445.jpg", "text_segment": [333, 1168, 9, 2362, 708, 18, 12, 4, 1127, 130], "labels": [457, 547, 1447], "scores": [1.0, 0.6, 0.6], "qid": 494455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000223466.jpg", "text_segment": [333, 428, 9, 1919, 327, 41, 255, 775, 130], "labels": [2197, 1329], "scores": [1.0, 0.6], "qid": 2234665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000142574.jpg", "text_segment": [14, 11, 23, 138, 54, 253, 130], "labels": [116], "scores": [1.0], "qid": 1425745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000289943.jpg", "text_segment": [333, 1168, 9, 1005, 18, 41, 130], "labels": [706, 2673, 1028], "scores": [1.0, 0.6, 0.6], "qid": 2899435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000578967.jpg", "text_segment": [772, 1229, 64, 41, 1651, 147, 130], "labels": [288, 14], "scores": [1.0, 0.6], "qid": 5789675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000573993.jpg", "text_segment": [333, 1168, 9, 6743, 18, 41, 130], "labels": [3087, 2324], "scores": [1.0, 0.6], "qid": 5739935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000452566.jpg", "text_segment": [333, 1168, 9, 4644, 18, 1839, 130], "labels": [2692, 4, 5], "scores": [0.6, 0.6, 0.6], "qid": 4525665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000388422.jpg", "text_segment": [333, 2858, 18, 41, 130], "labels": [933, 1644], "scores": [1.0, 0.6], "qid": 3884225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000051309.jpg", "text_segment": [333, 37, 174, 4610, 354, 130], "labels": [897, 2299], "scores": [1.0, 0.6], "qid": 513095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000010928.jpg", "text_segment": [333, 240, 44, 10, 1215, 326, 24, 4, 213, 396, 28, 41, 23665, 130], "labels": [2380], "scores": [1.0], "qid": 109285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000105786.jpg", "text_segment": [333, 64, 93, 90, 197, 130], "labels": [1252], "scores": [1.0], "qid": 1057865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000256973.jpg", "text_segment": [333, 18, 15, 443, 58, 130], "labels": [1831], "scores": [0.6], "qid": 2569735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000390954.jpg", "text_segment": [333, 428, 9, 3965, 18, 41, 130], "labels": [403], "scores": [1.0], "qid": 3909545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000242610.jpg", "text_segment": [87, 73, 1168, 9, 383, 2336, 18, 41, 491, 244, 1606, 12, 130], "labels": [2875, 2801], "scores": [1.0, 0.6], "qid": 2426105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000015259.jpg", "text_segment": [333, 1168, 9, 4201, 37, 7350, 130], "labels": [3003, 164], "scores": [0.6, 0.6], "qid": 152595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302643.jpg", "text_segment": [333, 10837, 3172, 76, 12345, 503, 12, 463, 13041, 7, 10, 6422, 130], "labels": [1790], "scores": [0.6], "qid": 3026435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000020553.jpg", "text_segment": [14, 11, 23, 8105, 54, 14593, 59, 12, 41, 1129, 130], "labels": [539], "scores": [1.0], "qid": 205535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000044467.jpg", "text_segment": [2017, 535, 41, 30489, 3326, 130], "labels": [1434, 749], "scores": [1.0, 0.6], "qid": 444675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000449073.jpg", "text_segment": [333, 1714, 9, 33035, 37, 12, 4, 9221, 130], "labels": [1800], "scores": [1.0], "qid": 4490735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000239456.jpg", "text_segment": [333, 37, 4, 11313, 17, 41, 2858, 270, 130], "labels": [1292, 421], "scores": [0.6, 0.6], "qid": 2394565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000415823.jpg", "text_segment": [333, 37, 4, 511, 10076, 9, 41, 503, 130], "labels": [2428, 512], "scores": [1.0, 0.6], "qid": 4158235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000538828.jpg", "text_segment": [333, 289, 18, 1839, 197, 130], "labels": [2327, 69], "scores": [1.0, 0.6], "qid": 5388285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000236457.jpg", "text_segment": [1299, 37, 4, 1919, 12, 41, 1129, 43, 1009, 130], "labels": [217, 444, 443], "scores": [1.0, 0.6, 0.6], "qid": 2364575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000197774.jpg", "text_segment": [1299, 18, 41, 248, 72, 1314, 130], "labels": [1622, 2827], "scores": [1.0, 0.6], "qid": 1977745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000019036.jpg", "text_segment": [3297, 833, 37, 174, 563, 145, 556, 4522, 130], "labels": [2879, 1831], "scores": [1.0, 0.6], "qid": 190365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000528458.jpg", "text_segment": [333, 37, 4, 431, 12, 41, 1129, 270, 130], "labels": [2416, 750], "scores": [1.0, 1.0], "qid": 5284585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000571437.jpg", "text_segment": [14, 11, 4, 522, 3374, 3856, 10, 4079, 54, 10, 13290, 130], "labels": [2025], "scores": [1.0], "qid": 5714375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000390463.jpg", "text_segment": [333, 428, 9, 25654, 37, 174, 130], "labels": [403, 36], "scores": [1.0, 0.6], "qid": 3904635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000429754.jpg", "text_segment": [333, 18, 4, 1168, 9, 262, 61, 395, 2595, 7, 15620, 2592, 4, 804, 1839, 12, 4, 1127, 130], "labels": [67], "scores": [0.6], "qid": 4297545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000173598.jpg", "text_segment": [333, 18, 4, 396, 17, 4, 403, 60, 55563, 11, 41, 208, 130], "labels": [2006], "scores": [1.0], "qid": 1735985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000144932.jpg", "text_segment": [333, 18, 4, 1423, 80, 130], "labels": [716, 1900, 241, 242], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1449325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000507766.jpg", "text_segment": [333, 428, 9, 4198, 37, 174, 130], "labels": [1207, 2500, 2888], "scores": [1.0, 0.6, 0.6], "qid": 5077665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000290700.jpg", "text_segment": [772, 196, 327, 23, 171, 460, 7, 1090, 41, 2858, 130], "labels": [273, 2422, 999], "scores": [1.0, 0.6, 0.6], "qid": 2907005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000097362.jpg", "text_segment": [333, 90, 174, 2124, 1333, 130], "labels": [1701, 87, 89], "scores": [1.0, 0.6, 0.6], "qid": 973625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000267343.jpg", "text_segment": [772, 1229, 64, 41, 2371, 344, 130], "labels": [2683, 2540, 14], "scores": [1.0, 0.6, 0.6], "qid": 2673435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000391774.jpg", "text_segment": [333, 3077, 30957, 18, 41, 1993, 1307, 203, 7, 130], "labels": [1809], "scores": [1.0], "qid": 3917745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000360440.jpg", "text_segment": [25, 448, 483, 1101, 9, 41, 7, 229, 327, 83, 12, 4, 1954, 130], "labels": [957, 1640], "scores": [1.0, 0.6], "qid": 3604405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000323418.jpg", "text_segment": [333, 2540, 9, 7858, 37, 174, 130], "labels": [2591], "scores": [0.6], "qid": 3234185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000149641.jpg", "text_segment": [333, 7164, 37, 20, 41, 3663, 130], "labels": [685], "scores": [0.6], "qid": 1496415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000386187.jpg", "text_segment": [1794, 38, 1400, 73, 428, 9, 2295, 18, 1839, 36, 4, 2871, 12, 41, 1129, 130], "labels": [800, 1836, 581], "scores": [1.0, 0.6, 0.6], "qid": 3861875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000368679.jpg", "text_segment": [333, 1168, 9, 16740, 18, 41, 130], "labels": [597, 2104], "scores": [1.0, 0.6], "qid": 3686795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000424642.jpg", "text_segment": [333, 18, 41, 208, 270, 130], "labels": [2706, 1476], "scores": [1.0, 0.6], "qid": 4246425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000061660.jpg", "text_segment": [333, 18, 4, 396, 4, 1714, 9, 4064, 20, 4, 2031, 130], "labels": [1289, 2361], "scores": [1.0, 0.6], "qid": 616605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474881.jpg", "text_segment": [742, 2124, 64, 32, 236, 12, 83, 248, 130], "labels": [4, 1042, 5], "scores": [1.0, 0.6, 0.6], "qid": 4748815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000006723.jpg", "text_segment": [333, 1005, 608, 93, 1879, 134, 130], "labels": [227], "scores": [1.0], "qid": 67235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000400981.jpg", "text_segment": [333, 2858, 37, 4, 337, 672, 130], "labels": [421], "scores": [1.0], "qid": 4009815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000406253.jpg", "text_segment": [333, 1246, 9, 25112, 18, 41, 130], "labels": [1255, 1863, 864], "scores": [1.0, 0.6, 0.6], "qid": 4062535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000183114.jpg", "text_segment": [5248, 41, 2371, 2751, 4480, 54, 339, 483, 1920, 130], "labels": [715], "scores": [0.6], "qid": 1831145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000370980.jpg", "text_segment": [333, 2371, 18, 6373, 20, 41, 810, 27, 11, 2144, 12, 41, 1129, 130], "labels": [3042], "scores": [1.0], "qid": 3709805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000035160.jpg", "text_segment": [333, 428, 9, 2288, 37, 12, 4, 2644, 130], "labels": [2927, 2030], "scores": [1.0, 1.0], "qid": 351605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000056736.jpg", "text_segment": [333, 428, 9, 2486, 18, 2990, 130], "labels": [2592, 2432, 2591], "scores": [1.0, 0.6, 0.6], "qid": 567365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000100187.jpg", "text_segment": [333, 1714, 9, 4064, 18, 15, 130], "labels": [1759, 165], "scores": [1.0, 0.6], "qid": 1001875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000326798.jpg", "text_segment": [333, 18, 41, 596, 241, 17, 130], "labels": [3052, 2475, 1834], "scores": [1.0, 0.6, 0.6], "qid": 3267985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000347558.jpg", "text_segment": [333, 1681, 18, 15, 10016, 130], "labels": [545, 546, 563, 118], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3475585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000273909.jpg", "text_segment": [333, 37, 4, 2948, 270, 20, 174, 551, 130], "labels": [626], "scores": [1.0], "qid": 2739095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000320020.jpg", "text_segment": [333, 1168, 9, 1152, 18, 41, 130], "labels": [1594, 2628], "scores": [1.0, 0.6], "qid": 3200205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000337065.jpg", "text_segment": [333, 428, 9, 2343, 18, 20, 4, 3663, 130], "labels": [1502], "scores": [1.0], "qid": 3370655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000092177.jpg", "text_segment": [772, 196, 70, 23, 1105, 171, 7, 14859, 41, 428, 9, 3965, 130], "labels": [2210, 691], "scores": [1.0, 0.6], "qid": 921775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000386224.jpg", "text_segment": [333, 289, 70, 38, 1400, 174, 93, 37, 12, 130], "labels": [981, 1877, 2305, 543], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3862245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000558253.jpg", "text_segment": [333, 240, 18, 41, 556, 12, 130], "labels": [1720], "scores": [1.0], "qid": 5582536}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000558253.jpg", "text_segment": [333, 11564, 9, 7722, 37, 174, 130], "labels": [2612], "scores": [1.0], "qid": 5582535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000488198.jpg", "text_segment": [772, 18, 41, 6630, 2148, 130], "labels": [141, 1925, 2001], "scores": [1.0, 0.6, 0.6], "qid": 4881985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000027874.jpg", "text_segment": [333, 1168, 9, 1651, 18, 41, 130], "labels": [2678, 214], "scores": [1.0, 1.0], "qid": 278745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000012333.jpg", "text_segment": [1794, 38, 396, 4, 248, 131, 41, 2858, 18, 561, 130], "labels": [2168, 2326, 1331], "scores": [1.0, 0.6, 0.6], "qid": 123335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113701.jpg", "text_segment": [127, 943, 32627, 64, 147, 36, 10, 302, 16543, 13573, 396, 270, 83, 130], "labels": [2723, 2225], "scores": [1.0, 0.6], "qid": 1137015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000094563.jpg", "text_segment": [2975, 37, 174, 10214, 2560, 130], "labels": [988, 852, 2787], "scores": [1.0, 1.0, 0.6], "qid": 945635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000528311.jpg", "text_segment": [333, 18, 41, 42212, 270, 130], "labels": [1432, 436], "scores": [1.0, 0.6], "qid": 5283115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000191444.jpg", "text_segment": [333, 37, 174, 5037, 17, 130], "labels": [2578, 681, 203], "scores": [1.0, 0.6, 0.6], "qid": 1914445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000309935.jpg", "text_segment": [333, 428, 9, 1897, 18, 41, 130], "labels": [186, 1017], "scores": [1.0, 1.0], "qid": 3099355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000193863.jpg", "text_segment": [772, 164, 10373, 64, 38, 5434, 36, 672, 41, 1168, 9, 2858, 17, 46, 996, 130], "labels": [2314, 1006, 176, 813], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1938635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000150410.jpg", "text_segment": [333, 428, 9, 2416, 327, 41, 7, 229, 234, 130], "labels": [2680, 679, 2393, 2435], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1504105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000206705.jpg", "text_segment": [333, 18, 41, 383, 2926, 241, 145, 17, 130], "labels": [1831, 897], "scores": [1.0, 0.6], "qid": 2067055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000505891.jpg", "text_segment": [333, 428, 9, 2528, 18, 41, 130], "labels": [1090, 2164], "scores": [1.0, 1.0], "qid": 5058915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000174511.jpg", "text_segment": [2975, 70, 38, 277, 174, 1781, 130], "labels": [1087, 436], "scores": [1.0, 0.6], "qid": 1745115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000333556.jpg", "text_segment": [333, 13969, 1384, 37, 4, 14386, 18207, 503, 4139, 264, 1105, 137, 18789, 81, 130], "labels": [1996], "scores": [1.0], "qid": 3335565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000117237.jpg", "text_segment": [12064, 4, 4472, 233, 7, 73, 23, 9224, 7, 1839, 12, 41, 1129, 130], "labels": [658, 676, 2898], "scores": [1.0, 0.6, 0.6], "qid": 1172375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000395531.jpg", "text_segment": [333, 3730, 327, 4, 6881, 32, 27172, 7, 130], "labels": [1081], "scores": [0.6], "qid": 3955315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000546463.jpg", "text_segment": [333, 1681, 18, 41, 11646, 130], "labels": [563, 118, 547, 545], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5464635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000158602.jpg", "text_segment": [333, 18, 4, 3507, 80, 197, 130], "labels": [1195, 977], "scores": [1.0, 0.6], "qid": 1586025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134863.jpg", "text_segment": [333, 1168, 9, 680, 18, 6271, 36, 4, 1005, 130], "labels": [1622, 166, 444], "scores": [1.0, 1.0, 0.6], "qid": 1348635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000218091.jpg", "text_segment": [333, 18, 4, 1659, 396, 9, 10, 403, 15, 8858, 7, 4, 2540, 9, 4016, 2664, 12, 41, 1127, 130], "labels": [1685], "scores": [1.0], "qid": 2180915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000553667.jpg", "text_segment": [3297, 205, 1952, 11, 4, 1644, 27, 11, 516, 829, 10, 21856, 130], "labels": [3084], "scores": [1.0], "qid": 5536675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134935.jpg", "text_segment": [772, 196, 327, 23, 171, 7, 135, 174, 2478, 130], "labels": [690, 691], "scores": [1.0, 0.6], "qid": 1349355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000021217.jpg", "text_segment": [333, 18, 4, 558, 270, 15, 19, 241, 7, 135, 41, 503, 130], "labels": [2247], "scores": [0.6], "qid": 212175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000319647.jpg", "text_segment": [333, 428, 9, 2786, 18, 1839, 12, 517, 2644, 130], "labels": [1575, 1975], "scores": [1.0, 0.6], "qid": 3196475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000108315.jpg", "text_segment": [333, 1168, 9, 1152, 18, 7350, 130], "labels": [1865, 2274], "scores": [1.0, 0.6], "qid": 1083155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000174363.jpg", "text_segment": [333, 18, 4, 12495, 376, 9, 41, 4472, 130], "labels": [3049], "scores": [1.0], "qid": 1743635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000200296.jpg", "text_segment": [3297, 1889, 2129, 41, 1766, 130], "labels": [6, 5], "scores": [1.0, 0.6], "qid": 2002965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000331785.jpg", "text_segment": [14, 11, 41, 1949, 54, 43, 1949, 130], "labels": [429, 2094], "scores": [1.0, 1.0], "qid": 3317855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000231806.jpg", "text_segment": [333, 19, 56, 3965, 137, 59, 9, 130], "labels": [1099, 403, 1729, 368], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2318065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000058174.jpg", "text_segment": [772, 164, 93, 64, 41, 1682, 1789, 130], "labels": [1494, 1642], "scores": [1.0, 0.6], "qid": 581745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000468161.jpg", "text_segment": [1299, 1714, 9, 11802, 327, 4, 244, 12, 4, 1484, 3068, 34, 130], "labels": [1546], "scores": [1.0], "qid": 4681615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000105912.jpg", "text_segment": [333, 289, 27, 11, 3528, 18, 2990, 130], "labels": [2292], "scores": [1.0], "qid": 1059125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000384350.jpg", "text_segment": [2975, 37, 174, 7858, 4324, 7, 54, 35, 130], "labels": [2726, 1286], "scores": [1.0, 0.6], "qid": 3843505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000268371.jpg", "text_segment": [266, 70, 38, 142, 41, 130], "labels": [983], "scores": [1.0], "qid": 2683715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000125371.jpg", "text_segment": [333, 1168, 9, 7162, 18, 41, 130], "labels": [1750, 1017], "scores": [1.0, 0.6], "qid": 1253715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000083065.jpg", "text_segment": [333, 18, 4, 244, 11, 9181, 130], "labels": [2776], "scores": [0.6], "qid": 830655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000564129.jpg", "text_segment": [333, 2849, 19, 41, 995, 130], "labels": [168, 479], "scores": [1.0, 0.6], "qid": 5641295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000328786.jpg", "text_segment": [333, 428, 9, 1782, 37, 165, 2424, 35, 130], "labels": [1279, 320], "scores": [1.0, 0.6], "qid": 3287865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000229207.jpg", "text_segment": [333, 5915, 8625, 37, 494, 20, 11747, 4657, 130], "labels": [1292, 3081, 2309], "scores": [1.0, 0.6, 0.6], "qid": 2292075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000171524.jpg", "text_segment": [333, 18, 4, 18168, 9, 41, 6657, 270, 130], "labels": [256, 2519, 437], "scores": [1.0, 0.6, 0.6], "qid": 1715245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000119785.jpg", "text_segment": [333, 77, 9, 138, 18, 23, 130], "labels": [2636, 1284, 116, 378], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1197855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000325114.jpg", "text_segment": [5418, 38, 234, 10, 24603, 54, 10, 22366, 7, 1507, 41, 383, 130], "labels": [2251], "scores": [1.0], "qid": 3251145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000259097.jpg", "text_segment": [333, 18, 23, 33, 18, 401, 7, 1982, 130], "labels": [1476], "scores": [1.0], "qid": 2590975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000014278.jpg", "text_segment": [14, 11, 41, 10, 29023, 1129, 54, 10, 648, 1129, 130], "labels": [1739], "scores": [1.0], "qid": 142785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000072666.jpg", "text_segment": [333, 5586, 90, 38, 142, 20, 4, 2486, 5710, 12, 4, 1127, 130], "labels": [669, 199], "scores": [0.6, 0.6], "qid": 726665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000179869.jpg", "text_segment": [333, 292, 174, 6943, 32, 241, 17, 130], "labels": [8, 731], "scores": [1.0, 0.6], "qid": 1798695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000441216.jpg", "text_segment": [94, 403, 1697, 41, 5986, 44, 145, 556, 6339, 35, 131, 130], "labels": [28, 27], "scores": [1.0, 0.6], "qid": 4412165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000021088.jpg", "text_segment": [333, 3836, 37, 137, 848, 174, 2124, 1839, 130], "labels": [1745, 632], "scores": [1.0, 0.6], "qid": 210885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000411303.jpg", "text_segment": [333, 37, 51, 62, 354, 384, 130], "labels": [3078, 2581], "scores": [1.0, 1.0], "qid": 4113035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475064.jpg", "text_segment": [87, 83, 326, 18, 41, 248, 1467, 130], "labels": [3026, 221, 387], "scores": [1.0, 0.6, 0.6], "qid": 4750645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000270672.jpg", "text_segment": [333, 1168, 9, 607, 37, 174, 93, 4522, 130], "labels": [2810, 407, 1961], "scores": [1.0, 0.6, 0.6], "qid": 2706725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000570110.jpg", "text_segment": [333, 1553, 18, 15, 1005, 130], "labels": [199, 209, 1548], "scores": [1.0, 0.6, 0.6], "qid": 5701105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000498381.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [2122, 2132, 1076, 1711, 88], "scores": [0.6, 0.6, 0.6, 0.6, 0.6], "qid": 4983815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000362127.jpg", "text_segment": [5418, 38, 32, 6067, 54, 2713, 84, 457, 41, 383, 130], "labels": [1968], "scores": [1.0], "qid": 3621275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000182236.jpg", "text_segment": [333, 428, 9, 6422, 18, 15, 130], "labels": [783, 1533, 392], "scores": [1.0, 0.6, 0.6], "qid": 1822365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000213758.jpg", "text_segment": [2975, 327, 41, 2371, 1105, 483, 130], "labels": [4, 1931, 617, 6], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2137585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000183387.jpg", "text_segment": [333, 1766, 18, 41, 403, 5818, 12, 130], "labels": [426], "scores": [1.0], "qid": 1833875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000380330.jpg", "text_segment": [127, 1993, 18, 20062, 10, 4798, 20, 83, 428, 9, 863, 130], "labels": [1274, 2083, 1056], "scores": [1.0, 0.6, 0.6], "qid": 3803305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000436992.jpg", "text_segment": [333, 1168, 9, 1408, 2418, 18, 148, 7, 4, 173, 130], "labels": [5, 2109], "scores": [1.0, 0.6], "qid": 4369925}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000427521.jpg", "text_segment": [333, 1168, 9, 7185, 52, 32, 137, 24, 41, 130], "labels": [2025, 838, 747], "scores": [1.0, 0.6, 0.6], "qid": 4275215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000507274.jpg", "text_segment": [333, 90, 38, 90, 12, 41, 383, 130], "labels": [1894, 359], "scores": [1.0, 0.6], "qid": 5072745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000094607.jpg", "text_segment": [333, 2276, 18, 133, 4654, 130], "labels": [1234, 597], "scores": [1.0, 0.6], "qid": 946075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000573455.jpg", "text_segment": [772, 164, 3830, 11, 327, 41, 2371, 34, 130], "labels": [1338, 1224, 1014], "scores": [1.0, 1.0, 0.6], "qid": 5734555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000108531.jpg", "text_segment": [333, 18, 1913, 1145, 2082, 15103, 76, 1207, 41, 1262, 130], "labels": [24], "scores": [1.0], "qid": 1085315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000365386.jpg", "text_segment": [333, 90, 174, 234, 7, 9013, 2600, 51, 27, 110, 458, 130], "labels": [1250], "scores": [1.0], "qid": 3653865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000007787.jpg", "text_segment": [333, 18, 4, 145, 1138, 428, 9, 4200, 241, 12, 41, 6630, 130], "labels": [2256, 2848], "scores": [1.0, 0.6], "qid": 77875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000457394.jpg", "text_segment": [772, 150, 38, 135, 41, 6630, 130], "labels": [123, 1400, 928], "scores": [0.6, 0.6, 0.6], "qid": 4573945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000272713.jpg", "text_segment": [772, 196, 52, 165, 4201, 483, 12, 15, 28831, 130], "labels": [2042, 275], "scores": [1.0, 0.6], "qid": 2727135}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000313872.jpg", "text_segment": [333, 90, 29455, 90, 12, 4, 1954, 130], "labels": [1274, 1376, 1056], "scores": [1.0, 0.6, 0.6], "qid": 3138725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000524977.jpg", "text_segment": [333, 4392, 30957, 18, 41, 270, 130], "labels": [1005, 346], "scores": [1.0, 1.0], "qid": 5249775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000309222.jpg", "text_segment": [333, 205, 9, 4, 516, 18, 41, 4587, 241, 20, 130], "labels": [2792, 67], "scores": [1.0, 1.0], "qid": 3092225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475660.jpg", "text_segment": [2975, 18, 41, 596, 1467, 130], "labels": [1537, 305], "scores": [1.0, 0.6], "qid": 4756605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000497299.jpg", "text_segment": [14, 11, 41, 251, 10557, 54, 630, 10557, 130], "labels": [1352, 347], "scores": [1.0, 0.6], "qid": 4972995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000509014.jpg", "text_segment": [2975, 18, 10, 1158, 5217, 17, 41, 1766, 130], "labels": [3], "scores": [1.0], "qid": 5090145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000142815.jpg", "text_segment": [25, 244, 12, 4, 5216, 3068, 44, 10, 1779, 83, 18, 41, 1779, 241, 17, 130], "labels": [394, 917, 1085], "scores": [1.0, 0.6, 0.6], "qid": 1428155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000403333.jpg", "text_segment": [333, 428, 9, 503, 18, 41, 130], "labels": [834], "scores": [1.0], "qid": 4033335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000086884.jpg", "text_segment": [14, 11, 41, 3341, 237, 34967, 54, 91, 34967, 130], "labels": [2715], "scores": [0.6], "qid": 868845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000543992.jpg", "text_segment": [333, 103, 174, 9316, 32, 241, 17, 130], "labels": [362, 2578, 203], "scores": [0.6, 0.6, 0.6], "qid": 5439925}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000534428.jpg", "text_segment": [333, 27, 11, 4, 1423, 80, 12, 41, 1129, 130], "labels": [243, 1989], "scores": [1.0, 0.6], "qid": 5344285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000095520.jpg", "text_segment": [333, 18, 4, 6357, 8, 649, 2166, 241, 17, 130], "labels": [1828, 558], "scores": [1.0, 0.6], "qid": 955205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000377486.jpg", "text_segment": [12064, 4, 1168, 9, 3814, 4, 244, 18, 1697, 130], "labels": [1439, 1843, 2965], "scores": [1.0, 1.0, 0.6], "qid": 3774865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000100203.jpg", "text_segment": [772, 196, 70, 23, 171, 7, 937, 4, 4587, 9, 849, 130], "labels": [2210, 2820, 33], "scores": [1.0, 0.6, 0.6], "qid": 1002035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000308735.jpg", "text_segment": [333, 18, 10, 2394, 2773, 15, 292, 1666, 41, 503, 130], "labels": [2269, 2270], "scores": [1.0, 0.6], "qid": 3087355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000038118.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 438, 494, 2082, 133, 241, 130], "labels": [1713, 25, 23], "scores": [0.6, 0.6, 0.6], "qid": 381185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000461017.jpg", "text_segment": [333, 18, 4, 2486, 136, 7, 90, 130], "labels": [699, 119, 807], "scores": [1.0, 0.6, 0.6], "qid": 4610175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000120519.jpg", "text_segment": [333, 18, 4, 260, 132, 7, 1507, 4, 7, 229, 12, 41, 1129, 130], "labels": [1624, 620, 1140], "scores": [1.0, 0.6, 0.6], "qid": 1205195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000389869.jpg", "text_segment": [333, 4198, 37, 165, 130], "labels": [1985, 1207], "scores": [1.0, 0.6], "qid": 3898695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000383066.jpg", "text_segment": [2975, 64, 38, 142, 41, 1639, 130], "labels": [880, 2496], "scores": [1.0, 0.6], "qid": 3830665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000318080.jpg", "text_segment": [333, 1168, 9, 7894, 37, 174, 130], "labels": [1321, 2232], "scores": [1.0, 0.6], "qid": 3180805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000234230.jpg", "text_segment": [2017, 18, 1697, 1365, 2501, 12, 41, 1129, 130], "labels": [570], "scores": [1.0], "qid": 2342305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000529083.jpg", "text_segment": [333, 18, 133, 3072, 20, 130], "labels": [1975], "scores": [1.0], "qid": 5290835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000380993.jpg", "text_segment": [266, 55, 174, 1423, 2501, 2095, 11224, 130], "labels": [70, 1794], "scores": [0.6, 0.6], "qid": 3809935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000466596.jpg", "text_segment": [333, 90, 38, 90, 24, 41, 130], "labels": [1252, 1303], "scores": [1.0, 0.6], "qid": 4665965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181796.jpg", "text_segment": [772, 90, 51, 135, 4, 1168, 9, 2212, 667, 4, 2295, 3487, 130], "labels": [58, 994], "scores": [1.0, 0.6], "qid": 1817965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000417265.jpg", "text_segment": [2613, 4, 2468, 12, 41, 1129, 6067, 54, 2713, 130], "labels": [1968], "scores": [1.0], "qid": 4172655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000455290.jpg", "text_segment": [333, 428, 9, 2371, 18, 41, 130], "labels": [989], "scores": [1.0], "qid": 4552905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000255244.jpg", "text_segment": [1299, 292, 460, 1844, 7, 230, 41, 2371, 130], "labels": [1656], "scores": [0.6], "qid": 2552445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000487698.jpg", "text_segment": [2017, 8730, 826, 452, 41, 960, 4587, 130], "labels": [2738, 2354, 351], "scores": [1.0, 0.6, 0.6], "qid": 4876985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000102331.jpg", "text_segment": [333, 428, 9, 5124, 2753, 18, 41, 130], "labels": [1290, 951, 845], "scores": [1.0, 0.6, 0.6], "qid": 1023315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000559312.jpg", "text_segment": [2975, 37, 2147, 80, 174, 3889, 2560, 130], "labels": [2063, 1412, 988], "scores": [1.0, 0.6, 0.6], "qid": 5593125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000280623.jpg", "text_segment": [14, 11, 15, 10, 13257, 54, 43279, 130], "labels": [2313], "scores": [1.0], "qid": 2806235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000108679.jpg", "text_segment": [333, 18, 4, 2753, 137, 9, 130], "labels": [1926], "scores": [1.0], "qid": 1086795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000103705.jpg", "text_segment": [333, 1294, 37, 4, 8635, 12, 41, 1127, 130], "labels": [782, 923], "scores": [1.0, 0.6], "qid": 1037055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000043417.jpg", "text_segment": [333, 1168, 9, 1591, 18, 1839, 130], "labels": [362, 1533], "scores": [1.0, 0.6], "qid": 434175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181745.jpg", "text_segment": [2975, 150, 41, 2858, 37394, 130], "labels": [1286, 1285, 32], "scores": [1.0, 0.6, 0.6], "qid": 1817455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000457708.jpg", "text_segment": [333, 1553, 37, 174, 2273, 12, 130], "labels": [423, 424], "scores": [1.0, 1.0], "qid": 4577085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000038919.jpg", "text_segment": [742, 2124, 37, 236, 12, 83, 386, 9, 4, 218, 130], "labels": [541, 1877, 1663], "scores": [1.0, 0.6, 0.6], "qid": 389195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031043.jpg", "text_segment": [333, 5037, 37, 12, 41, 1168, 9, 383, 1105, 130], "labels": [302, 1485, 1645, 1009], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 310435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000407825.jpg", "text_segment": [333, 11564, 9, 2371, 18, 20, 4, 1129, 130], "labels": [670], "scores": [1.0], "qid": 4078255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000406377.jpg", "text_segment": [1299, 327, 23, 3664, 698, 3369, 130], "labels": [1955], "scores": [1.0], "qid": 4063775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000167989.jpg", "text_segment": [333, 1168, 9, 4200, 18, 133, 2045, 130], "labels": [2222, 2256], "scores": [0.6, 0.6], "qid": 1679895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000341409.jpg", "text_segment": [333, 756, 7, 32, 4, 2763, 240, 9, 4, 93, 197, 130], "labels": [2447, 1403, 882, 2946], "scores": [0.6, 0.6, 0.6, 0.6], "qid": 3414095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000386819.jpg", "text_segment": [333, 18, 41, 2418, 130], "labels": [3035, 766], "scores": [1.0, 0.6], "qid": 3868195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475906.jpg", "text_segment": [2017, 292, 293, 197, 130], "labels": [200, 1080, 1434], "scores": [1.0, 0.6, 0.6], "qid": 4759065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000430652.jpg", "text_segment": [333, 2858, 18, 41, 130], "labels": [1266, 1267], "scores": [1.0, 0.6], "qid": 4306525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134870.jpg", "text_segment": [333, 327, 4, 960, 1005, 24, 4, 522, 1853, 25708, 130], "labels": [712, 713], "scores": [1.0, 0.6], "qid": 1348705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000135748.jpg", "text_segment": [333, 11564, 9, 1152, 18, 12, 41, 1129, 130], "labels": [1826, 653], "scores": [1.0, 0.6], "qid": 1357485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000016025.jpg", "text_segment": [333, 1730, 7, 32, 1718, 20, 4, 1665, 130], "labels": [393, 1397], "scores": [0.6, 0.6], "qid": 160255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000566824.jpg", "text_segment": [333, 4167, 9, 4, 2630, 18, 13045, 197, 130], "labels": [2526, 2525, 816], "scores": [1.0, 1.0, 0.6], "qid": 5668245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000297017.jpg", "text_segment": [333, 37, 4, 19612, 4625, 12, 130], "labels": [2724, 32], "scores": [1.0, 1.0], "qid": 2970175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000025860.jpg", "text_segment": [333, 18, 41, 383, 1522, 241, 17, 130], "labels": [1831], "scores": [1.0], "qid": 258605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000089032.jpg", "text_segment": [333, 18, 4, 1423, 130], "labels": [1989, 243, 538], "scores": [1.0, 1.0, 0.6], "qid": 890325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000401653.jpg", "text_segment": [3297, 2124, 368, 37, 27168, 15081, 110, 11, 130], "labels": [257, 1766], "scores": [1.0, 1.0], "qid": 4016535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000330405.jpg", "text_segment": [333, 1188, 327, 41, 3904, 263, 80, 130], "labels": [717, 2311], "scores": [1.0, 0.6], "qid": 3304055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000545441.jpg", "text_segment": [333, 23225, 18, 41, 771, 130], "labels": [422, 423, 270], "scores": [1.0, 0.6, 0.6], "qid": 5454415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000379800.jpg", "text_segment": [772, 70, 41, 1651, 582, 991, 20, 4, 3866, 130], "labels": [1346], "scores": [1.0], "qid": 3798005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000355143.jpg", "text_segment": [333, 90, 93, 90, 197, 130], "labels": [1640], "scores": [1.0], "qid": 3551435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000280536.jpg", "text_segment": [333, 1681, 9, 7935, 37, 133, 241, 130], "labels": [1013], "scores": [0.6], "qid": 2805365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000558671.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [193, 2397, 2398, 215], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5586715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000442009.jpg", "text_segment": [333, 1714, 9, 23811, 18, 538, 4, 1523, 130], "labels": [3087], "scores": [1.0], "qid": 4420095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000392108.jpg", "text_segment": [333, 18, 4, 1152, 354, 130], "labels": [2070], "scores": [1.0], "qid": 3921085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000009105.jpg", "text_segment": [333, 18, 4, 244, 1697, 966, 39, 2797, 130], "labels": [431], "scores": [1.0], "qid": 91055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000507918.jpg", "text_segment": [87, 83, 1819, 90, 38, 277, 174, 2124, 130], "labels": [2373, 4], "scores": [1.0, 0.6], "qid": 5079185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000228749.jpg", "text_segment": [333, 18, 41, 241, 17, 130], "labels": [897, 407, 2091], "scores": [1.0, 0.6, 0.6], "qid": 2287495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000132992.jpg", "text_segment": [333, 464, 19, 41, 2310, 7, 229, 957, 84, 130], "labels": [17, 16, 18], "scores": [1.0, 1.0, 0.6], "qid": 1329925}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000444888.jpg", "text_segment": [333, 1168, 9, 596, 18, 41, 130], "labels": [2079], "scores": [1.0], "qid": 4448885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000391067.jpg", "text_segment": [772, 18, 4, 2343, 12, 41, 6630, 2148, 130], "labels": [562, 2294], "scores": [0.6, 0.6], "qid": 3910675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000424799.jpg", "text_segment": [333, 1286, 18, 145, 241, 35, 41, 2371, 130], "labels": [632], "scores": [1.0], "qid": 4247995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000053550.jpg", "text_segment": [5418, 41, 578, 32, 66, 556, 7, 1422, 10, 1129, 443, 54, 61, 24, 113, 780, 130], "labels": [1347], "scores": [1.0], "qid": 535505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000459164.jpg", "text_segment": [333, 1681, 18, 4, 649, 6422, 130], "labels": [1691], "scores": [1.0], "qid": 4591645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000019446.jpg", "text_segment": [12064, 4, 248, 1839, 12, 41, 1129, 131, 4, 208, 18, 561, 130], "labels": [1489, 1316], "scores": [1.0, 0.6], "qid": 194465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000072764.jpg", "text_segment": [14, 11, 41, 2858, 1158, 66, 1158, 12, 4, 157, 54, 4, 44615, 130], "labels": [2705], "scores": [1.0], "qid": 727645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000000661.jpg", "text_segment": [333, 48809, 11, 70, 32, 160, 20, 41, 4267, 3630, 130], "labels": [350, 2742], "scores": [1.0, 0.6], "qid": 6615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000499480.jpg", "text_segment": [3297, 9, 174, 15721, 70, 38, 2151, 102, 21517, 12, 130], "labels": [1474], "scores": [1.0], "qid": 4994805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000093553.jpg", "text_segment": [333, 2371, 4207, 12, 174, 4584, 130], "labels": [435, 874, 1348, 2412], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 935535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000037119.jpg", "text_segment": [333, 18, 12, 4, 7384, 27, 11, 5093, 130], "labels": [2565, 2564, 67], "scores": [1.0, 1.0, 0.6], "qid": 371195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000561437.jpg", "text_segment": [333, 5343, 18, 41, 403, 354, 130], "labels": [735, 1577], "scores": [0.6, 0.6], "qid": 5614375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000480075.jpg", "text_segment": [772, 70, 4, 7799, 20, 41, 1262, 147, 130], "labels": [817, 386], "scores": [1.0, 0.6], "qid": 4800755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000273637.jpg", "text_segment": [14, 11, 41, 960, 2937, 54, 24329, 7158, 130], "labels": [2119, 800], "scores": [1.0, 0.6], "qid": 2736375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000526806.jpg", "text_segment": [333, 151, 435, 215, 4849, 3870, 5127, 9, 174, 1919, 130], "labels": [819, 340], "scores": [1.0, 0.6], "qid": 5268065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000225603.jpg", "text_segment": [333, 21377, 2926, 147, 20, 41, 349, 4587, 130], "labels": [610, 609, 350], "scores": [1.0, 0.6, 0.6], "qid": 2256035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000267035.jpg", "text_segment": [333, 1168, 9, 4370, 19, 241, 17, 41, 9398, 130], "labels": [2935, 2055], "scores": [1.0, 0.6], "qid": 2670355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000272136.jpg", "text_segment": [333, 2849, 18, 41, 2486, 35, 130], "labels": [601, 965, 602, 1551], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2721365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000137362.jpg", "text_segment": [333, 37, 51, 457, 7, 444, 144, 4, 366, 130], "labels": [3065, 1187, 1186], "scores": [1.0, 0.6, 0.6], "qid": 1373625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000007386.jpg", "text_segment": [333, 1168, 9, 669, 18, 1120, 18, 41, 1127, 130], "labels": [3018], "scores": [1.0], "qid": 73865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000226959.jpg", "text_segment": [333, 18, 4, 3149, 1291, 9, 41, 470, 130], "labels": [992], "scores": [1.0], "qid": 2269595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000309530.jpg", "text_segment": [333, 1230, 9, 27334, 2405, 80, 4, 1262, 1839, 197, 130], "labels": [2648, 527], "scores": [1.0, 0.6], "qid": 3095305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000127576.jpg", "text_segment": [333, 11564, 9, 2771, 18, 41, 130], "labels": [1334, 437, 2814, 820], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1275765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000496525.jpg", "text_segment": [333, 37, 4, 522, 2785, 1781, 1467, 20, 673, 2263, 9, 4, 1129, 130], "labels": [3070], "scores": [1.0], "qid": 4965255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000139740.jpg", "text_segment": [333, 37, 174, 1919, 7650, 20, 130], "labels": [1486, 445], "scores": [1.0, 1.0], "qid": 1397405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000377091.jpg", "text_segment": [266, 70, 41, 3341, 32, 5919, 7929, 130], "labels": [378, 597, 2091], "scores": [1.0, 0.6, 0.6], "qid": 3770915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000436323.jpg", "text_segment": [772, 37, 302, 1132, 7, 2349, 41, 3856, 130], "labels": [2555], "scores": [1.0], "qid": 4363235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000207059.jpg", "text_segment": [87, 41, 1677, 83, 2314, 7185, 18, 200, 1289, 200, 1342, 8, 79, 173, 130], "labels": [1097], "scores": [1.0], "qid": 2070595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000075923.jpg", "text_segment": [772, 164, 8590, 327, 41, 2753, 34, 130], "labels": [182, 995, 1338, 1224], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 759235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000016161.jpg", "text_segment": [333, 2010, 3461, 90, 174, 4079, 4139, 130], "labels": [512, 1183], "scores": [1.0, 1.0], "qid": 161615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000167854.jpg", "text_segment": [333, 1714, 9, 2513, 18, 41, 470, 1697, 130], "labels": [2604, 1276, 1160], "scores": [1.0, 0.6, 0.6], "qid": 1678545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475990.jpg", "text_segment": [772, 90, 732, 135, 4, 2232, 15, 732, 142, 12, 41, 1127, 130], "labels": [2001, 141, 1043], "scores": [1.0, 0.6, 0.6], "qid": 4759905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000483330.jpg", "text_segment": [2975, 64, 38, 277, 41, 1600, 13290, 130], "labels": [2508], "scores": [1.0], "qid": 4833305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000055429.jpg", "text_segment": [14, 11, 15, 2771, 21893, 3003, 54, 24480, 130], "labels": [2742, 2715], "scores": [0.6, 0.6], "qid": 554295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000104701.jpg", "text_segment": [333, 18, 41, 2371, 27, 11, 4270, 12, 4, 2660, 130], "labels": [1982, 2174, 1701], "scores": [1.0, 0.6, 0.6], "qid": 1047015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000470113.jpg", "text_segment": [333, 3609, 37, 165, 20592, 137, 9, 130], "labels": [320, 450], "scores": [1.0, 0.6], "qid": 4701135}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000356878.jpg", "text_segment": [14, 11, 41, 615, 475, 248, 179, 4, 138, 54, 253, 130], "labels": [115, 116], "scores": [1.0, 0.6], "qid": 3568785}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000046859.jpg", "text_segment": [3297, 1252, 37, 174, 2896, 551, 12, 130], "labels": [1031, 1733], "scores": [1.0, 1.0], "qid": 468595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000303006.jpg", "text_segment": [333, 1637, 103, 171, 248, 12, 41, 383, 130], "labels": [2747, 225], "scores": [1.0, 0.6], "qid": 3030065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000315620.jpg", "text_segment": [333, 1168, 9, 6120, 327, 41, 6300, 6284, 7, 130], "labels": [2926, 151], "scores": [1.0, 0.6], "qid": 3156205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000262161.jpg", "text_segment": [333, 104, 19, 41, 3299, 8882, 1787, 130], "labels": [576, 2900], "scores": [1.0, 0.6], "qid": 2621615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000439007.jpg", "text_segment": [333, 20737, 44, 12343, 4, 10966, 9, 41, 2371, 130], "labels": [1055], "scores": [1.0], "qid": 4390075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000132328.jpg", "text_segment": [350, 4, 239, 9, 73, 1041, 4031, 13284, 3005, 18324, 2906, 327, 41, 1766, 4263, 130], "labels": [451, 2864], "scores": [1.0, 0.6], "qid": 1323285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000314495.jpg", "text_segment": [2613, 174, 61127, 54, 27168, 15081, 12141, 2124, 130], "labels": [891], "scores": [1.0], "qid": 3144955}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000102594.jpg", "text_segment": [333, 2276, 18, 23, 130], "labels": [1234], "scores": [1.0], "qid": 1025945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000114375.jpg", "text_segment": [1794, 38, 1400, 4, 248, 131, 41, 2858, 18, 561, 130], "labels": [617, 1286], "scores": [1.0, 0.6], "qid": 1143755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000452684.jpg", "text_segment": [333, 1168, 9, 23159, 90, 38, 101, 35, 4, 4079, 130], "labels": [919, 2428], "scores": [1.0, 1.0], "qid": 4526845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000365035.jpg", "text_segment": [11637, 35, 1662, 83, 1009, 2529, 64, 41, 1779, 4269, 130], "labels": [394], "scores": [1.0], "qid": 3650355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000371330.jpg", "text_segment": [333, 1384, 292, 4, 960, 1276, 12, 4, 39095, 32, 137, 9, 130], "labels": [2095, 2566, 2567], "scores": [1.0, 0.6, 0.6], "qid": 3713305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000206831.jpg", "text_segment": [333, 11564, 9, 1152, 18, 41, 130], "labels": [1867, 252], "scores": [1.0, 0.6], "qid": 2068315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000330122.jpg", "text_segment": [333, 6414, 37, 174, 337, 1307, 12, 130], "labels": [500, 2229], "scores": [0.6, 0.6], "qid": 3301225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000022479.jpg", "text_segment": [333, 18, 41, 444, 270, 130], "labels": [736, 735], "scores": [1.0, 0.6], "qid": 224795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000339120.jpg", "text_segment": [1794, 38, 1400, 4, 248, 396, 131, 51, 37, 672, 4, 208, 130], "labels": [1652, 1651], "scores": [1.0, 0.6], "qid": 3391205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000556758.jpg", "text_segment": [333, 428, 9, 10966, 18, 1839, 130], "labels": [1236, 2880], "scores": [1.0, 0.6], "qid": 5567585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000321476.jpg", "text_segment": [1794, 38, 1400, 4, 1384, 241, 7, 3437, 41, 3434, 130], "labels": [319], "scores": [1.0], "qid": 3214765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000219928.jpg", "text_segment": [333, 18, 4, 2352, 9, 4, 3299, 15958, 20, 174, 93, 11, 27, 29398, 130], "labels": [643, 228, 385], "scores": [0.6, 0.6, 0.6], "qid": 2199285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000145439.jpg", "text_segment": [333, 2343, 90, 1583, 48389, 7894, 80, 7, 1982, 28, 51, 5752, 22089, 130], "labels": [1502], "scores": [1.0], "qid": 1454395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000430788.jpg", "text_segment": [14, 11, 4, 2771, 2135, 10, 5777, 524, 54, 10, 1866, 524, 130], "labels": [1869], "scores": [1.0], "qid": 4307885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000183319.jpg", "text_segment": [1299, 18, 41, 21906, 12, 130], "labels": [877, 2574], "scores": [1.0, 0.6], "qid": 1833195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000550432.jpg", "text_segment": [333, 428, 9, 863, 18, 15, 130], "labels": [2133, 13, 1648], "scores": [1.0, 1.0, 0.6], "qid": 5504325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000460732.jpg", "text_segment": [12064, 4, 248, 131, 4, 13716, 18, 1307, 12, 41, 1129, 130], "labels": [2707, 2176, 240], "scores": [1.0, 1.0, 0.6], "qid": 4607325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000414852.jpg", "text_segment": [1794, 38, 1400, 4, 1168, 9, 26102, 1839, 12, 41, 1129, 130], "labels": [1308, 248, 247], "scores": [1.0, 1.0, 0.6], "qid": 4148525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031993.jpg", "text_segment": [333, 37, 4, 17615, 20, 41, 2371, 241, 17, 130], "labels": [1538, 2662, 1250], "scores": [1.0, 0.6, 0.6], "qid": 319935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000553549.jpg", "text_segment": [12064, 4, 248, 1839, 12, 41, 1129, 131, 4, 3326, 18, 1606, 130], "labels": [1235, 1236], "scores": [1.0, 0.6], "qid": 5535495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000247764.jpg", "text_segment": [333, 1819, 18, 260, 17, 41, 1168, 9, 1897, 130], "labels": [1295, 1384, 2372], "scores": [1.0, 0.6, 0.6], "qid": 2477645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000511572.jpg", "text_segment": [333, 18, 4, 1600, 37898, 13290, 15, 999, 80, 195, 15839, 12, 41, 6630, 130], "labels": [1260, 1715], "scores": [1.0, 0.6], "qid": 5115725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000203416.jpg", "text_segment": [333, 37, 4, 5037, 12, 41, 470, 27, 11, 438, 241, 17, 130], "labels": [897], "scores": [1.0], "qid": 2034165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000410880.jpg", "text_segment": [127, 3631, 3367, 83, 428, 9, 448, 3326, 130], "labels": [2232, 2700, 2626], "scores": [1.0, 1.0, 0.6], "qid": 4108805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000313562.jpg", "text_segment": [333, 1168, 9, 301, 327, 4, 470, 159, 12, 130], "labels": [1946, 44, 2469, 2579], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3135625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000228551.jpg", "text_segment": [333, 64, 38, 90, 24, 4, 1781, 7350, 130], "labels": [1940], "scores": [1.0], "qid": 2285515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000410587.jpg", "text_segment": [772, 224, 49, 124, 41, 18, 4, 845, 1059, 130], "labels": [2128, 988, 860], "scores": [0.6, 0.6, 0.6], "qid": 4105875}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000358149.jpg", "text_segment": [333, 2858, 18, 41, 130], "labels": [1262, 613], "scores": [1.0, 0.6], "qid": 3581495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000238385.jpg", "text_segment": [333, 18, 41, 729, 13475, 9, 130], "labels": [1145, 1308], "scores": [0.6, 0.6], "qid": 2383855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000147545.jpg", "text_segment": [333, 1168, 9, 2783, 18, 4, 1059, 542, 130], "labels": [1573, 2324], "scores": [1.0, 0.6], "qid": 1475455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000242523.jpg", "text_segment": [333, 18, 4, 596, 137, 9, 130], "labels": [942], "scores": [1.0], "qid": 2425235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000000042.jpg", "text_segment": [127, 12527, 18, 78, 270, 10, 7400, 83, 130], "labels": [559, 517], "scores": [1.0, 0.6], "qid": 425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181962.jpg", "text_segment": [333, 1766, 18, 475, 248, 197, 130], "labels": [2239, 2535, 590], "scores": [1.0, 0.6, 0.6], "qid": 1819625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000120164.jpg", "text_segment": [333, 327, 41, 3856, 90, 130], "labels": [1673, 2001], "scores": [1.0, 0.6], "qid": 1201645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000525371.jpg", "text_segment": [333, 428, 9, 1262, 18, 806, 4, 596, 130], "labels": [527, 2648], "scores": [1.0, 0.6], "qid": 5253715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000467593.jpg", "text_segment": [333, 428, 9, 4472, 18, 7350, 197, 130], "labels": [233, 1632], "scores": [1.0, 0.6], "qid": 4675935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000434700.jpg", "text_segment": [12064, 4, 1384, 35, 73, 41, 5696, 18, 137, 9, 130], "labels": [1022, 319], "scores": [1.0, 0.6], "qid": 4347005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000145873.jpg", "text_segment": [333, 18, 569, 7, 234, 41, 1262, 130], "labels": [815, 1193, 2680], "scores": [1.0, 0.6, 0.6], "qid": 1458735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000513098.jpg", "text_segment": [333, 6071, 37, 4, 7858, 2990, 12, 130], "labels": [2253], "scores": [1.0], "qid": 5130985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000143098.jpg", "text_segment": [333, 1330, 18, 41, 779, 1606, 20, 130], "labels": [98, 680], "scores": [1.0, 1.0], "qid": 1430985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000008170.jpg", "text_segment": [333, 428, 9, 11646, 90, 51, 34, 130], "labels": [2184, 2393], "scores": [1.0, 0.6], "qid": 81705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000514468.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 863, 33, 18, 20, 130], "labels": [1648, 13, 2133], "scores": [1.0, 1.0, 0.6], "qid": 5144685}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000147498.jpg", "text_segment": [333, 18, 4, 396, 17, 10, 5878, 9, 174, 2124, 130], "labels": [2727], "scores": [1.0], "qid": 1474985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000502090.jpg", "text_segment": [2975, 37, 174, 29104, 11, 130], "labels": [984, 617, 2176], "scores": [1.0, 0.6, 0.6], "qid": 5020905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000396496.jpg", "text_segment": [333, 1857, 161, 34, 4620, 1565, 130], "labels": [1174], "scores": [1.0], "qid": 3964965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000405188.jpg", "text_segment": [333, 18, 41, 4392, 1779, 270, 130], "labels": [203], "scores": [1.0], "qid": 4051885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000024386.jpg", "text_segment": [8043, 10578, 9, 4, 83, 130], "labels": [1590], "scores": [1.0], "qid": 243865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000226119.jpg", "text_segment": [333, 428, 9, 482, 18, 41, 130], "labels": [36, 35], "scores": [1.0, 1.0], "qid": 2261195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000490338.jpg", "text_segment": [333, 326, 18, 1839, 130], "labels": [1359], "scores": [1.0], "qid": 4903385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000489475.jpg", "text_segment": [333, 18, 4, 2124, 1408, 21031, 130], "labels": [2174, 1952], "scores": [1.0, 1.0], "qid": 4894755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000325331.jpg", "text_segment": [333, 18, 4, 4008, 396, 9, 4, 2371, 3256, 197, 130], "labels": [383, 384, 1374], "scores": [1.0, 0.6, 0.6], "qid": 3253315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000252573.jpg", "text_segment": [333, 2371, 327, 4, 2528, 3632, 41, 1779, 18, 130], "labels": [2311, 455], "scores": [1.0, 0.6], "qid": 2525735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000334614.jpg", "text_segment": [333, 16102, 174, 2124, 35, 6712, 151, 130], "labels": [484, 948], "scores": [0.6, 0.6], "qid": 3346145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000412364.jpg", "text_segment": [2017, 2782, 4, 589, 974, 61, 1026, 1123, 78, 5147, 41, 1677, 130], "labels": [894], "scores": [0.6], "qid": 4123645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000111117.jpg", "text_segment": [12064, 4, 233, 7, 73, 41, 4472, 9224, 7, 1839, 12, 41, 1129, 130], "labels": [2932, 625, 657], "scores": [1.0, 0.6, 0.6], "qid": 1111175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000500420.jpg", "text_segment": [25, 196, 12250, 205, 9, 41, 2990, 3856, 18, 270, 10, 83, 130], "labels": [2599], "scores": [1.0], "qid": 5004205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000547493.jpg", "text_segment": [333, 1168, 9, 1501, 8818, 18, 4, 503, 20, 130], "labels": [1906], "scores": [1.0], "qid": 5474935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000278977.jpg", "text_segment": [333, 1168, 9, 1782, 18, 41, 984, 237, 130], "labels": [449, 320, 1696], "scores": [1.0, 1.0, 0.6], "qid": 2789775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000213280.jpg", "text_segment": [333, 1766, 701, 54, 18, 58, 7, 928, 130], "labels": [2940, 8], "scores": [1.0, 0.6], "qid": 2132805}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000118741.jpg", "text_segment": [772, 251, 64, 41, 29104, 2702, 130], "labels": [2959, 1199, 1230], "scores": [1.0, 0.6, 0.6], "qid": 1187415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000571550.jpg", "text_segment": [333, 428, 9, 1897, 18, 368, 12, 41, 1129, 130], "labels": [149, 1750], "scores": [1.0, 1.0], "qid": 5715505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000236884.jpg", "text_segment": [3297, 555, 1180, 18, 133, 16908, 20, 4, 578, 27, 11, 3068, 130], "labels": [2113], "scores": [1.0], "qid": 2368845}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000460129.jpg", "text_segment": [333, 9561, 18, 4, 244, 12, 4, 1129, 130], "labels": [1439, 2807], "scores": [0.6, 0.6], "qid": 4601295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000130516.jpg", "text_segment": [333, 18, 41, 1168, 9, 190, 26001, 2031, 241, 17, 130], "labels": [1077, 3022], "scores": [1.0, 0.6], "qid": 1305165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000445433.jpg", "text_segment": [127, 30957, 18, 241, 17, 83, 130], "labels": [2852, 2117], "scores": [0.6, 0.6], "qid": 4454335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000500200.jpg", "text_segment": [333, 428, 9, 7935, 37, 4, 4201, 12, 130], "labels": [121], "scores": [1.0], "qid": 5002005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000388014.jpg", "text_segment": [333, 428, 9, 4198, 37, 174, 130], "labels": [1015, 1004], "scores": [1.0, 0.6], "qid": 3880145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000240417.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [311, 2132, 863], "scores": [1.0, 0.6, 0.6], "qid": 2404175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000414576.jpg", "text_segment": [2017, 327, 33, 293, 17, 130], "labels": [2860], "scores": [0.6], "qid": 4145765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000246064.jpg", "text_segment": [333, 11564, 9, 12926, 37, 174, 2124, 130], "labels": [1591, 1979], "scores": [1.0, 0.6], "qid": 2460645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000041990.jpg", "text_segment": [333, 1681, 18, 4, 337, 27, 11, 13257, 12, 4, 1064, 130], "labels": [1646, 1093, 3011], "scores": [1.0, 0.6, 0.6], "qid": 419905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000467197.jpg", "text_segment": [333, 428, 9, 2119, 18, 4, 2528, 1307, 134, 20, 130], "labels": [847], "scores": [1.0], "qid": 4671975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000124759.jpg", "text_segment": [3297, 289, 292, 4, 5932, 20, 4, 342, 243, 34, 13422, 12, 130], "labels": [104, 364, 1081], "scores": [1.0, 0.6, 0.6], "qid": 1247595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000034915.jpg", "text_segment": [2613, 4, 6121, 12, 4, 10016, 1522, 2010, 54, 17513, 130], "labels": [2644, 2666], "scores": [1.0, 0.6], "qid": 349155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000100083.jpg", "text_segment": [333, 4426, 3371, 19, 241, 7, 3437, 217, 41, 9398, 8, 99, 349, 6630, 130], "labels": [1172, 2919], "scores": [1.0, 0.6], "qid": 1000835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000437423.jpg", "text_segment": [333, 18, 4, 3359, 1076, 76, 4324, 12, 10, 1262, 8, 1243, 10, 960, 1645, 680, 130], "labels": [218, 219], "scores": [1.0, 1.0], "qid": 4374235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000377882.jpg", "text_segment": [333, 3739, 9, 366, 4774, 37, 174, 130], "labels": [2315, 1220, 2456], "scores": [1.0, 1.0, 0.6], "qid": 3778825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000528604.jpg", "text_segment": [71, 999, 80, 41, 810, 79, 176, 59, 9, 83, 130], "labels": [359], "scores": [1.0], "qid": 5286045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000335585.jpg", "text_segment": [333, 18, 4, 3152, 686, 12, 4, 157, 7, 7076, 10, 3711, 17, 15, 1262, 130], "labels": [2800, 307, 2, 182], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3355855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000333365.jpg", "text_segment": [333, 1168, 9, 9952, 206, 125, 3870, 5722, 18, 7350, 197, 130], "labels": [2587, 526], "scores": [1.0, 0.6], "qid": 3333655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000492051.jpg", "text_segment": [333, 1168, 9, 1332, 18, 12, 41, 205, 9, 4, 336, 130], "labels": [3027], "scores": [1.0], "qid": 4920515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000077345.jpg", "text_segment": [3297, 428, 9, 1782, 18, 1839, 12, 41, 1129, 130], "labels": [2493, 133, 320], "scores": [1.0, 0.6, 0.6], "qid": 773455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000183949.jpg", "text_segment": [333, 292, 41, 2371, 80, 7, 1333, 130], "labels": [2149, 88], "scores": [1.0, 0.6], "qid": 1839495}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000114420.jpg", "text_segment": [14, 11, 4, 4472, 12, 4, 1129, 10, 55061, 54, 27168, 15081, 110, 130], "labels": [2917], "scores": [1.0], "qid": 1144205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000308441.jpg", "text_segment": [333, 700, 18, 41, 5915, 779, 12, 130], "labels": [1669], "scores": [0.6], "qid": 3084415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000301991.jpg", "text_segment": [1299, 18, 65, 5740, 130], "labels": [92, 1403, 882], "scores": [0.6, 0.6, 0.6], "qid": 3019915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000049473.jpg", "text_segment": [333, 292, 4, 1495, 181, 130], "labels": [2933], "scores": [0.6], "qid": 494735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000158798.jpg", "text_segment": [333, 558, 18, 241, 7, 135, 15, 11150, 1600, 130], "labels": [348, 440], "scores": [1.0, 0.6], "qid": 1587985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000295269.jpg", "text_segment": [772, 18, 41, 4587, 2148, 130], "labels": [2294, 2001], "scores": [1.0, 0.6], "qid": 2952695}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000190700.jpg", "text_segment": [333, 18, 4, 1681, 9, 3326, 130], "labels": [3055, 1915, 1917, 2033], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1907005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000108129.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 29522, 1782, 130], "labels": [3080], "scores": [1.0], "qid": 1081295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000307658.jpg", "text_segment": [333, 1168, 9, 3326, 18, 41, 130], "labels": [2232, 1321], "scores": [1.0, 1.0], "qid": 3076585}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000226171.jpg", "text_segment": [3297, 9, 4, 97, 5932, 60327, 11, 20, 4, 3791, 70, 32, 278, 17, 1373, 10, 1289, 2212, 130], "labels": [1390, 1389, 1388], "scores": [1.0, 0.6, 0.6], "qid": 2261715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000432796.jpg", "text_segment": [772, 164, 4480, 90, 4, 366, 56850, 12, 41, 1129, 2751, 130], "labels": [1014, 1338, 1339], "scores": [1.0, 0.6, 0.6], "qid": 4327965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000096755.jpg", "text_segment": [772, 18, 41, 503, 8169, 130], "labels": [1636, 1668, 2294], "scores": [1.0, 0.6, 0.6], "qid": 967555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000018841.jpg", "text_segment": [2975, 103, 38, 1483, 46, 4587, 80, 41, 130], "labels": [2873], "scores": [1.0], "qid": 188415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000159900.jpg", "text_segment": [127, 1365, 13356, 390, 27, 31, 231, 3550, 47, 23, 327, 764, 134, 20, 83, 130], "labels": [1508, 1195, 1276], "scores": [1.0, 0.6, 0.6], "qid": 1599005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409241.jpg", "text_segment": [333, 18, 4, 2418, 91, 4, 294, 9, 4, 1651, 130], "labels": [1975], "scores": [1.0], "qid": 4092415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000347390.jpg", "text_segment": [25, 6573, 12, 41, 383, 37, 137, 35, 83, 1384, 130], "labels": [319, 2842], "scores": [1.0, 0.6], "qid": 3473905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000257060.jpg", "text_segment": [772, 2010, 18, 41, 130], "labels": [482, 1212, 1666, 2101], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2570605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000051157.jpg", "text_segment": [87, 73, 240, 18, 23, 145, 1138, 90, 41, 2858, 130], "labels": [1286, 1285], "scores": [1.0, 1.0], "qid": 511575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000389843.jpg", "text_segment": [333, 37, 4, 6848, 137, 9, 130], "labels": [1013, 319], "scores": [0.6, 0.6], "qid": 3898435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000305622.jpg", "text_segment": [333, 77, 9, 138, 18, 23, 130], "labels": [1622, 1282, 1283], "scores": [1.0, 0.6, 0.6], "qid": 3056225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000435823.jpg", "text_segment": [333, 2253, 18, 41, 130], "labels": [1081, 69, 1156], "scores": [1.0, 0.6, 0.6], "qid": 4358235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000088021.jpg", "text_segment": [333, 1168, 9, 380, 18, 41, 130], "labels": [3066], "scores": [0.6], "qid": 880215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000361153.jpg", "text_segment": [333, 428, 9, 14594, 6739, 18, 82, 130], "labels": [1470], "scores": [0.6], "qid": 3611535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000293505.jpg", "text_segment": [14, 11, 41, 10, 22974, 54, 24743, 130], "labels": [1144, 323], "scores": [1.0, 0.6], "qid": 2935055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000093611.jpg", "text_segment": [1299, 18, 41, 1129, 19426, 130], "labels": [538, 1989], "scores": [1.0, 0.6], "qid": 936115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000467675.jpg", "text_segment": [266, 10, 2528, 608, 10, 387, 80, 4, 61, 12, 41, 1677, 83, 24708, 1766, 37, 51, 43, 389, 567, 7, 130], "labels": [359, 360], "scores": [1.0, 0.6], "qid": 4676755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000412916.jpg", "text_segment": [333, 1659, 212, 44, 295, 4, 145, 8625, 12, 4, 2858, 133, 561, 197, 130], "labels": [1418, 872, 2860], "scores": [1.0, 0.6, 0.6], "qid": 4129165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000240731.jpg", "text_segment": [333, 428, 9, 4370, 125, 19, 241, 130], "labels": [1520, 369, 368], "scores": [1.0, 0.6, 0.6], "qid": 2407315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000344100.jpg", "text_segment": [772, 18, 41, 12405, 137, 130], "labels": [2643], "scores": [0.6], "qid": 3441005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000488832.jpg", "text_segment": [2975, 64, 41, 960, 13290, 32, 236, 130], "labels": [2508], "scores": [1.0], "qid": 4888325}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000454102.jpg", "text_segment": [25, 29104, 12, 4, 725, 10751, 121, 9, 83, 9959, 6439, 130], "labels": [792, 333, 975], "scores": [1.0, 1.0, 0.6], "qid": 4541025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000052282.jpg", "text_segment": [333, 428, 9, 1591, 4239, 18, 4, 61, 12, 1677, 130], "labels": [2650, 1533, 759], "scores": [1.0, 0.6, 0.6], "qid": 522825}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000364205.jpg", "text_segment": [2975, 70, 38, 277, 174, 130], "labels": [2801, 1904], "scores": [1.0, 0.6], "qid": 3642055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000387855.jpg", "text_segment": [12064, 4, 1246, 9, 1651, 1839, 12, 41, 1129, 130], "labels": [1419, 340, 1146], "scores": [1.0, 0.6, 0.6], "qid": 3878555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000535748.jpg", "text_segment": [333, 37, 174, 11301, 270, 130], "labels": [1099], "scores": [1.0], "qid": 5357485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000264124.jpg", "text_segment": [266, 19, 41, 4587, 89, 11224, 130], "labels": [1641, 2521, 2522], "scores": [1.0, 0.6, 0.6], "qid": 2641245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000153973.jpg", "text_segment": [772, 164, 9, 4, 2124, 37, 2047, 130], "labels": [1014, 1338], "scores": [1.0, 0.6], "qid": 1539735}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000452866.jpg", "text_segment": [2613, 51, 5672, 46, 3577, 54, 50, 2035, 130], "labels": [93], "scores": [1.0], "qid": 4528665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000090040.jpg", "text_segment": [333, 1168, 9, 2610, 18, 6271, 130], "labels": [1524, 2388, 330], "scores": [1.0, 0.6, 0.6], "qid": 900405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000501385.jpg", "text_segment": [772, 196, 18, 41, 46, 8932, 27, 11, 48328, 665, 130], "labels": [690], "scores": [0.6], "qid": 5013855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000050975.jpg", "text_segment": [333, 1168, 9, 208, 18, 41, 130], "labels": [962], "scores": [1.0], "qid": 509755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000333808.jpg", "text_segment": [12064, 4, 4472, 130], "labels": [657, 1301, 915], "scores": [1.0, 0.6, 0.6], "qid": 3338085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000211675.jpg", "text_segment": [333, 18, 4, 11643, 17, 130], "labels": [1828], "scores": [1.0], "qid": 2116755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000441535.jpg", "text_segment": [333, 37, 4, 318, 9689, 11, 137, 9, 130], "labels": [1013, 2566, 2778], "scores": [1.0, 0.6, 0.6], "qid": 4415355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000170442.jpg", "text_segment": [333, 3589, 18, 4, 943, 21177, 130], "labels": [408, 757, 758], "scores": [0.6, 0.6, 0.6], "qid": 1704425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000057072.jpg", "text_segment": [333, 18, 4, 1168, 9, 4509, 15, 19, 241, 7, 764, 41, 4370, 130], "labels": [698], "scores": [1.0], "qid": 570725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000431306.jpg", "text_segment": [333, 428, 9, 2958, 37, 91, 174, 16300, 130], "labels": [3032, 1181, 2067], "scores": [1.0, 0.6, 0.6], "qid": 4313065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000276720.jpg", "text_segment": [333, 326, 103, 41, 32, 130], "labels": [638, 1394], "scores": [1.0, 1.0], "qid": 2767205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000548164.jpg", "text_segment": [333, 18, 4, 6874, 3591, 9, 41, 386, 3262, 7, 28, 130], "labels": [230, 2798], "scores": [1.0, 0.6], "qid": 5481645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000331366.jpg", "text_segment": [333, 1168, 9, 2753, 18, 41, 130], "labels": [1490], "scores": [0.6], "qid": 3313665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000084474.jpg", "text_segment": [333, 27, 11, 4, 396, 17, 4, 97, 214, 4, 2486, 18, 7650, 20, 130], "labels": [32], "scores": [0.6], "qid": 844745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000571944.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [87, 1701, 89], "scores": [1.0, 1.0, 0.6], "qid": 5719445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000061418.jpg", "text_segment": [772, 298, 18, 4, 2136, 15, 174, 93, 37, 20, 130], "labels": [2983, 138, 1544], "scores": [1.0, 0.6, 0.6], "qid": 614185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000563816.jpg", "text_segment": [772, 90, 38, 135, 41, 6630, 130], "labels": [2001, 2002, 346, 141], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5638165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000486026.jpg", "text_segment": [333, 2718, 618, 4079, 18, 41, 1307, 20, 130], "labels": [391], "scores": [1.0], "qid": 4860265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000027285.jpg", "text_segment": [333, 18, 327, 4, 769, 237, 4, 8734, 17, 90, 130], "labels": [2001, 160, 141], "scores": [0.6, 0.6, 0.6], "qid": 272855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000347630.jpg", "text_segment": [772, 196, 90, 174, 2124, 483, 130], "labels": [1223, 2409], "scores": [1.0, 0.6], "qid": 3476305}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000037675.jpg", "text_segment": [333, 289, 18, 41, 130], "labels": [69, 1614, 2326, 2652], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 376755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000227736.jpg", "text_segment": [772, 64, 38, 455, 83, 4, 246, 292, 32, 12, 41, 1899, 130], "labels": [2745], "scores": [1.0], "qid": 2277365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000079588.jpg", "text_segment": [14, 11, 41, 10, 299, 54, 931, 262, 130], "labels": [1460], "scores": [1.0], "qid": 795885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000184485.jpg", "text_segment": [3297, 289, 37, 174, 42004, 35, 130], "labels": [2327], "scores": [1.0], "qid": 1844855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000051089.jpg", "text_segment": [1299, 292, 49, 2088, 15, 82, 37, 10, 275, 164, 18381, 709, 197, 130], "labels": [229, 3071], "scores": [1.0, 0.6], "qid": 510895}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000021864.jpg", "text_segment": [333, 1168, 9, 7255, 37, 12, 4, 3188, 130], "labels": [1268, 1270, 1269], "scores": [1.0, 0.6, 0.6], "qid": 218645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000350966.jpg", "text_segment": [3297, 48389, 326, 18, 435, 17, 323, 41, 4121, 388, 130], "labels": [1310, 1122], "scores": [1.0, 0.6], "qid": 3509665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000379104.jpg", "text_segment": [333, 18, 4, 2352, 9, 1835, 174, 2124, 130], "labels": [1511, 1335, 632], "scores": [1.0, 0.6, 0.6], "qid": 3791045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409116.jpg", "text_segment": [1299, 292, 460, 201, 7, 32, 12, 4, 248, 9, 41, 1127, 130], "labels": [1444], "scores": [1.0], "qid": 4091165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000284279.jpg", "text_segment": [333, 4472, 18, 29, 4, 21009, 130], "labels": [658, 1973, 675], "scores": [1.0, 0.6, 0.6], "qid": 2842795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000516805.jpg", "text_segment": [333, 2660, 20881, 292, 19308, 41, 607, 130], "labels": [1098], "scores": [1.0], "qid": 5168055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000155546.jpg", "text_segment": [333, 428, 9, 13906, 18, 3538, 20, 4, 1332, 130], "labels": [1280, 2649], "scores": [1.0, 0.6], "qid": 1555465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000069553.jpg", "text_segment": [2975, 64, 38, 1316, 80, 41, 130], "labels": [220, 881, 1972, 1081], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 695535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000301753.jpg", "text_segment": [333, 90, 51, 399, 623, 162, 4, 7291, 20, 10, 625, 472, 130], "labels": [1708, 1061], "scores": [1.0, 1.0], "qid": 3017535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000188862.jpg", "text_segment": [333, 3155, 37, 174, 537, 12, 130], "labels": [2054, 144], "scores": [1.0, 0.6], "qid": 1888625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000136740.jpg", "text_segment": [2975, 37, 174, 2124, 236, 130], "labels": [540, 1411, 1412], "scores": [1.0, 0.6, 0.6], "qid": 1367405}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000096988.jpg", "text_segment": [333, 327, 41, 1651, 1789, 130], "labels": [213, 1067], "scores": [1.0, 0.6], "qid": 969885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000030270.jpg", "text_segment": [333, 18, 41, 386, 241, 17, 130], "labels": [360, 500], "scores": [1.0, 0.6], "qid": 302705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000541965.jpg", "text_segment": [333, 1168, 9, 2212, 103, 32, 12, 4, 6810, 130], "labels": [924, 925, 508], "scores": [1.0, 0.6, 0.6], "qid": 5419655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000305050.jpg", "text_segment": [25, 244, 1697, 10, 3814, 83, 18, 4, 396, 9, 15, 3814, 130], "labels": [3031, 1439, 2965], "scores": [1.0, 0.6, 0.6], "qid": 3050505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000362941.jpg", "text_segment": [2975, 70, 38, 277, 41, 2371, 12, 4, 2660, 130], "labels": [1042, 240], "scores": [1.0, 0.6], "qid": 3629415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000555772.jpg", "text_segment": [2975, 70, 38, 142, 41, 1168, 9, 1005, 130], "labels": [1721, 650], "scores": [0.6, 0.6], "qid": 5557725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000327225.jpg", "text_segment": [333, 18, 41, 10, 3467, 6442, 9, 130], "labels": [231, 2950], "scores": [1.0, 0.6], "qid": 3272255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000505911.jpg", "text_segment": [3297, 9, 174, 7164, 18, 4, 4482, 12, 14733, 2096, 130], "labels": [1503, 2304, 685], "scores": [1.0, 0.6, 0.6], "qid": 5059115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000472924.jpg", "text_segment": [333, 503, 327, 4, 2371, 1333, 130], "labels": [2397, 193], "scores": [1.0, 0.6], "qid": 4729245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000080698.jpg", "text_segment": [333, 18, 4, 700, 396, 9, 4, 779, 47439, 134, 130], "labels": [571], "scores": [1.0], "qid": 806985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000087070.jpg", "text_segment": [333, 428, 9, 1782, 18, 33, 3871, 130], "labels": [2486, 2817], "scores": [1.0, 0.6], "qid": 870705}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000415360.jpg", "text_segment": [333, 44, 265, 7799, 12, 41, 1129, 130], "labels": [1057], "scores": [1.0], "qid": 4153605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000301266.jpg", "text_segment": [333, 18, 4, 1286, 133, 137, 197, 130], "labels": [2091, 346], "scores": [0.6, 0.6], "qid": 3012665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000515214.jpg", "text_segment": [2017, 18, 4, 218, 27, 11, 294, 779, 12, 41, 2858, 130], "labels": [2226, 2576], "scores": [1.0, 0.6], "qid": 5152145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000360986.jpg", "text_segment": [333, 18, 10, 810, 7384, 270, 130], "labels": [179, 749], "scores": [1.0, 0.6], "qid": 3609865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000007867.jpg", "text_segment": [333, 5939, 37, 241, 12, 41, 503, 130], "labels": [879], "scores": [1.0], "qid": 78675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000287959.jpg", "text_segment": [333, 18, 41, 9398, 270, 20, 4, 2439, 3029, 9, 4, 157, 130], "labels": [153, 1441, 379], "scores": [1.0, 0.6, 0.6], "qid": 2879595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000425136.jpg", "text_segment": [333, 138, 18, 133, 4654, 130], "labels": [1606, 1605, 2157], "scores": [1.0, 0.6, 0.6], "qid": 4251365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302388.jpg", "text_segment": [14, 11, 41, 39461, 1320, 1930, 169, 54, 24909, 1930, 169, 130], "labels": [1194], "scores": [1.0], "qid": 3023885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000160529.jpg", "text_segment": [333, 1246, 2486, 18, 41, 130], "labels": [2587, 526, 528], "scores": [1.0, 0.6, 0.6], "qid": 1605295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000168890.jpg", "text_segment": [333, 215, 137, 41, 1262, 130], "labels": [1863, 864], "scores": [1.0, 0.6], "qid": 1688905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000324008.jpg", "text_segment": [3297, 3341, 9, 4, 138, 18, 41, 130], "labels": [597, 378], "scores": [1.0, 0.6], "qid": 3240085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000467721.jpg", "text_segment": [333, 1553, 18, 20, 4, 1340, 2273, 130], "labels": [199, 2663, 820], "scores": [1.0, 0.6, 0.6], "qid": 4677215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000502852.jpg", "text_segment": [2017, 187, 166, 234, 41, 130], "labels": [2092, 2058, 749], "scores": [1.0, 1.0, 0.6], "qid": 5028525}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000170960.jpg", "text_segment": [333, 18, 41, 6881, 137, 9, 130], "labels": [956, 206, 2240, 1926], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1709605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000560279.jpg", "text_segment": [1299, 327, 680, 560, 42263, 1025, 174, 4584, 7, 1643, 130], "labels": [1630, 643], "scores": [1.0, 0.6], "qid": 5602795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000210501.jpg", "text_segment": [333, 1168, 9, 1651, 18, 41, 130], "labels": [1571, 1811], "scores": [1.0, 0.6], "qid": 2105015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000048555.jpg", "text_segment": [333, 1168, 9, 4610, 37, 133, 4728, 282, 130], "labels": [2725, 1322], "scores": [0.6, 0.6], "qid": 485555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113113.jpg", "text_segment": [333, 18, 4, 4079, 12, 130], "labels": [1805], "scores": [1.0], "qid": 1131135}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000047828.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 1168, 9, 6242, 368, 197, 130], "labels": [1699, 1975], "scores": [1.0, 0.6], "qid": 478285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000545583.jpg", "text_segment": [333, 2555, 18, 241, 7, 28994, 4, 944, 9, 41, 1766, 130], "labels": [757, 756, 2151, 758], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 5455835}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000277518.jpg", "text_segment": [333, 1168, 9, 7530, 18, 41, 130], "labels": [1220, 1524, 1993], "scores": [1.0, 0.6, 0.6], "qid": 2775185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000030967.jpg", "text_segment": [3297, 31805, 44, 10, 42536, 860, 7, 41, 2124, 47, 24, 2123, 14452, 130], "labels": [2139, 2140], "scores": [1.0, 1.0], "qid": 309675}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000565742.jpg", "text_segment": [333, 1168, 9, 2371, 18, 41, 8, 37, 51, 1711, 12, 4, 20871, 130], "labels": [112], "scores": [1.0], "qid": 5657425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000295114.jpg", "text_segment": [333, 37, 4, 873, 10837, 7, 3619, 4, 4970, 80, 12, 41, 1127, 130], "labels": [1455], "scores": [1.0], "qid": 2951145}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000575051.jpg", "text_segment": [333, 18, 4, 1175, 17, 4, 244, 1697, 649, 130], "labels": [2006], "scores": [1.0], "qid": 5750515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000549300.jpg", "text_segment": [25, 10543, 7799, 6284, 7, 83, 1168, 9, 1262, 130], "labels": [2461, 300, 2141], "scores": [1.0, 0.6, 0.6], "qid": 5493005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000363072.jpg", "text_segment": [772, 90, 49, 124, 41, 18, 10, 326, 1017, 130], "labels": [2043], "scores": [1.0], "qid": 3630725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000238263.jpg", "text_segment": [266, 19, 41, 596, 137, 130], "labels": [478, 479], "scores": [0.6, 0.6], "qid": 2382635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000129186.jpg", "text_segment": [2975, 18, 41, 2858, 561, 130], "labels": [1651, 1652, 2160], "scores": [1.0, 1.0, 0.6], "qid": 1291865}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000096075.jpg", "text_segment": [2975, 64, 732, 920, 174, 1919, 130], "labels": [1780, 729], "scores": [1.0, 1.0], "qid": 960755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000072011.jpg", "text_segment": [1077, 83, 246, 19, 41, 1127, 465, 130], "labels": [888, 367], "scores": [1.0, 1.0], "qid": 720115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000304341.jpg", "text_segment": [2975, 64, 38, 277, 10, 582, 80, 41, 130], "labels": [1834, 1178, 2221], "scores": [1.0, 0.6, 0.6], "qid": 3043415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000066926.jpg", "text_segment": [333, 8673, 9, 31284, 37, 4, 1755, 1839, 197, 130], "labels": [2923, 1723, 509], "scores": [1.0, 0.6, 0.6], "qid": 669265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000253924.jpg", "text_segment": [333, 1168, 9, 1262, 18, 5338, 5216, 12, 41, 1129, 130], "labels": [459, 1413], "scores": [1.0, 0.6], "qid": 2539245}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000399542.jpg", "text_segment": [333, 503, 327, 41, 2371, 1333, 130], "labels": [1982, 1701, 2998], "scores": [1.0, 1.0, 0.6], "qid": 3995425}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000409247.jpg", "text_segment": [2975, 18, 41, 1127, 465, 130], "labels": [754, 2291], "scores": [1.0, 0.6], "qid": 4092475}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000288579.jpg", "text_segment": [333, 7, 229, 18, 4, 1152, 672, 24, 130], "labels": [1476], "scores": [1.0], "qid": 2885795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000395665.jpg", "text_segment": [2975, 18, 4, 5915, 1044, 130], "labels": [1486], "scores": [0.6], "qid": 3956655}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000578591.jpg", "text_segment": [333, 1168, 9, 2416, 90, 11630, 234, 130], "labels": [1767, 2680], "scores": [1.0, 0.6], "qid": 5785915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000020307.jpg", "text_segment": [14, 11, 41, 10521, 17, 7723, 54, 7979, 130], "labels": [2903, 323], "scores": [1.0, 0.6], "qid": 203075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000120007.jpg", "text_segment": [333, 11564, 9, 7384, 18, 41, 130], "labels": [633, 2802, 1582], "scores": [1.0, 0.6, 0.6], "qid": 1200075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000110597.jpg", "text_segment": [333, 2540, 9, 5064, 292, 12806, 27964, 193, 28, 4, 61, 41, 244, 18, 4017, 130], "labels": [1581], "scores": [1.0], "qid": 1105975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000205222.jpg", "text_segment": [333, 70, 38, 2212, 7, 147, 24, 41, 503, 130], "labels": [117, 1511, 929], "scores": [1.0, 0.6, 0.6], "qid": 2052225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000246672.jpg", "text_segment": [333, 18, 4, 1175, 17, 4, 491, 2371, 12, 4, 1129, 130], "labels": [179, 200], "scores": [1.0, 0.6], "qid": 2466725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000210099.jpg", "text_segment": [333, 18, 41, 137, 9, 130], "labels": [1204, 1804], "scores": [1.0, 1.0], "qid": 2100995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000435003.jpg", "text_segment": [333, 2032, 388, 18, 15, 6422, 623, 20, 130], "labels": [2128], "scores": [1.0], "qid": 4350035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000151790.jpg", "text_segment": [333, 18, 4, 6131, 4587, 241, 17, 130], "labels": [648, 887], "scores": [1.0, 0.6], "qid": 1517905}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000106617.jpg", "text_segment": [2975, 150, 51, 101, 15, 5303, 130], "labels": [97, 1310, 2269], "scores": [1.0, 0.6, 0.6], "qid": 1066175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000353299.jpg", "text_segment": [772, 1229, 64, 4, 2371, 7, 4, 173, 147, 130], "labels": [1618, 327, 14, 483], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3532995}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000574256.jpg", "text_segment": [333, 428, 9, 4472, 18, 41, 130], "labels": [1632, 34], "scores": [1.0, 0.6], "qid": 5742565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000128119.jpg", "text_segment": [333, 18, 4288, 7, 4, 480, 9, 4, 1682, 15, 38, 3889, 912, 27, 31, 142, 130], "labels": [960, 1104], "scores": [1.0, 1.0], "qid": 1281195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000330515.jpg", "text_segment": [14, 11, 4, 7835, 173, 54, 243, 3149, 130], "labels": [991, 1423, 992], "scores": [1.0, 1.0, 0.6], "qid": 3305155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000224118.jpg", "text_segment": [333, 1168, 9, 1408, 4036, 18, 145, 556, 7, 928, 7, 41, 1126, 130], "labels": [728], "scores": [0.6], "qid": 2241185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000125850.jpg", "text_segment": [333, 18, 41, 2528, 6672, 12, 130], "labels": [1481, 652, 1957, 1254], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1258505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000081361.jpg", "text_segment": [25, 9012, 2371, 12, 41, 1129, 18, 957, 17, 73, 464, 130], "labels": [17, 16, 2033], "scores": [1.0, 1.0, 0.6], "qid": 813615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000475223.jpg", "text_segment": [333, 27, 11, 4, 4472, 354, 130], "labels": [1929, 1977], "scores": [1.0, 0.6], "qid": 4752235}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000487722.jpg", "text_segment": [333, 37, 62, 4, 214, 1307, 12, 480, 9, 4, 960, 2031, 130], "labels": [2731, 405], "scores": [1.0, 0.6], "qid": 4877225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000140963.jpg", "text_segment": [333, 37, 174, 93, 1224, 17, 130], "labels": [407], "scores": [1.0], "qid": 1409635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000078107.jpg", "text_segment": [333, 90, 38, 154, 4, 13906, 609, 4, 2528, 18, 1311, 18, 58, 130], "labels": [3046, 1656], "scores": [1.0, 0.6], "qid": 781075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000292685.jpg", "text_segment": [333, 90, 174, 2124, 2212, 130], "labels": [32], "scores": [1.0], "qid": 2926855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000530706.jpg", "text_segment": [14, 11, 41, 10, 931, 54, 299, 383, 130], "labels": [752], "scores": [1.0], "qid": 5307065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474215.jpg", "text_segment": [2017, 55, 4, 89, 93, 7, 4090, 90, 41, 130], "labels": [2170], "scores": [1.0], "qid": 4742155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000019579.jpg", "text_segment": [772, 164, 10373, 18, 12, 10, 503, 80, 41, 130], "labels": [178, 1006, 2596], "scores": [1.0, 0.6, 0.6], "qid": 195795}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000042888.jpg", "text_segment": [2975, 70, 41, 1005, 3889, 32, 1467, 130], "labels": [706], "scores": [1.0], "qid": 428885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000484151.jpg", "text_segment": [333, 20642, 37, 4, 93, 12, 4, 1127, 457, 130], "labels": [2902, 1240, 1944, 1239], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 4841515}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000156727.jpg", "text_segment": [266, 19, 41, 1766, 89, 11224, 130], "labels": [2608, 1101], "scores": [1.0, 0.6], "qid": 1567275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000044856.jpg", "text_segment": [333, 11564, 37, 4, 2186, 130], "labels": [2894, 738, 2097], "scores": [1.0, 0.6, 0.6], "qid": 448565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000524459.jpg", "text_segment": [333, 428, 9, 12405, 18, 4, 9513, 20, 4, 243, 4851, 7, 130], "labels": [276, 924], "scores": [1.0, 0.6], "qid": 5244595}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000186322.jpg", "text_segment": [333, 326, 18, 41, 12, 130], "labels": [1310, 662, 1175], "scores": [1.0, 0.6, 0.6], "qid": 1863225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000327038.jpg", "text_segment": [333, 37, 4, 5939, 241, 7, 3437, 4, 6630, 4, 244, 18, 323, 12, 39, 438, 130], "labels": [57], "scores": [0.6], "qid": 3270385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000200231.jpg", "text_segment": [333, 7, 229, 18, 41, 130], "labels": [1527, 1717, 143], "scores": [1.0, 0.6, 0.6], "qid": 2002315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000485985.jpg", "text_segment": [1794, 38, 1400, 4, 1384, 241, 7, 135, 41, 1055, 3068, 1839, 12, 41, 1129, 130], "labels": [1141, 2212], "scores": [1.0, 1.0], "qid": 4859855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000468604.jpg", "text_segment": [14, 11, 41, 46, 10, 25303, 4674, 54, 12, 14830, 12686, 130], "labels": [1847, 270, 271], "scores": [1.0, 0.6, 0.6], "qid": 4686045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000481404.jpg", "text_segment": [333, 1384, 18, 4, 1059, 137, 59, 9, 130], "labels": [1784, 2052, 1308], "scores": [1.0, 0.6, 0.6], "qid": 4814045}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000103017.jpg", "text_segment": [12064, 4, 3904, 1246, 1839, 12, 41, 1129, 130], "labels": [1298], "scores": [1.0], "qid": 1030175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000267363.jpg", "text_segment": [333, 2540, 9, 4121, 37, 1839, 130], "labels": [459], "scores": [0.6], "qid": 2673635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000235902.jpg", "text_segment": [25, 8746, 162, 4, 12613, 31, 2618, 8654, 148, 83, 6950, 130], "labels": [1348], "scores": [0.6], "qid": 2359025}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000165157.jpg", "text_segment": [1299, 18, 4, 11179, 20, 4, 845, 130], "labels": [888, 975, 367], "scores": [1.0, 0.6, 0.6], "qid": 1651575}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000306135.jpg", "text_segment": [333, 18, 4, 25162, 1924, 7, 4, 244, 27, 11, 3068, 130], "labels": [165, 722, 1355], "scores": [1.0, 1.0, 0.6], "qid": 3061355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000202275.jpg", "text_segment": [3297, 9, 174, 2186, 52, 32, 4, 1100, 76, 1621, 2560, 130], "labels": [2628, 992, 1423], "scores": [0.6, 0.6, 0.6], "qid": 2022755}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000515993.jpg", "text_segment": [333, 1168, 9, 38740, 18, 12, 41, 3965, 130], "labels": [1354], "scores": [1.0], "qid": 5159935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000527506.jpg", "text_segment": [14, 11, 41, 10, 746, 54, 9102, 2486, 130], "labels": [396], "scores": [1.0], "qid": 5275065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181601.jpg", "text_segment": [333, 428, 9, 503, 327, 41, 4472, 3373, 130], "labels": [2132, 1711, 311], "scores": [1.0, 0.6, 0.6], "qid": 1816015}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000058772.jpg", "text_segment": [333, 55, 174, 17, 130], "labels": [538, 2776], "scores": [1.0, 0.6], "qid": 587725}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000202093.jpg", "text_segment": [333, 37, 4, 24345, 9, 4, 11109, 12, 41, 1127, 130], "labels": [1582, 993], "scores": [1.0, 0.6], "qid": 2020935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000252216.jpg", "text_segment": [333, 18, 4, 2371, 7, 4, 243, 130], "labels": [438, 1591], "scores": [0.6, 0.6], "qid": 2522165}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000144003.jpg", "text_segment": [25, 960, 1781, 20, 4, 29273, 37, 10, 1664, 14754, 17, 83, 1168, 9, 3965, 130], "labels": [404, 344], "scores": [1.0, 0.6], "qid": 1440035}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581831.jpg", "text_segment": [333, 104, 19, 4, 89, 208, 9, 41, 2858, 561, 130], "labels": [2295], "scores": [0.6], "qid": 5818315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000181296.jpg", "text_segment": [1299, 327, 41, 403, 34, 8848, 3836, 20, 130], "labels": [385], "scores": [1.0], "qid": 1812965}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000411727.jpg", "text_segment": [266, 19, 41, 1591, 2920, 130], "labels": [2375, 2850, 2849], "scores": [1.0, 0.6, 0.6], "qid": 4117275}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000292617.jpg", "text_segment": [333, 103, 135, 41, 383, 15376, 130], "labels": [1170], "scores": [0.6], "qid": 2926175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000083217.jpg", "text_segment": [333, 3989, 21381, 2623, 18, 569, 7, 1333, 41, 3341, 130], "labels": [328], "scores": [1.0], "qid": 832175}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000256800.jpg", "text_segment": [11637, 35, 41, 7, 229, 73, 96, 4587, 327, 174, 2371, 80, 7, 18703, 130], "labels": [1608, 939], "scores": [1.0, 1.0], "qid": 2568005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113333.jpg", "text_segment": [333, 104, 19, 41, 380, 137, 130], "labels": [2849], "scores": [0.6], "qid": 1133335}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000115363.jpg", "text_segment": [333, 27, 11, 4, 1246, 9, 4, 8882, 20, 4, 173, 130], "labels": [846, 845, 707, 271], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1153635}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000095062.jpg", "text_segment": [291, 83, 1168, 9, 1897, 327, 4, 7350, 4079, 1489, 130], "labels": [3019], "scores": [1.0], "qid": 950625}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000062398.jpg", "text_segment": [772, 324, 187, 41, 2371, 32, 126, 51, 37, 465, 35, 56, 528, 130], "labels": [1001], "scores": [0.6], "qid": 623985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000284535.jpg", "text_segment": [333, 1168, 9, 4472, 18768, 41, 503, 130], "labels": [1632], "scores": [1.0], "qid": 2845355}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000398220.jpg", "text_segment": [333, 90, 93, 234, 41, 17, 130], "labels": [1930], "scores": [1.0], "qid": 3982205}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000386707.jpg", "text_segment": [3297, 1681, 18, 7350, 197, 130], "labels": [580], "scores": [1.0], "qid": 3867075}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000370285.jpg", "text_segment": [333, 187, 32, 365, 24, 4, 3522, 20, 4, 1110, 84, 23, 18, 365, 133, 241, 130], "labels": [1704], "scores": [0.6], "qid": 3702855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000322106.jpg", "text_segment": [14, 11, 4, 6553, 20, 4, 845, 397, 54, 1164, 130], "labels": [1573, 407], "scores": [1.0, 0.6], "qid": 3221065}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134034.jpg", "text_segment": [333, 428, 9, 1782, 18, 41, 130], "labels": [741, 392, 2530], "scores": [1.0, 0.6, 0.6], "qid": 1340345}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000255248.jpg", "text_segment": [12064, 10, 1325, 9, 4079, 15, 18, 4, 213, 1924, 28, 4, 4955, 12, 4, 1690, 173, 1806, 130], "labels": [1545, 392, 849], "scores": [1.0, 1.0, 0.6], "qid": 2552485}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000474293.jpg", "text_segment": [333, 503, 18, 6271, 12, 4, 1523, 130], "labels": [54, 419, 2317], "scores": [1.0, 0.6, 0.6], "qid": 4742935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000581394.jpg", "text_segment": [2975, 18, 4, 13491, 6207, 20, 4, 1600, 1682, 130], "labels": [2937, 2556], "scores": [1.0, 0.6], "qid": 5813945}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000134518.jpg", "text_segment": [333, 1168, 9, 708, 18, 4, 470, 389, 29, 130], "labels": [1447, 654, 457, 1945], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1345185}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000440937.jpg", "text_segment": [333, 18, 41, 1779, 241, 17, 130], "labels": [1878, 2451, 506], "scores": [0.6, 0.6, 0.6], "qid": 4409375}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000204381.jpg", "text_segment": [333, 786, 1801, 215, 44, 10, 12458, 3326, 28, 10, 19303, 130], "labels": [925, 926], "scores": [0.6, 0.6], "qid": 2043815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000570664.jpg", "text_segment": [333, 37, 4, 4912, 3350, 17, 12, 41, 1127, 130], "labels": [3041], "scores": [1.0], "qid": 5706645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000503197.jpg", "text_segment": [2017, 18, 2394, 17, 8271, 7, 339, 57, 50, 1540, 20, 4, 480, 9, 61, 9, 174, 130], "labels": [1424], "scores": [1.0], "qid": 5031975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000018781.jpg", "text_segment": [333, 23225, 18, 41, 503, 130], "labels": [669, 2327], "scores": [1.0, 0.6], "qid": 187815}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000215755.jpg", "text_segment": [333, 428, 9, 17447, 18, 41, 130], "labels": [2262, 2567, 2731], "scores": [1.0, 0.6, 0.6], "qid": 2157555}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000451471.jpg", "text_segment": [333, 1168, 9, 14100, 37, 1208, 197, 130], "labels": [801, 1736, 276], "scores": [1.0, 1.0, 0.6], "qid": 4514715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000169250.jpg", "text_segment": [333, 1384, 18, 4, 4897, 137, 9, 130], "labels": [885], "scores": [1.0], "qid": 1692505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000410350.jpg", "text_segment": [333, 1168, 9, 693, 3049, 23422, 37, 174, 24997, 29, 130], "labels": [423, 1542], "scores": [0.6, 0.6], "qid": 4103505}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000315974.jpg", "text_segment": [6604, 20, 4, 2222, 9, 4, 4079, 3801, 122, 18077, 23, 18, 130], "labels": [483, 1562], "scores": [0.6, 0.6], "qid": 3159745}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000424744.jpg", "text_segment": [333, 18, 4, 379, 698, 5927, 336, 80, 596, 270, 130], "labels": [2910], "scores": [0.6], "qid": 4247445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000214388.jpg", "text_segment": [333, 77, 9, 138, 70, 41, 3341, 32, 7929, 130], "labels": [1283, 2636], "scores": [1.0, 0.6], "qid": 2143885}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000113185.jpg", "text_segment": [333, 327, 41, 1005, 676, 130], "labels": [706, 2673], "scores": [1.0, 0.6], "qid": 1131855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000172877.jpg", "text_segment": [2975, 292, 10, 403, 2513, 80, 41, 130], "labels": [1087, 2359, 439], "scores": [1.0, 0.6, 0.6], "qid": 1728775}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000295426.jpg", "text_segment": [12064, 4, 1246, 9, 1651, 1839, 12, 41, 1129, 130], "labels": [1954, 1955], "scores": [0.6, 0.6], "qid": 2954265}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000566729.jpg", "text_segment": [333, 428, 9, 4472, 18, 41, 130], "labels": [1632, 914], "scores": [1.0, 1.0], "qid": 5667295}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000125539.jpg", "text_segment": [3297, 1681, 9, 380, 18, 1839, 12, 41, 1127, 130], "labels": [474, 1167, 459, 1777], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1255395}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000398246.jpg", "text_segment": [333, 18, 41, 22974, 241, 17, 130], "labels": [2953, 1976], "scores": [1.0, 0.6], "qid": 3982465}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000479008.jpg", "text_segment": [2613, 51, 1307, 20, 10, 2486, 54, 10, 1682, 130], "labels": [2648], "scores": [1.0], "qid": 4790085}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000547041.jpg", "text_segment": [333, 18, 4, 649, 5037, 20, 4, 8282, 270, 130], "labels": [2539, 2762, 2394], "scores": [1.0, 0.6, 0.6], "qid": 5470415}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000051191.jpg", "text_segment": [14, 11, 41, 3077, 251, 54, 630, 239, 130], "labels": [347, 2930], "scores": [1.0, 1.0], "qid": 511915}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000450885.jpg", "text_segment": [14, 11, 41, 160, 848, 54, 590, 848, 17, 10, 6930, 5915, 32904, 130], "labels": [656, 701], "scores": [1.0, 0.6], "qid": 4508855}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000225093.jpg", "text_segment": [333, 1714, 9, 1651, 18, 12, 4, 1177, 130], "labels": [1419, 74, 214], "scores": [1.0, 0.6, 0.6], "qid": 2250935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000301910.jpg", "text_segment": [14, 11, 41, 10, 1126, 35, 10, 33959, 13119, 9155, 8287, 54, 53561, 695, 8287, 1041, 7644, 130], "labels": [423, 424, 421, 422], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3019105}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302260.jpg", "text_segment": [333, 18, 4, 3856, 20, 4, 2186, 303, 270, 130], "labels": [1117], "scores": [1.0], "qid": 3022605}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000351597.jpg", "text_segment": [333, 18, 4, 3791, 137, 9, 130], "labels": [599, 1022, 1926], "scores": [1.0, 0.6, 0.6], "qid": 3515975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000018519.jpg", "text_segment": [333, 1145, 2082, 18, 133, 241, 130], "labels": [24], "scores": [1.0], "qid": 185195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000493022.jpg", "text_segment": [333, 1168, 9, 2663, 292, 65, 32, 354, 130], "labels": [2070], "scores": [1.0], "qid": 4930225}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000000143.jpg", "text_segment": [333, 428, 9, 4198, 37, 165, 130], "labels": [1676, 1678, 675, 676], "scores": [0.6, 0.6, 0.6, 0.6], "qid": 1435}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000168093.jpg", "text_segment": [333, 2555, 18, 4, 366, 352, 130], "labels": [408], "scores": [1.0], "qid": 1680935}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000184321.jpg", "text_segment": [2975, 327, 41, 1262, 582, 130], "labels": [1834, 2798], "scores": [1.0, 1.0], "qid": 1843215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000497466.jpg", "text_segment": [333, 18, 4, 2352, 9, 4, 14671, 20, 4, 3953, 58530, 130], "labels": [2374], "scores": [1.0], "qid": 4974665}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000528821.jpg", "text_segment": [3297, 421, 12, 4, 3341, 37, 174, 93, 12, 130], "labels": [3012], "scores": [1.0], "qid": 5288215}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000479612.jpg", "text_segment": [333, 1681, 18, 41, 16325, 130], "labels": [635], "scores": [1.0], "qid": 4796125}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000504811.jpg", "text_segment": [2017, 11224, 41, 2166, 130], "labels": [2170, 2169], "scores": [1.0, 0.6], "qid": 5048115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000564197.jpg", "text_segment": [333, 7049, 9, 503, 18, 41, 130], "labels": [510, 209], "scores": [1.0, 0.6], "qid": 5641975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000380597.jpg", "text_segment": [202, 234, 4, 3856, 91, 4, 3807, 76, 4, 1423, 18, 83, 547, 130], "labels": [1295, 539], "scores": [1.0, 1.0], "qid": 3805975}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000359715.jpg", "text_segment": [333, 18, 4, 25162, 1924, 7, 4, 2753, 130], "labels": [1020, 1355, 1209, 1147], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 3597155}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000031745.jpg", "text_segment": [12064, 4, 233, 54, 4, 4370, 9, 1152, 1839, 12, 41, 1129, 130], "labels": [2968, 2039, 2628], "scores": [1.0, 1.0, 0.6], "qid": 317455}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000117836.jpg", "text_segment": [12064, 4, 1600, 11179, 12, 41, 3663, 130], "labels": [1410, 1408], "scores": [1.0, 0.6], "qid": 1178365}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000036528.jpg", "text_segment": [333, 752, 18, 41, 12014, 2393, 24, 130], "labels": [2854], "scores": [1.0], "qid": 365285}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000302405.jpg", "text_segment": [333, 2082, 37, 51, 457, 7, 7118, 130], "labels": [1274], "scores": [0.6], "qid": 3024055}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000263700.jpg", "text_segment": [333, 90, 93, 90, 20, 174, 1781, 130], "labels": [51, 2544], "scores": [1.0, 0.6], "qid": 2637005}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000337619.jpg", "text_segment": [333, 19, 4, 396, 9, 4, 1325, 9, 5624, 51, 37, 1307, 20, 130], "labels": [2323, 3059], "scores": [1.0, 0.6], "qid": 3376195}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000067125.jpg", "text_segment": [1299, 37, 174, 431, 20, 294, 9, 4, 18310, 130], "labels": [1105], "scores": [1.0], "qid": 671255}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000471009.jpg", "text_segment": [333, 1168, 9, 3814, 18, 4, 244, 1697, 130], "labels": [1438, 1439, 1440], "scores": [1.0, 0.6, 0.6], "qid": 4710095}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000131171.jpg", "text_segment": [333, 70, 38, 34, 7, 2616, 7, 135, 41, 2131, 15495, 130], "labels": [2904, 193, 2333], "scores": [1.0, 1.0, 0.6], "qid": 1311715}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000402931.jpg", "text_segment": [333, 55, 51, 354, 130], "labels": [1273, 2430, 389], "scores": [1.0, 0.6, 0.6], "qid": 4029315}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000412753.jpg", "text_segment": [333, 18, 4, 396, 9, 4, 12504, 4791, 4, 5667, 130], "labels": [2147, 163], "scores": [1.0, 0.6], "qid": 4127535}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000328111.jpg", "text_segment": [333, 18, 10, 1138, 396, 17, 153, 3603, 2641, 80, 4, 61, 1839, 12, 41, 1127, 130], "labels": [2244], "scores": [1.0], "qid": 3281115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000103538.jpg", "text_segment": [333, 1168, 9, 1766, 292, 93, 90, 12, 41, 383, 130], "labels": [1673, 1831], "scores": [1.0, 0.6], "qid": 1035385}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000345456.jpg", "text_segment": [3297, 3317, 19663, 18, 11960, 4, 213, 1924, 28, 41, 1651, 130], "labels": [2789, 1841], "scores": [1.0, 0.6], "qid": 3454565}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000207898.jpg", "text_segment": [772, 164, 10373, 327, 4, 5216, 4079, 34, 130], "labels": [177, 1583, 943, 490], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 2078985}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000339761.jpg", "text_segment": [12064, 4, 1168, 9, 1897, 41, 18, 130], "labels": [3019], "scores": [1.0], "qid": 3397615}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000415076.jpg", "text_segment": [333, 37, 174, 17549, 2617, 384, 24, 130], "labels": [1077, 249], "scores": [0.6, 0.6], "qid": 4150765}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000142744.jpg", "text_segment": [333, 1168, 9, 2528, 18, 12, 4, 12748, 130], "labels": [1315, 2760, 1092, 1355], "scores": [1.0, 0.6, 0.6, 0.6], "qid": 1427445}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000307511.jpg", "text_segment": [333, 104, 19, 41, 380, 10707, 130], "labels": [504, 964, 1551], "scores": [1.0, 0.6, 0.6], "qid": 3075115}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000323564.jpg", "text_segment": [333, 70, 38, 399, 41, 1779, 98, 23, 113, 48, 61, 4334, 130], "labels": [2934], "scores": [1.0], "qid": 3235645}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000384554.jpg", "text_segment": [14, 11, 41, 10016, 54, 23466, 130], "labels": [2118], "scores": [1.0], "qid": 3845545}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000410195.jpg", "text_segment": [333, 1384, 18, 4, 6067, 2671, 137, 35, 130], "labels": [312, 313], "scores": [1.0, 1.0], "qid": 4101955}
+{"image_path": "val2014\\val2014\\COCO_val2014_000000566823.jpg", "text_segment": [333, 3476, 8141, 327, 41, 1682, 5480, 38, 9, 130], "labels": [3079], "scores": [1.0], "qid": 5668235}
