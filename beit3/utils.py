@@ -21,7 +21,8 @@ import torch
 import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
-from torch._six import inf
+from _six import inf
+# import collections.abc as container_abcs
 from torchmetrics import Metric
 from tensorboardX import SummaryWriter
 
@@ -518,6 +519,7 @@ def auto_load_model(args, model, model_without_ddp, optimizer, loss_scaler, mode
 
 
 # The implementation code is modified from DeiT (https://github.com/facebookresearch/deit.git)
+
 def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
     if ckpt_path.startswith('https'):
         checkpoint = torch.hub.load_state_dict_from_url(
@@ -532,10 +534,10 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
             checkpoint_model = checkpoint[model_key]
             print("Load state_dict by model_key = %s" % model_key)
             break
-    
+
     if checkpoint_model is None:
         checkpoint_model = checkpoint
-    
+
     state_dict = model.state_dict()
     for k in ['head.weight', 'head.bias']:
         if k in checkpoint_model and checkpoint_model[k].shape != state_dict[k].shape:
@@ -571,8 +573,12 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
                     extra_tokens = pos_embed_checkpoint[:, :num_extra_tokens]
                     # only the position tokens are interpolated
                     pos_tokens = pos_embed_checkpoint[:, num_extra_tokens:]
+
+                # Convert pos_tokens to float32
+                pos_tokens = pos_tokens.float()
+
                 pos_tokens = pos_tokens.reshape(-1, orig_size, orig_size, embedding_size).permute(0, 3, 1, 2)
-                pos_tokens = torch.nn.functional.interpolate(
+                pos_tokens = F.interpolate(
                     pos_tokens, size=(new_size, new_size), mode='bicubic', align_corners=False)
                 pos_tokens = pos_tokens.permute(0, 2, 3, 1).flatten(1, 2)
                 new_pos_embed = torch.cat((extra_tokens, pos_tokens), dim=1)

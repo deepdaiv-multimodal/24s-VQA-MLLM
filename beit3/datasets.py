@@ -17,6 +17,7 @@ from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMA
 from timm.data.transforms import RandomResizedCropAndInterpolation
 from timm.data import create_transform
 
+
 import utils
 from glossary import normalize_word
 from randaug import RandomAugment
@@ -114,6 +115,10 @@ class BaseDataset(torch.utils.data.Dataset):
 
 
 def _write_data_into_jsonl(items, jsonl_file):
+    directory = os.path.dirname(jsonl_file)
+    if not os.path.exists(directory):
+        os.makedirs(directory, exist_ok=True)
+
     with open(jsonl_file, mode="w", encoding="utf-8") as writer:
         for data in items:
             writer.write(json.dumps(data, indent=None))
@@ -350,7 +355,6 @@ class ImageNetDataset(BaseDataset):
         )
 
 
-
 class VQAv2Dataset(BaseDataset):
     def __init__(self, data_path, **kwargs):
         super().__init__(data_path=data_path, **kwargs)
@@ -358,27 +362,28 @@ class VQAv2Dataset(BaseDataset):
         ans2label = {}
         label2ans = []
         with open(ans2label_file, mode="r", encoding="utf-8") as reader:
-            for line in reader:
+            for i, line in enumerate(reader):
                 data = json.loads(line)
                 ans = data["answer"]
                 label = data["label"]
                 label = int(label)
-                ans2label[ans] = label
+                assert label == i
+                ans2label[ans] = i
                 label2ans.append(ans)
-
         
         self.ans2label = ans2label
         self.label2ans = label2ans
-        self.num_classes = len(label2ans)
 
     @staticmethod
     def get_index_files(split, task=None):
         if split == "train":
-            return ("vqa.train.jsonl", )
+            return ("vqa.train.jsonl", "vqa.trainable_val.jsonl")
         elif split == "val":
             return ("vqa.rest_val.jsonl", )
         elif split == "test":
             return ("vqa.test.jsonl", )
+        elif split == "test-dev":
+            return ("vqa.test-dev.jsonl", )            
         else:
             raise RuntimeError("split %s is not found!" % split)
 
@@ -409,20 +414,24 @@ class VQAv2Dataset(BaseDataset):
     @classmethod
     def make_dataset_index(cls, data_path, tokenizer, annotation_data_path):
         with open(os.path.join(annotation_data_path, "v2_OpenEnded_mscoco_train2014_questions.json"), "r") as fp:
-            questions_train = json.load(fp)["questions"]
+            questions_train2014 = json.load(fp)["questions"]
         with open(os.path.join(annotation_data_path, "v2_OpenEnded_mscoco_val2014_questions.json"), "r") as fp:
-            questions_val = json.load(fp)["questions"]
+            questions_val2014 = json.load(fp)["questions"]
+        with open(os.path.join(annotation_data_path, "v2_OpenEnded_mscoco_test2015_questions.json"), "r") as fp:
+            questions_test2015 = json.load(fp)["questions"]
+        with open(os.path.join(annotation_data_path, "v2_OpenEnded_mscoco_test-dev2015_questions.json"), "r") as fp:
+            questions_test_dev2015 = json.load(fp)["questions"]
 
         with open(os.path.join(annotation_data_path, "v2_mscoco_train2014_annotations.json"), "r") as fp:
-            annotations_train = json.load(fp)["annotations"]
+            annotations_train2014 = json.load(fp)["annotations"]
         with open(os.path.join(annotation_data_path, "v2_mscoco_val2014_annotations.json"), "r") as fp:
-            annotations_val = json.load(fp)["annotations"]
+            annotations_val2014 = json.load(fp)["annotations"]
 
         annotations = dict()
 
         for split, questions in zip(
-            ["train", "val"],
-            [questions_train, questions_val],
+            ["train", "val", "test", "test-dev"],
+            [questions_train2014, questions_val2014, questions_test2015, questions_test_dev2015],
         ):
             _annot = defaultdict(dict)
             for q in questions:
@@ -441,11 +450,11 @@ class VQAv2Dataset(BaseDataset):
         all_major_answers = list()
 
         for split, annots in zip(
-            ["train", "val"], [annotations_train, annotations_val],
+            ["train", "val"], [annotations_train2014, annotations_val2014],
         ):
+            # _annot = annotations[split]
             for q in annots:
-                for answer in q["answers"]:
-                    all_major_answers.append(answer["raw_answer"])
+                all_major_answers.append(q["multiple_choice_answer"])
 
         all_major_answers = [normalize_word(word) for word in all_major_answers]
         counter = {k: v for k, v in Counter(all_major_answers).items() if v >= 9}
@@ -453,15 +462,15 @@ class VQAv2Dataset(BaseDataset):
         label2ans = list(counter.keys())
 
         for split, annots in zip(
-            ["train", "val"], [annotations_train, annotations_val],
+            ["train", "val"], [annotations_train2014, annotations_val2014],
         ):
             _annot = annotations[split]
             for q in annots:
                 answers = q["answers"]
                 answer_count = {}
                 for answer in answers:
-                    raw_answer = answer["raw_answer"]
-                    answer_count[raw_answer] = answer_count.get(raw_answer, 0) + 1
+                    answer_ = answer["answer"]
+                    answer_count[answer_] = answer_count.get(answer_, 0) + 1
 
                 labels = []
                 scores = []
@@ -489,11 +498,13 @@ class VQAv2Dataset(BaseDataset):
             annotations[split] = filtered_annot
 
         split2items = {}
-        for split in ["train", "val"]:
+        for split in ["train", "val", "test", "test-dev"]:
             annot = annotations[split]
             split_name = {
                 "train": "train2014",
                 "val": "val2014",
+                "test": "test2015",
+                "test-dev": "test2015",
             }[split]
             paths = list(glob.glob(f"{data_path}/{split_name}/*.jpg"))
             random.shuffle(paths)
@@ -512,8 +523,11 @@ class VQAv2Dataset(BaseDataset):
                 _annot = annotations[split][iid]
                 for qid in _annot:
                     q = _annot[qid]
-                    labels = q["labels"]
-                    scores = q["scores"]
+                    if split in ["train", "val"]:
+                        labels = q["labels"]
+                        scores = q["scores"]
+                    else:
+                        labels, scores = [], []
 
                     items.append({
                         "image_path": os.path.join(split_name, path.split('/')[-1]), 
@@ -524,8 +538,9 @@ class VQAv2Dataset(BaseDataset):
                     })
             split2items[split] = items
 
-            _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, f"vqa.{split}.jsonl"))
+            _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, "vqa.%s.jsonl" % split))
 
+        # Following ViLT, we use 1000 images of the original val set as the final val set        
         val_image2items = defaultdict(list)
         for item in split2items["val"]:
             val_image2items[item["image_path"]].append(item)
@@ -545,26 +560,6 @@ class VQAv2Dataset(BaseDataset):
         _write_data_into_jsonl(items=trainable_val, jsonl_file=os.path.join(data_path, "vqa.trainable_val.jsonl"))
         _write_data_into_jsonl(items=rest_val, jsonl_file=os.path.join(data_path, "vqa.rest_val.jsonl"))
 
-        # Generate test set from val data
-        test_items = []
-        for path in glob.glob(f"{data_path}/val2014/*.jpg"):
-            if int(path.split("/")[-1].split("_")[-1][:-4]) in annotations["val"]:
-                iid = int(path.split("/")[-1].split("_")[-1][:-4])
-                _annot = annotations["val"][iid]
-                for qid in _annot:
-                    q = _annot[qid]
-                    labels = q["labels"]
-                    scores = q["scores"]
-
-                    test_items.append({
-                        "image_path": os.path.join("val2014", path.split('/')[-1]), 
-                        "text_segment": q["token_ids"], 
-                        "labels": labels, 
-                        "scores": scores, 
-                        "qid": qid, 
-                    })
-        _write_data_into_jsonl(items=test_items, jsonl_file=os.path.join(data_path, "vqa.test.jsonl"))
-
         with open(os.path.join(data_path, "answer2label.txt"), mode="w", encoding="utf-8") as writer:
             for ans in ans2label:
                 to_json = {
@@ -572,9 +567,6 @@ class VQAv2Dataset(BaseDataset):
                     "label": ans2label[ans]
                 }
                 writer.write("%s\n" % json.dumps(to_json))
-
-
-
 
 
 class RetrievalDataset(BaseDataset):
@@ -838,8 +830,6 @@ def create_dataset_by_split(args, split, is_train=True):
         num_max_bpe_tokens=args.num_max_bpe_tokens, 
         task=args.task, **opt_kwargs, 
     )
-
-    print(f"Number of items in {split} dataset: {len(dataset)}")
     if is_train:
         batch_size = args.batch_size
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:

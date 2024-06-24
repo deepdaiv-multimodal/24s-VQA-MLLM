@@ -1,10 +1,9 @@
-# run_beit3_finetuning.py
 # --------------------------------------------------------
 # Image as a Foreign Language: BEiT Pretraining for Vision and Vision-Language Tasks (https://arxiv.org/abs/2208.10442)
 # Github source: https://github.com/microsoft/unilm/tree/master/beit3
 # Copyright (c) 2023 Microsoft
 # Licensed under The MIT License [see LICENSE for details]
-# --------------------------------------------------------
+# --------------------------------------------------------'
 
 import argparse
 import datetime
@@ -28,7 +27,6 @@ from datasets import create_downstream_dataset
 from utils import NativeScalerWithGradNormCount as NativeScaler
 import utils
 import modeling_finetune
-
 
 def get_args():
     parser = argparse.ArgumentParser('BEiT fine-tuning and evaluation script for image classification', add_help=False)
@@ -134,6 +132,14 @@ def get_args():
     parser.add_argument('--no_pin_mem', action='store_false', dest='pin_mem')
     parser.set_defaults(pin_mem=True)
 
+    # distributed training parameters
+    parser.add_argument('--world_size', default=1, type=int,
+                        help='number of distributed processes')
+    parser.add_argument('--local-rank', default=-1, type=int)
+    parser.add_argument('--dist_on_itp', action='store_true')
+    parser.add_argument('--dist_url', default='env://',
+                        help='url used to set up distributed training')
+
     # parameter for dump predictions (VQA, COCO captioning, NoCaps)
     parser.add_argument('--task_cache_path', default=None, type=str)
 
@@ -189,15 +195,26 @@ def get_args():
     parser.add_argument('--initial_scale_power', type=int, default=16)
     parser.add_argument('--zero_stage', default=0, type=int,
                         help='ZeRO optimizer stage (default: 0)')
-    
-    # Add the local_rank argument
-    parser.add_argument('--local_rank', type=int, default=0)
 
-    return parser.parse_args(), None
+    known_args, _ = parser.parse_known_args()
+
+    if known_args.enable_deepspeed:
+        try:
+            import deepspeed
+            from deepspeed import DeepSpeedConfig
+            parser = deepspeed.add_config_arguments(parser)
+            ds_init = deepspeed.initialize
+        except:
+            print("Please 'pip install deepspeed==0.4.0'")
+            exit(0)
+    else:
+        ds_init = None
+
+    return parser.parse_args(), ds_init
 
 
 def main(args, ds_init):
-    # utils.init_distributed_mode(args) 제거
+    utils.init_distributed_mode(args)
 
     if ds_init is not None:
         utils.create_ds_config(args)
@@ -210,14 +227,14 @@ def main(args, ds_init):
     device = torch.device(args.device)
 
     # fix the seed for reproducibility
-    seed = args.seed
+    seed = args.seed + utils.get_rank()
     torch.manual_seed(seed)
     np.random.seed(seed)
     # random.seed(seed)
 
     cudnn.benchmark = True
 
-    if args.log_dir is not None:
+    if utils.get_rank() == 0 and args.log_dir is not None:
         os.makedirs(args.log_dir, exist_ok=True)
         log_writer = utils.TensorboardLogger(log_dir=args.log_dir)
     else:
@@ -266,7 +283,7 @@ def main(args, ds_init):
     print("Model = %s" % str(model_without_ddp))
     print('number of params:', n_parameters)
 
-    total_batch_size = args.batch_size * args.update_freq
+    total_batch_size = args.batch_size * args.update_freq * utils.get_world_size()
     num_training_steps_per_epoch = len(data_loader_train.dataset) // total_batch_size
     print("LR = %.8f" % args.lr)
     print("Batch size = %d" % total_batch_size)
@@ -288,11 +305,31 @@ def main(args, ds_init):
 
     skip_weight_decay_list = model.no_weight_decay()
 
-    optimizer = create_optimizer(
-        args, model_without_ddp, skip_list=skip_weight_decay_list,
-        get_num_layer=assigner.get_layer_id if assigner is not None else None, 
-        get_layer_scale=assigner.get_scale if assigner is not None else None)
-    loss_scaler = NativeScaler()
+    if args.distributed:
+        torch.distributed.barrier()
+    if args.enable_deepspeed:
+        loss_scaler = None
+        optimizer_params = get_parameter_groups(
+            model, args.weight_decay, skip_weight_decay_list,
+            assigner.get_layer_id if assigner is not None else None,
+            assigner.get_scale if assigner is not None else None)
+        model, optimizer, _, _ = ds_init(
+            args=args, model=model, model_parameters=optimizer_params,
+            dist_init_required=not args.distributed,
+        )
+
+        print("model.gradient_accumulation_steps() = %d" % model.gradient_accumulation_steps())
+        assert model.gradient_accumulation_steps() == args.update_freq
+    else:
+        if args.distributed:
+            model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu], find_unused_parameters=True)
+            model_without_ddp = model.module
+
+        optimizer = create_optimizer(
+            args, model_without_ddp, skip_list=skip_weight_decay_list,
+            get_num_layer=assigner.get_layer_id if assigner is not None else None, 
+            get_layer_scale=assigner.get_scale if assigner is not None else None)
+        loss_scaler = NativeScaler()
 
     lr_schedule_values = utils.cosine_scheduler(
         args.lr, args.min_lr, args.epochs, num_training_steps_per_epoch,
@@ -341,6 +378,8 @@ def main(args, ds_init):
 
     max_accuracy = 0.0
     for epoch in range(args.start_epoch, args.epochs):
+        if args.distributed:
+            data_loader_train.sampler.set_epoch(epoch)
         if log_writer is not None:
             log_writer.set_step(epoch * num_training_steps_per_epoch * args.update_freq)
         train_stats = train_one_epoch(
@@ -386,10 +425,11 @@ def main(args, ds_init):
                         'n_parameters': n_parameters}
         else:
             log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
+                         # **{f'test_{k}': v for k, v in test_stats.items()},
                          'epoch': epoch,
                          'n_parameters': n_parameters}
 
-        if args.output_dir:
+        if args.output_dir and utils.is_main_process():
             if log_writer is not None:
                 log_writer.flush()
             with open(os.path.join(args.output_dir, "log.txt"), mode="a", encoding="utf-8") as f:

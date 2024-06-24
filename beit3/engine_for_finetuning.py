@@ -205,15 +205,9 @@ class VQAHandler(TaskHandler):
         logits = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
-
-        # logits과 labels의 크기를 일치시키기 위한 코드 추가
-        if logits.size() != labels.size():
-            min_size = min(logits.size(1), labels.size(1))
-            logits = logits[:, :min_size]
-            labels = labels[:, :min_size]
-
-        loss = self.criterion(input=logits.float(), target=labels.float()) * labels.shape[1]
-        return {"loss": loss}
+        return {
+            "loss": self.criterion(input=logits.float(), target=labels.float()) * labels.shape[1], 
+        }
 
     def before_eval(self, metric_logger, data_loader, **kwargs):
         self.predictions.clear()
@@ -224,13 +218,6 @@ class VQAHandler(TaskHandler):
         logits = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
-
-        # logits과 labels의 크기를 일치시키기 위한 코드 추가
-        if labels is not None and logits.size() != labels.size():
-            min_size = min(logits.size(1), labels.size(1))
-            logits = logits[:, :min_size]
-            labels = labels[:, :min_size]
-
         batch_size = language_tokens.shape[0]
         if labels is not None:
             scores = utils.VQAScore()(logits, labels) * 100.0
@@ -249,7 +236,6 @@ class VQAHandler(TaskHandler):
             return {k: meter.global_avg for k, meter in self.metric_logger.meters.items()}, "score"
         else:
             return self.predictions, "prediction"
-
 
 
 class CaptioningHandler(TaskHandler):
