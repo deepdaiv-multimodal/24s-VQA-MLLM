@@ -1,0 +1,7 @@
+einops==0.6.0
+openai==0.18.0
+sentence-transformers==2.2.2
+git+https://github.com/openai/CLIP.git
+git+https://github.com/huggingface/transformers.git
+accelerate
+bitsandbytes
