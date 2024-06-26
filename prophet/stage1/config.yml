@@ -1,0 +1,34 @@
+TASK: 'okvqa'
+RUN_MODE: 'finetune'
+VERSION: 'v1'
+RESUME: False
+PRETRAINED_MODEL_PATH: 'C:/Users/guts4/unilm/beit3/dataset/beit3_base_patch16_224.pth'
+BEIT3_MODEL_NAME: 'microsoft/beit-base-patch16-224-pt22k-ft22k'
+
+GPU: '0'
+SEED: 42
+
+BATCH_SIZE: 16
+EVAL_BATCH_SIZE: 16
+MAX_EPOCH: 10
+GRAD_ACCU_STEPS: 1
+
+NUM_WORKERS: 4
+PIN_MEM: True
+
+DATA_PATH: 'C:/Users/guts4/unilm/beit3/dataset'
+TRAIN_IMAGES_PATH: 'C:/Users/guts4/unilm/beit3/dataset/train2014/train2014'
+VAL_IMAGES_PATH: 'C:/Users/guts4/unilm/beit3/dataset/val2014/val2014'
+TRAIN_ANNOTATIONS_PATH: 'C:/Users/guts4/unilm/beit3/dataset/vqa.train.jsonl'
+VAL_ANNOTATIONS_PATH: 'C:/Users/guts4/unilm/beit3/dataset/vqa.val.jsonl'
+
+CKPT_ROOT: 'checkpoints/'
+LOG_ROOT: 'logs/'
+RESULTS_ROOT: 'results/'
+
+LR: 5e-5
+WARMUP_STEPS: 500
+WEIGHT_DECAY: 0.01
+
+ANSWER_DICT_PATH:
+  okvqa: 'C:/Users/guts4/unilm/beit3/dataset/answer2label.txt'

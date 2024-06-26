@@ -43,9 +43,9 @@ class Runner(object):
             net = MCANForFinetune(self.__C, dataset.ans_size)
             ckpt = torch.load(path, map_location='cpu')
             net.load_state_dict(ckpt['state_dict'], strict=False)
-            net.cuda()
-            if self.__C.N_GPU > 1:
-                net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
+            net#.cuda()
+            #if self.__C.N_GPU > 1:
+            #    net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
             print('Finish!')
             self.net = net
         else:
@@ -166,7 +166,7 @@ def heuristics_login_args(parser):
     parser.add_argument('--cfg', dest='cfg_file', help='optional config file', type=str, required=True)
     parser.add_argument('--version', dest='VERSION', help='version name', type=str, required=True)
     parser.add_argument('--ckpt_path', dest='CKPT_PATH', help='checkpoint path for heuristics', type=str, default=None)
-    parser.add_argument('--gpu', dest='GPU', help='gpu id', type=str, default=None)
+    #parser.add_argument('--gpu', dest='GPU', help='gpu id', type=str, default=None)
     parser.add_argument('--candidate_num', dest='CANDIDATE_NUM', help='topk candidates', type=int, default=None)
     parser.add_argument('--example_num', dest='EXAMPLE_NUM', help='number of most similar examples to be searched, default: 200', type=int, default=None)
 

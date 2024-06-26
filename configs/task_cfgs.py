@@ -22,14 +22,11 @@ class Cfgs(PATH):
         self.GPU = getattr(args, 'GPU', None)
         if self.GPU is not None:
             self.GPU_IDS = [int(i) for i in self.GPU.split(',')]
-            # print(f'Avaliable GPUs: {torch.cuda.device_count()}')
-            # print(f'Using GPU {self.GPU}')
             self.CURRENT_GPU = self.GPU_IDS[0]
             torch.cuda.set_device(f'cuda:{self.CURRENT_GPU}')
             self.N_GPU = len(self.GPU_IDS)
             self.SEED = getattr(args, 'SEED', 1111)
             torch.manual_seed(self.SEED)
-            # torch.manual_seed_all(self.SEED)
             if self.N_GPU < 2:
                 torch.cuda.manual_seed(self.SEED)
             else:
@@ -96,7 +93,6 @@ class Cfgs(PATH):
         self.EVAL_NOW = True
         if self.RUN_MODE == 'pretrain' or self.TASK == 'aok_test':
             self.EVAL_NOW = False
-        # print(f'Eval Now: {self.EVAL_NOW}')
 
         # ------------------------
         # ---- Model Training ----
@@ -127,6 +123,8 @@ class Cfgs(PATH):
                 'answer_latents'
             ) # where answer latents will be saved
 
+        # Add the IMAGE_PATH attribute
+        self.IMAGE_PATH = getattr(args, 'IMAGE_PATH', 'datasets/coco2014')
 
         # write rest arguments to self
         for attr in args.__dict__:
@@ -169,8 +167,6 @@ class Cfgs(PATH):
     
     @property
     def EVAL_QUESTION_PATH(self):
-        # if not self.EVAL_NOW:
-        #     return []
         return self.QUESTION_PATH[self.EVAL_SPLITS[0]]
     
     @property
