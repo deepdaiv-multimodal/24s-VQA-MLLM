@@ -3,7 +3,6 @@
 # Description: Runner that handles the prompting process
 # ------------------------------------------------------------------------------ #
 
-from jax import image
 import torch
 import os, sys
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -27,7 +26,6 @@ from configs.task_cfgs import Cfgs
 from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
 from PIL import Image 
 
-
 class Runner:
     def __init__(self, __C, evaluater):
         self.__C = __C
@@ -37,12 +35,8 @@ class Runner:
         # instructBLIP loading 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
-        # self.processor = InstructBlipProcessor.from_pretrained('/content/drive/MyDrive/24s-deep-daiv/prophet/InstructBLIP/processor')
-        # self.model = InstructBlipForConditionalGeneration.from_pretrained('/content/drive/MyDrive/24s-deep-daiv/prophet/InstructBLIP/model-CPU', load_in_4bit=False).to(self.device)
         self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
         self.model = InstructBlipForConditionalGeneration.from_pretrained("Salesforce/instructblip-flan-t5-xl", load_in_4bit=False).to(self.device)
-
-
 
     def instructblip_infer(self, image_path, prompt_text, max_retries=3):
         retry_count = 0
@@ -137,15 +131,6 @@ class Runner:
             self.__C.TRAIN_SPLITS,
             True
         )
-
-        # sample_qid = next(iter(self.trainset.qid_to_data.keys()))
-        # sample_data = self.trainset[sample_qid]
-
-        # # 샘플 데이터 출력
-        # print(f"Sample QID: {sample_qid}")
-        # print("Sample Data:")
-        # print(json.dumps(sample_data, indent=4))
-        # exit()
 
         self.valset = Qid2Data(
             self.__C, 
