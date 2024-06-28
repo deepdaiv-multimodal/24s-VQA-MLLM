@@ -3,29 +3,25 @@
 # Description: Runner that handles the finetuning and evaluation process
 # ------------------------------------------------------------------------------ #
 
-import os, sys
-# sys.path.append(os.getcwd())
-
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from datetime import datetime
-import pickle, random, math, time
-import json
-import numpy as np
+import time
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.utils.data as Data
 import argparse
 from pathlib import Path
-from copy import deepcopy
 import yaml
+import numpy as np
 
 from configs.task_cfgs import Cfgs
 from .utils.load_data import CommonData, DataSet
-from .model.mcan_for_finetune import MCANForFinetune
+from .model.mcan_for_finetune import MCANForFinetune, load_checkpoint_with_different_shape
 from .utils.optim import get_optim_for_finetune as get_optim
 
 class Runner(object):
-    def __init__(self, __C, evaluater):
+    def __init__(self, __C, evaluater=None):
         self.__C = __C
         self.evaluater = evaluater
         
@@ -38,17 +34,13 @@ class Runner(object):
         ## load the pretrained model
         if self.__C.PRETRAINED_MODEL_PATH is not None:
             print(f'Loading pretrained model from {self.__C.PRETRAINED_MODEL_PATH}')
-            ckpt = torch.load(self.__C.PRETRAINED_MODEL_PATH, map_location='cpu')
-            net.load_state_dict(ckpt['state_dict'], strict=False)
+            load_checkpoint_with_different_shape(self.__C.PRETRAINED_MODEL_PATH, net)
             net.parameter_init()
             print('Finish loading.')
 
         # Define the optimizer
-        if self.__C.RESUME:
-            raise NotImplementedError('Resume training is not needed as the finetuning is fast')
-        else:
-            optim = get_optim(self.__C, net)
-            start_epoch = 0
+        optim = get_optim(self.__C, net)
+        start_epoch = 0
 
         # load to gpu
         net.cuda()
@@ -59,6 +51,10 @@ class Runner(object):
         # Define the binary cross entropy loss
         loss_fn = torch.nn.BCEWithLogitsLoss(reduction='sum')
         epoch_loss = 0
+
+        # Set default value for GRAD_ACCU_STEPS if not set
+        if self.__C.GRAD_ACCU_STEPS is None:
+            self.__C.GRAD_ACCU_STEPS = 1
 
         # Define multi-thread dataloader
         dataloader = Data.DataLoader(
@@ -98,7 +94,7 @@ class Runner(object):
                     loss.backward()
                     loss_item = loss.item()
                     iteration_loss += loss_item
-                    epoch_loss += loss_item# * self.__C.GRAD_ACCU_STEPS
+                    epoch_loss += loss_item
 
                 print("\r[version %s][epoch %2d][step %4d/%4d][Task %s][Mode %s] loss: %.4f, lr: %.2e" % (
                     self.__C.VERSION,
@@ -122,20 +118,6 @@ class Runner(object):
             
             optim.schedule_step(epoch)
 
-            # Save checkpoint
-            state = {
-                'state_dict': net.state_dict() if self.__C.N_GPU == 1 \
-                    else net.module.state_dict(),
-                'optimizer': optim.optimizer.state_dict(),
-                'warmup_lr_scale': optim.warmup_lr_scale,
-                'decay_lr_scale': optim.decay_lr_scale,
-            }
-            torch.save(
-                state,
-                f'{self.__C.CKPTS_DIR}/epoch{epoch + 1}.pkl'
-            )
-
-
             # Eval after every epoch
             if eval_set is not None:
                 self.eval(
@@ -150,9 +132,6 @@ class Runner(object):
     @torch.no_grad()
     def eval(self, dataset, net=None, eval_now=False):
         data_size = dataset.data_size
-
-        # if eval_now and self.evaluater is None:
-        #     self.build_evaluator(dataset)
         
         if net is None:
             # Load parameters
@@ -209,18 +188,6 @@ class Runner(object):
             with open(self.__C.LOG_PATH, 'a+') as logfile:
                 self.evaluater.evaluate(logfile)
 
-    # def build_evaluator(self, valid_set):
-    #     if 'aok' in self.__C.TASK:
-    #         from evaluation.aokvqa_evaluate import Evaluater
-    #     elif 'ok' in self.__C.TASK:
-    #         from evaluation.okvqa_evaluate import Evaluater
-    #     else:
-    #         raise ValueError('Unknown dataset')
-    #     self.evaluater = Evaluater(
-    #         valid_set.annotation_path,
-    #         valid_set.question_path,
-    #     )
-
     def run(self):
         # Set ckpts and log path
         ## where checkpoints will be saved
@@ -271,7 +238,7 @@ def finetune_login_args(parser):
     parser.add_argument('--ckpt_path', dest='CKPT_PATH', help='checkpoint path for test', type=str, default=None)
     parser.add_argument('--gpu', dest='GPU', help='gpu id', type=str, default=None)
     parser.add_argument('--seed', dest='SEED', help='random seed', type=int, default=None)
-    parser.add_argument('--grad_accu', dest='GRAD_ACCU_STEPS', help='random seed', type=int, default=None)
+    parser.add_argument('--grad_accu', dest='GRAD_ACCU_STEPS', help='gradient accumulation steps', type=int, default=1)  # Update the default value here
     parser.add_argument('--pretrained_model', dest='PRETRAINED_MODEL_PATH', help='pretrained model path', type=str, default=None)
 
 

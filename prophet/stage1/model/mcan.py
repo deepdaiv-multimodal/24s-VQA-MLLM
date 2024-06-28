@@ -36,34 +36,23 @@ class MCA_ED(nn.Module):
         return x, y
 
 
-
 class MCAN(nn.Module):
     """
     The definition of the complete network of the improved MCAN, mainly includes:
     1. A pretrained BERT model used to encode questions (already represented as tokens)
-    2. A linear layer to project CLIP vision features (extracted beforehand, so the CLIP
-        model is not included) to a common embedding space
+    2. A linear layer to project vision features to a common embedding space
     3. An encoder-decoder backbone to fuse question and image features in depth
     4. A classifier head based on `AttFlat`
     """
     def __init__(self, __C, answer_size):
         super().__init__()
 
-        # answer_size = trainset.ans_size
-
         self.__C = __C
 
         self.bert = AutoModel.from_pretrained(__C.BERT_VERSION)
 
-        # self.clip_visual = trainset.clip_model.visual
-        # self.clip_visual.layer4 = Identity()
-        # self.clip_visual.float()
-
-        # for p in self.clip_visual.parameters():
-        #     p.requires_grad = False
-
         self.img_feat_linear = nn.Sequential(
-            nn.Linear(__C.IMG_FEAT_SIZE, __C.HIDDEN_SIZE, bias=False),
+            nn.Linear(768, __C.HIDDEN_SIZE, bias=False),  # Here we set the input size to 768
         )
         self.lang_adapt = nn.Sequential(
             nn.Linear(__C.LANG_FEAT_SIZE, __C.HIDDEN_SIZE),
@@ -81,7 +70,7 @@ class MCAN(nn.Module):
 
         # Make mask
         lang_feat_mask = self.make_mask(ques_ix.unsqueeze(2))
-        img_feat_mask = None#self.make_mask(img_feat)
+        img_feat_mask = None
 
         # Pre-process Language Feature
         lang_feat = self.bert(
@@ -93,9 +82,7 @@ class MCAN(nn.Module):
         # Pre-process Image Feature
         img_feat = self.img_feat_linear(img_feat)
 
-
         # Backbone Framework
-        # img_feat = flatten(img_feat)
         lang_feat, img_feat = self.backbone(
             lang_feat,
             img_feat,

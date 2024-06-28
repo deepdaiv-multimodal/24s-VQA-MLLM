@@ -134,8 +134,8 @@ class DataSet(Data.Dataset):
         # Process image feature
         img_id = int(ques_info['image_id'])
         img_feat = np.load(self.imgid_to_path[img_id])['x']
-        assert img_feat.shape == (__C.IMG_FEAT_GRID, __C.IMG_FEAT_GRID, __C.IMG_FEAT_SIZE)
-        img_feat = img_feat.reshape(-1, __C.IMG_FEAT_SIZE)
+        assert img_feat.shape == (197, 768)  # Update the expected shape here
+        # img_feat = img_feat.reshape(-1, __C.IMG_FEAT_SIZE)
 
         # Process answer
         # The code is compatible with VQA v2, OK-VQA, and A-OKVQA.

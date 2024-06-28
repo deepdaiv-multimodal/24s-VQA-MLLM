@@ -20,6 +20,7 @@ class Cfgs(PATH):
         self.set_silent_attr()
 
         self.GPU = getattr(args, 'GPU', None)
+        self.N_GPU = 0
         if self.GPU is not None:
             self.GPU_IDS = [int(i) for i in self.GPU.split(',')]
             self.CURRENT_GPU = self.GPU_IDS[0]
