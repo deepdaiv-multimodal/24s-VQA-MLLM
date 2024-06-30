@@ -114,7 +114,7 @@ class Cfgs(PATH):
         if self.RUN_MODE == 'pretrain' or self.TASK == 'aok_test':
             self.EVAL_NOW = False
 
-        self.NUM_WORKERS = 8
+        self.NUM_WORKERS = 2
         self.PIN_MEM = True
 
         self.CANDIDATE_NUM = getattr(args, 'CANDIDATE_NUM', None)
