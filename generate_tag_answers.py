@@ -18,13 +18,13 @@ import json
 # sys.path.append(groundingdino_dir)
 
 # from GroundingDINO import groundingdino
-import groundingdino.datasets.transforms as T
-from groundingdino.models import build_model
-from groundingdino.util.slconfig import SLConfig
-from groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
+import tagging_model.groundingdino.datasets.transforms as T
+from tagging_model.groundingdino.models import build_model
+from tagging_model.groundingdino.util.slconfig import SLConfig
+from tagging_model.groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
 
-from ram import inference_ram
-from ram.models import ram
+from tagging_model.ram import inference_ram
+from tagging_model.ram.models import ram
 
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
