@@ -1,10 +1,11 @@
 # ------------------------------------------------------------------------------ #
 # Author: Zhenwei Shao (https://github.com/ParadoxZW)
-# Description: Runner that handles the prompting process with InstructBLIP
+# Description: Runner that handles the prompting process
 # ------------------------------------------------------------------------------ #
 
 import os, sys
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# sys.path.append(os.getcwd())
+
 import pickle
 import json, time
 import math
@@ -14,65 +15,62 @@ from datetime import datetime
 from copy import deepcopy
 import yaml
 from pathlib import Path
-import torch
-from PIL import Image
-
-from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
-
+import openai
 
 from .utils.fancy_pbar import progress, info_column
 from .utils.data_utils import Qid2Data
 from configs.task_cfgs import Cfgs
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
+
 
 class Runner:
     def __init__(self, __C, evaluater):
         self.__C = __C
         self.evaluater = evaluater
-        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        print(f"Using device: {self.device}")
-        self.model = InstructBlipForConditionalGeneration.from_pretrained("Salesforce/instructblip-flan-t5-xl", load_in_4bit=False).to(self.device)
-
-    def infer_with_blip(self, image_path, prompt_text, _retry=0):
+        openai.api_key = __C.OPENAI_KEY
+    
+    def gpt3_infer(self, prompt_text, _retry=0):
+        # print(prompt_text)
+        # exponential backoff
         if _retry > 0:
             print('retrying...')
             st = 2 ** _retry
             time.sleep(st)
-
+        
         if self.__C.DEBUG:
+            # print(prompt_text)
             time.sleep(0.05)
-            return "Debug mode response", 0
+            return 0, 0
 
         try:
-            if not os.path.isfile(image_path):
-                raise FileNotFoundError(f"The image at path {image_path} does not exist.")
-
-            image = Image.open(image_path).convert("RGB")
-            inputs = self.processor(images=image, text=prompt_text, return_tensors="pt", truncation=True, max_length=512)
-            if torch.cuda.is_available():
-                inputs = {key: value.to(self.device) for key, value in inputs.items()}
-            outputs = self.model.generate(**inputs, max_length=512, return_dict_in_generate=True, output_scores=True)
-
-            response_txt = self.processor.decode(outputs.sequences[0], skip_special_tokens=True).strip()
-
-            logprobs = []
-            for score in outputs.scores:
-                logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
-            total_logprob = torch.sum(torch.stack(logprobs))
-            prob = math.exp(total_logprob.item())
-
-        except FileNotFoundError as e:
-            print(e)
-            return "Image not found", 0
+            # print('calling gpt3...')
+            response = openai.Completion.create(
+                engine=self.__C.MODEL,
+                prompt=prompt_text,
+                temperature=self.__C.TEMPERATURE,
+                max_tokens=self.__C.MAX_TOKENS,
+                logprobs=1,
+                stop=["\n", "<|endoftext|>"],
+                # timeout=20,
+            )
+            # print('gpt3 called.')
         except Exception as e:
             print(type(e), e)
-            return self.infer_with_blip(image_path, prompt_text, _retry + 1)
+            if str(e) == 'You exceeded your current quota, please check your plan and billing details.':
+                exit(1)
+            return self.gpt3_infer(prompt_text, _retry + 1)
 
+        response_txt = response.choices[0].text.strip()
+        # print(response_txt)
+        plist = []
+        for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
+            if response['choices'][0]['logprobs']['tokens'][ii] in ["\n", "<|endoftext|>"]:
+                break
+            plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
+        prob = math.exp(sum(plist))
+        
         return response_txt, prob
-
-    def sample_make(self, ques, capt, cands, image_path, ans=None):
+    
+    def sample_make(self, ques, capt, cands, ans=None):
         line_prefix = self.__C.LINE_PREFIX
         cands = cands[:self.__C.K_CANDIDATES]
         prompt_text = line_prefix + f'Context: {capt}\n'
@@ -83,9 +81,10 @@ class Runner:
         prompt_text += line_prefix + 'Answer:'
         if ans is not None:
             prompt_text += f' {ans}'
-        return prompt_text, image_path
+        return prompt_text
 
     def get_context(self, example_qids):
+        # making context text for one testing input
         prompt_text = self.__C.PROMPT_HEAD
         examples = []
         for key in example_qids:
@@ -93,33 +92,52 @@ class Runner:
             caption = self.trainset.get_caption(key)
             cands = self.trainset.get_topk_candidates(key)
             gt_ans = self.trainset.get_most_answer(key)
-            image_path = self.trainset.get_image_path(key)
-            examples.append((ques, caption, cands, gt_ans, image_path))
-            context_prompt, _ = self.sample_make(ques, caption, cands, image_path, ans=gt_ans)
-            prompt_text += context_prompt
+            examples.append((ques, caption, cands, gt_ans))
+            prompt_text += self.sample_make(ques, caption, cands, ans=gt_ans)
             prompt_text += '\n\n'
         return prompt_text
-
+    
     def run(self):
-        ## 로그 저장 위치 설정
+        ## where logs will be saved
         Path(self.__C.LOG_PATH).parent.mkdir(parents=True, exist_ok=True)
         with open(self.__C.LOG_PATH, 'w') as f:
             f.write(str(self.__C) + '\n')
-        ## 결과 저장 위치 설정
+        ## where results will be saved
         Path(self.__C.RESULT_DIR).mkdir(parents=True, exist_ok=True)
-
+        
         self.cache = {}
-        self.cache_file_path = os.path.join(self.__C.RESULT_DIR, 'cache.json')
+        self.cache_file_path = os.path.join(
+            self.__C.RESULT_DIR,
+            'cache.json'
+        )
         if self.__C.RESUME:
             self.cache = json.load(open(self.cache_file_path, 'r'))
-
+        
         print('Note that the accuracies printed before final evaluation (the last printed one) are rough, just for checking if the process is normal!!!\n')
-        self.trainset = Qid2Data(self.__C, self.__C.TRAIN_SPLITS, True)
-        self.valset = Qid2Data(self.__C, self.__C.EVAL_SPLITS, self.__C.EVAL_NOW, json.load(open(self.__C.EXAMPLES_PATH, 'r')))
+        self.trainset = Qid2Data(
+            self.__C, 
+            self.__C.TRAIN_SPLITS,
+            True
+        )
+        self.valset = Qid2Data(
+            self.__C, 
+            self.__C.EVAL_SPLITS,
+            self.__C.EVAL_NOW,
+            json.load(open(self.__C.EXAMPLES_PATH, 'r'))
+        )
+
+        # if 'aok' in self.__C.TASK:
+        #     from evaluation.aokvqa_evaluate import AOKEvaluater as Evaluater
+        # else:
+        #     from evaluation.okvqa_evaluate import OKEvaluater as Evaluater
+        # evaluater = Evaluater(
+        #     self.valset.annotation_path,
+        #     self.valset.question_path
+        # )
 
         infer_times = self.__C.T_INFER
         N_inctx = self.__C.N_EXAMPLES
-
+        
         print()
 
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
@@ -128,19 +146,19 @@ class Runner:
             ques = self.valset.get_question(qid)
             caption = self.valset.get_caption(qid)
             cands = self.valset.get_topk_candidates(qid, self.__C.K_CANDIDATES)
-            image_path = self.valset.get_image_path(qid)
 
-            prompt_query, image_path = self.sample_make(ques, caption, cands, image_path)
+            prompt_query = self.sample_make(ques, caption, cands)
             example_qids = self.valset.get_similar_qids(qid, k=infer_times * N_inctx)
             random.shuffle(example_qids)
 
             prompt_info_list = []
             ans_pool = {}
-            # 다중 추론
+            # multi-times infer
             for t in range(infer_times):
+                # print(f'Infer {t}...')
                 prompt_in_ctx = self.get_context(example_qids[(N_inctx * t):(N_inctx * t + N_inctx)])
                 prompt_text = prompt_in_ctx + prompt_query
-                gen_text, gen_prob = self.infer_with_blip(image_path, prompt_text)
+                gen_text, gen_prob = self.gpt3_infer(prompt_text)
 
                 ans = self.evaluater.prep_ans(gen_text)
                 if ans != '':
@@ -153,13 +171,13 @@ class Runner:
                 }
                 prompt_info_list.append(prompt_info)
                 time.sleep(self.__C.SLEEP_PER_INFER)
-
-            # 다수결 투표
+            
+            # vote
             if len(ans_pool) == 0:
                 answer = self.valset.get_topk_candidates(qid, 1)[0]['answer']
             else:
                 answer = sorted(ans_pool.items(), key=lambda x: x[1], reverse=True)[0][0]
-
+            
             self.evaluater.add(qid, answer)
             self.cache[qid] = {
                 'question_id': qid,
@@ -178,7 +196,7 @@ class Runner:
         if self.__C.EVAL_NOW:
             with open(self.__C.LOG_PATH, 'a+') as logfile:
                 self.evaluater.evaluate(logfile)
-
+        
 def prompt_login_args(parser):
     parser.add_argument('--debug', dest='DEBUG', help='debug mode', action='store_true')
     parser.add_argument('--resume', dest='RESUME', help='resume previous run', action='store_true')
@@ -188,19 +206,18 @@ def prompt_login_args(parser):
     parser.add_argument('--examples_path', dest='EXAMPLES_PATH', help='answer-aware example file path, default: "assets/answer_aware_examples_for_ok.json"', type=str, default=None)
     parser.add_argument('--candidates_path', dest='CANDIDATES_PATH', help='candidates file path, default: "assets/candidates_for_ok.json"', type=str, default=None)
     parser.add_argument('--captions_path', dest='CAPTIONS_PATH', help='captions file path, default: "assets/captions_for_ok.json"', type=str, default=None)
-    parser.add_argument('--image_path', dest='IMAGE_PATH', help='path to the images folder', type=str, required=True)
+    parser.add_argument('--openai_key', dest='OPENAI_KEY', help='openai api key', type=str, default=None)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Heuristics-enhanced Prompting')
     prompt_login_args(parser)
     args = parser.parse_args()
-
     __C = Cfgs(args)
     with open(args.cfg_file, 'r') as f:
         yaml_dict = yaml.load(f, Loader=yaml.FullLoader)
     __C.override_from_dict(yaml_dict)
     print(__C)
 
-    runner = Runner(__C, None)
+    runner = Runner(__C)
     runner.run()

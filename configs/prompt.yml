@@ -1,4 +1,4 @@
-MODEL: Salesforce/instructblip-flan-t5-xl
+MODEL: text-davinci-002
 TEMPERATURE: 0.
 MAX_TOKENS: 8
 SLEEP_PER_INFER: 10

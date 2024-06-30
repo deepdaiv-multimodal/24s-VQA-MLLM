@@ -1,34 +1,18 @@
-# ------------------------------------------------------------------------------ #
-# Author: Zhenwei Shao (https://github.com/ParadoxZW)
-# Description: Utilities for optimization
-# ------------------------------------------------------------------------------ #
+# optim.py
 
 import torch
 import torch.optim as Optim
 from torch.nn.utils import clip_grad_norm_
 
 class OptimizerWrapper(object):
-    """
-    A Wrapper for optimizer to support learning rate warmup and decay.
-    It also support multiple optimizers and switching at different steps.
-    """
-    def __init__(self, optimizers, 
-                 warmup_schd_steps,
-                 decay_schd_step_list,
-                 decay_rate, 
-                 cur_schd_step=-1,
-                 change_optim_step_list=None
-        ):
+    def __init__(self, optimizers, warmup_schd_steps, decay_schd_step_list, decay_rate, cur_schd_step=-1, change_optim_step_list=None):
         self.optimizer_list = optimizers
         self.groups_lr_list = []
         for _optim in self.optimizer_list:
-            self.groups_lr_list.append([])
-            for group in _optim.param_groups:
-                self.groups_lr_list[-1].append(group['lr'])
+            self.groups_lr_list.append([group['lr'] for group in _optim.param_groups])
         self.curr_optim_id = 0
         self.optimizer = self.optimizer_list[self.curr_optim_id]
         self.change_optim_step_list = change_optim_step_list
-        # self.total_schd_steps = total_schd_steps
         self.warmup_schd_steps = warmup_schd_steps
         self.decay_schd_step_list = decay_schd_step_list
         self.decay_rate = decay_rate
@@ -60,11 +44,9 @@ class OptimizerWrapper(object):
         if schd_step in self.decay_schd_step_list:
             self.decay_lr_scale = self.decay_lr_scale * self.decay_rate
         lr_scale = self.warmup_lr_scale * self.decay_lr_scale
-        # lr actually changes in following lines
-        if self.change_optim_step_list is not None:
-            if schd_step in self.change_optim_step_list:
-                self.curr_optim_id += 1
-                self.optimizer = self.optimizer_list[self.curr_optim_id]
+        if self.change_optim_step_list and schd_step in self.change_optim_step_list:
+            self.curr_optim_id += 1
+            self.optimizer = self.optimizer_list[self.curr_optim_id]
         for i, group in enumerate(self.optimizer.param_groups):
             group['lr'] = lr_scale * self.groups_lr_list[self.curr_optim_id][i]
 
@@ -102,19 +84,11 @@ def get_optim(__C, model):
     )
 
 
-def get_optim_for_finetune(__C, model, new_params_name='proj1'):
-    # optimizer for finetuning warmup
+def get_optim_for_finetune(__C, model, new_params_name='head'):
     optim_class1 = eval('Optim.' + __C.OPT_FTW)
-    params1 = []
-    for name, param in model.named_parameters():
-        if new_params_name in name and param.requires_grad:
-            params1.append(param)
+    params1 = [{'params': param, 'lr': __C.LR_BASE_FTW} for name, param in model.named_parameters() if new_params_name in name and param.requires_grad]
     hyper_params1 = {k: eval(v) for k, v in __C.OPT_PARAMS_FTW.items()}
-    optimizer1 = optim_class1(
-        params1,
-        lr=__C.LR_BASE_FTW,
-        **hyper_params1
-    )
+    optimizer1 = optim_class1(params1, **hyper_params1)
 
     optim_class2 = eval('Optim.' + __C.OPT)
     params2 = [
@@ -128,14 +102,12 @@ def get_optim_for_finetune(__C, model, new_params_name='proj1'):
             else:
                 params2[0]['params'].append(param)
     hyper_params2 = {k: eval(v) for k, v in __C.OPT_PARAMS.items()}
-    optimizer2 = optim_class2(
-        params2,
-        **hyper_params2
-    )
+    optimizer2 = optim_class2(params2, **hyper_params2)
+
     return OptimizerWrapper(
         [optimizer1, optimizer2],
         warmup_schd_steps=__C.WARMUP_EPOCH,
         decay_schd_step_list=__C.LR_DECAY_LIST,
         decay_rate=__C.LR_DECAY_R,
-        change_optim_step_list=[__C.EPOPH_FTW,]        
+        change_optim_step_list=[__C.EPOPH_FTW]        
     )

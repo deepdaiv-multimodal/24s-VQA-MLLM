@@ -1,115 +1,41 @@
-# ------------------------------------------------------------------------------ #
-# Author: Zhenwei Shao (https://github.com/ParadoxZW)
-# Description: the definition of the improved MCAN
-# ------------------------------------------------------------------------------ #
-
 import torch
-from torch import nn
-from torch.nn import functional as F
-import math
-from transformers import AutoModel, logging
+import torch.nn as nn
+from transformers import BeitFeatureExtractor, BeitForImageQuestionAnswering, AutoTokenizer
+import logging
+
 logging.set_verbosity_error()
 
-from .net_utils import *
-from .layers import *
-
-
-class MCA_ED(nn.Module):
-    """
-    The definition of the encoder-decoder backbone of MCAN.
-    """
-    def __init__(self, __C):
-        super(MCA_ED, self).__init__()
-
-        enc = __C.ARCH_CEIL['enc'] * __C.LAYER
-        dec = __C.ARCH_CEIL['dec'] * __C.LAYER
-        self.enc_list = nn.ModuleList([eval(layer)(__C) for layer in enc])
-        self.dec_list = nn.ModuleList([eval(layer)(__C) for layer in dec])
-
-    def forward(self, x, y, x_mask, y_mask):
-        for enc in self.enc_list:
-            x = enc(x, x_mask)
-
-        for dec in self.dec_list:
-            y = dec(y, x, y_mask, x_mask)
-
-        return x, y
-
-
-class MCAN(nn.Module):
-    """
-    The definition of the complete network of the improved MCAN, mainly includes:
-    1. A pretrained BERT model used to encode questions (already represented as tokens)
-    2. A linear layer to project vision features to a common embedding space
-    3. An encoder-decoder backbone to fuse question and image features in depth
-    4. A classifier head based on `AttFlat`
-    """
-    def __init__(self, __C, answer_size):
+class BEiT3_VQA(nn.Module):
+    def __init__(self, model_name_or_path, answer_size):
         super().__init__()
 
-        self.__C = __C
+        # Load BEiT3ForVisualQuestionAnswering model and feature extractor
+        self.model = BeitForImageQuestionAnswering.from_pretrained(model_name_or_path)
+        self.feature_extractor = BeitFeatureExtractor.from_pretrained(model_name_or_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
+        self.answer_size = answer_size
 
-        self.bert = AutoModel.from_pretrained(__C.BERT_VERSION)
+        # Additional layers for VQA task
+        self.proj_norm = nn.LayerNorm(self.model.config.hidden_size)
+        self.proj = nn.Linear(self.model.config.hidden_size, answer_size)
 
-        self.img_feat_linear = nn.Sequential(
-            nn.Linear(768, __C.HIDDEN_SIZE, bias=False),  # Here we set the input size to 768
-        )
-        self.lang_adapt = nn.Sequential(
-            nn.Linear(__C.LANG_FEAT_SIZE, __C.HIDDEN_SIZE),
-            nn.Tanh(),
-        )
+    def forward(self, img, ques_text):
+        # Extract image features using BEiT's feature extractor
+        image = self.feature_extractor(images=img, return_tensors="pt")
 
-        self.backbone = MCA_ED(__C)
-        self.attflat_img = AttFlat(__C)
-        self.attflat_lang = AttFlat(__C)
-        self.proj_norm = nn.LayerNorm(__C.FLAT_OUT_SIZE)
-        self.proj = nn.Linear(__C.FLAT_OUT_SIZE, answer_size)
+        # Tokenize and encode question text
+        inputs = self.tokenizer(ques_text, return_tensors="pt", padding=True, truncation=True)
 
-    def forward(self, input_tuple, output_answer_latent=False):
-        img_feat, ques_ix = input_tuple
+        # Forward pass through BEiT model
+        outputs = self.model(pixel_values=image.pixel_values, **inputs)
 
-        # Make mask
-        lang_feat_mask = self.make_mask(ques_ix.unsqueeze(2))
-        img_feat_mask = None
+        # Extract pooled output
+        pooled_output = outputs.logits[:, :self.answer_size]
 
-        # Pre-process Language Feature
-        lang_feat = self.bert(
-            ques_ix, 
-            attention_mask= ~lang_feat_mask.squeeze(1).squeeze(1)
-        )[0]
-        lang_feat = self.lang_adapt(lang_feat)
+        # Apply layer normalization
+        pooled_output = self.proj_norm(pooled_output)
 
-        # Pre-process Image Feature
-        img_feat = self.img_feat_linear(img_feat)
+        # Project pooled output to answer space
+        proj_output = self.proj(pooled_output)
 
-        # Backbone Framework
-        lang_feat, img_feat = self.backbone(
-            lang_feat,
-            img_feat,
-            lang_feat_mask,
-            img_feat_mask
-        )
-        lang_feat = self.attflat_lang(
-            lang_feat,
-            lang_feat_mask
-        )
-        img_feat = self.attflat_img(
-            img_feat,
-            img_feat_mask
-        )
-
-        proj_feat = lang_feat + img_feat
-        answer_latent = self.proj_norm(proj_feat)
-        proj_feat = self.proj(answer_latent)
-
-        if output_answer_latent:
-            return proj_feat, answer_latent
-
-        return proj_feat
-
-    # Masking
-    def make_mask(self, feature):
-        return (torch.sum(
-            torch.abs(feature),
-            dim=-1
-        ) == 0).unsqueeze(1).unsqueeze(2)
+        return proj_output
