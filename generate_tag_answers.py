@@ -10,12 +10,14 @@ import torchvision.transforms as TS
 import matplotlib.pyplot as plt 
 from PIL import Image, ImageDraw, ImageFont
 import argparse
+import re
+import json
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-groundingdino_dir = os.path.abspath(os.path.join(current_dir, 'GroundingDINO'))
-sys.path.append(groundingdino_dir)
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# groundingdino_dir = os.path.abspath(os.path.join(current_dir, 'GroundingDINO'))
+# sys.path.append(groundingdino_dir)
 
-from GroundingDINO import groundingdino
+# from GroundingDINO import groundingdino
 import groundingdino.datasets.transforms as T
 from groundingdino.models import build_model
 from groundingdino.util.slconfig import SLConfig
@@ -73,18 +75,6 @@ def get_grounding_output(model, image, caption, box_threshold, text_threshold, d
 
     return boxes_filt, torch.Tensor(scores), pred_phrases
 
-# def draw_mask(mask, draw, random_color=False):
-#     if random_color:
-#         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 153)
-#     else:
-#         color = (30, 144, 255, 153)
-
-#     nonzero_coords = np.transpose(np.nonzero(mask))
-
-#     for coord in nonzero_coords:
-#         draw.point(coord[::-1], fill=color)
-
-
 def draw_box(box, draw, label):
     # random color
     color = tuple(np.random.randint(0, 255, size=3).tolist())
@@ -106,8 +96,6 @@ def draw_box(box, draw, label):
 
         draw.text((box[0], box[1]), label, font=font)
 
-
-@torch.no_grad()
 def inference(raw_image, specified_tags, tagging_model, grounding_dino_model):
 
     print(f"Start processing, image size {raw_image.size}")
@@ -133,8 +121,8 @@ def inference(raw_image, specified_tags, tagging_model, grounding_dino_model):
     # while ". " is a little worse in some case
     res = inference_ram(image, tagging_model)
     tags = res[0].strip(' ').replace('  ', ' ').replace(' |', ',')
-    print("Tags: ", tags)
 
+  
     # run groundingDINO
     transform = T.Compose([
         T.RandomResize([800], max_size=1333),
@@ -149,65 +137,58 @@ def inference(raw_image, specified_tags, tagging_model, grounding_dino_model):
     )
     print("GroundingDINO finished")
 
-    # run SAM
-    image = np.asarray(raw_image)
-    # sam_model.set_image(image)
-
     size = raw_image.size
     H, W = size[1], size[0]
-    # for i in range(boxes_filt.size(0)):
-    #     boxes_filt[i] = boxes_filt[i] * torch.Tensor([W, H, W, H])
-    #     boxes_filt[i][:2] -= boxes_filt[i][2:] / 2
-    #     boxes_filt[i][2:] += boxes_filt[i][:2]
 
-    # boxes_filt = boxes_filt.cpu()
-    # # use NMS to handle overlapped boxes
-    # print(f"Before NMS: {boxes_filt.shape[0]} boxes")
-    # nms_idx = torchvision.ops.nms(boxes_filt, scores, iou_threshold).numpy().tolist()
-    # boxes_filt = boxes_filt[nms_idx]
-    # pred_phrases = [pred_phrases[idx] for idx in nms_idx]
-    # print(f"After NMS: {boxes_filt.shape[0]} boxes")
+    for i in range(boxes_filt.size(0)):
+        boxes_filt[i] = boxes_filt[i] * torch.Tensor([W, H, W, H])
+        boxes_filt[i][:2] -= boxes_filt[i][2:] / 2
+        boxes_filt[i][2:] += boxes_filt[i][:2]
 
-    # transformed_boxes = sam_model.transform.apply_boxes_torch(boxes_filt, image.shape[:2]).to(device)
+    boxes_filt = boxes_filt.cpu()
 
-    # masks, _, _ = sam_model.predict_torch(
-    #     point_coords=None,
-    #     point_labels=None,
-    #     boxes=transformed_boxes.to(device),
-    #     multimask_output=False,
+    # use NMS to handle overlapped boxes
+    print(f"Before NMS: {boxes_filt.shape[0]} boxes")
+    nms_idx = torchvision.ops.nms(boxes_filt, scores, iou_threshold).numpy().tolist()
+    boxes_filt = boxes_filt[nms_idx]
+    pred_phrases = [pred_phrases[idx] for idx in nms_idx]
+    print(f"After NMS: {boxes_filt.shape[0]} boxes")
+
+    # detection_prompt = ", ".join(
+    #     [f"{label}: [{box[0]:.3f}, {box[1]:.3f}, {box[2]:.3f}, {box[3]:.3f}]" for box, label in zip(boxes_filt, pred_phrases)]
     # )
-    # print("SAM finished")
 
     # draw output image
-    mask_image = Image.new('RGBA', size, color=(0, 0, 0, 0))
-
-    # mask_draw = ImageDraw.Draw(mask_image)
-    # for mask in masks:
-    #     draw_mask(mask[0].cpu().numpy(), mask_draw, random_color=True)
-
     # image_draw = ImageDraw.Draw(raw_image)
 
+    detection_prompts = []
     for box, label in zip(boxes_filt, pred_phrases):
-        draw_box(box, mask_image, label)
+        detection_prompts.append(f"{label}: [{box[0]:.3f}, {box[1]:.3f}, {box[2]:.3f}, {box[3]:.3f}]")
+        # draw_box(box, image_draw, label)
 
-    out_image = raw_image.convert('RGBA')
-    out_image.alpha_composite(mask_image)
+    detection_prompt = ", ".join(detection_prompts)
+    
+    # out_image = raw_image.convert('RGBA')
 
     # return
-    return tags.replace(", ", " | "), out_image
+    # return tags.replace(", ", " | "), out_image, detection_prompt
+    return detection_prompt
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('syndiff parameters')
-    parser.add_argument('--input_image_path', type=str, default='/root/datasets/okvqa/data/train2014/COCO_train2014_000000000009.jpg')
-    parser.add_argument('--config_file', type=str, default='/root/workspace/jiwonkim/24s-VQA-MLLM/recognize-anything/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py')
-    parser.add_argument('--ram_checkpoint', type=str, default='/root/workspace/jiwonkim/24s-VQA-MLLM/recognize-anything/pretrained/ram_swin_large_14m.pth')
-    parser.add_argument('--grounded_checkpoint', type=str, default='/root/workspace/jiwonkim/24s-VQA-MLLM/recognize-anything/Grounded-Segment-Anything/groundingdino_swint_ogc.pth')
-    parser.add_argument('--save_image_path', type=str, default='/root/workspace/jiwonkim/24s-VQA-MLLM/tagging_image')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_image_path', type=str, default='/content/drive/MyDrive/24s-deep-daiv/ok-vqa/train2014_vqa')
+    parser.add_argument('--config_file', type=str, default='/content/drive/MyDrive/24s-deep-daiv/recognize-anything/Grounded-Segment-Anything/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py')
+    parser.add_argument('--ram_checkpoint', type=str, default='/content/drive/MyDrive/24s-deep-daiv/recognize-anything/pretrained/ram_swin_large_14m.pth')
+    parser.add_argument('--grounded_checkpoint', type=str, default='/content/drive/MyDrive/24s-deep-daiv/recognize-anything/Grounded-Segment-Anything/groundingdino_swint_ogc.pth')
+    parser.add_argument('--save_image_path', type=str, default='/content/drive/MyDrive/24s-deep-daiv/tagging_image')
+    parser.add_argument('--save_json_path', type=str, default='/content/drive/MyDrive/24s-deep-daiv/okvqa_train_tagging.json')
+
     parser.add_argument('--box_threshold', type=int, default=0.25)
     parser.add_argument('--text_threshold', type=int, default=0.2)
     parser.add_argument('--iou_threshold', type=int, default=0.5)
 
+    # args = parser.parse_args()
     args = parser.parse_args()
 
     # load RAM
@@ -218,12 +199,34 @@ if __name__ == '__main__':
     # load gounding dino
     grounding_dino_model = load_model(args.config_file, args.grounded_checkpoint, device=device)
 
-    # inference 
-    in_img = Image.open(args.input_image_path)
+    def extract_image_id(image_name):
+        match = re.search(r'_(\d+)\.jpg$', image_name)
+        if match:
+            return match.group(1).lstrip('0')  # Strip leading zeros
+        return None
 
-    ram_tags, ram_out_image = inference(in_img, None, ram_model, grounding_dino_model)
-    ram_out_image.thumbnail((500, 500))
-    # display(ram_out_image)
-    plt.imshow(ram_out_image)
-    plt.axis('off')
-    plt.show()
+    # inference
+    in_img_paths = os.listdir(args.input_image_path)
+    results = {}
+
+    for in_img_path in in_img_paths:
+      in_img = Image.open(os.path.join(args.input_image_path, in_img_path))
+      image_id = extract_image_id(in_img_path)
+
+      # ram_tags, ram_out_image, detection_prompt = inference(in_img, None, ram_model, grounding_dino_model)
+      detection_prompt = inference(in_img, None, ram_model, grounding_dino_model)
+      results[image_id] = detection_prompt
+
+      # print(results)
+
+    with open(args.save_json_path, 'w') as outfile:
+      json.dump(results, outfile, indent=4)
+
+    # print(f"Tags: {ram_tags}")
+    # print(f"Detection prompt: {detection_prompt}")
+
+    # ram_out_image.thumbnail((500, 500))
+    # # display(ram_out_image)
+    # plt.imshow(ram_out_image)
+    # plt.axis('off')
+    # plt.show()
