@@ -1,0 +1,17 @@
+**/__pycache__/
+datasets/*/
+!datasets/.gitkeep
+assets/*
+!assets/.gitkeep
+ckpts/*
+!ckpts/.gitkeep
+outputs/ckpts/*
+!outputs/ckpts/.gitkeep
+outputs/logs/*
+!outputs/logs/.gitkeep
+outputs/results/*
+!outputs/results/.gitkeep
+preds/*
+!preds/.gitkeep
+tmp
+.git/
