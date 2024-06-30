@@ -106,14 +106,10 @@ class DataSet(Data.Dataset):
         return self.feature_extractor(images=Image.open(image_path).convert("RGB"), return_tensors="pt")
 
     def convert_to_features(self, img):
-        # 변환 함수 추가
-        img = img.unsqueeze(0)  # (C, H, W) -> (1, C, H, W)
-        img = nn.Conv2d(3, 4096, kernel_size=16, stride=16)(img)
-        img = img.squeeze(0)  # (1, C, H, W) -> (C, H, W)
-        img = img.permute(1, 2, 0).contiguous()  # (C, H, W) -> (H, W, C)
-        img = img.unsqueeze(0).permute(0, 3, 1, 2)  # (H, W, C) -> (1, C, H, W)
-        img = nn.functional.interpolate(img, size=(224, 224))  # 이미지 크기를 224x224로 변경
-        img = img.squeeze(0)  # (1, C, H, W) -> (C, H, W)
+        # 이미지를 224x224 크기로 리사이즈
+        img = nn.functional.interpolate(img.unsqueeze(0), size=(224, 224), mode='bilinear', align_corners=False)
+        img = img.squeeze(0)  # 배치 차원을 제거하여 (C, H, W) 형태로 변환
+        img = img.half()  # fp16 모드로 변환
         return img
 
     def soft_target(self, answers):
