@@ -1,0 +1,33 @@
+{ TIMESTAMP         }-> 20240701112451
+{ VERSION           }-> okvqa_prompt_2
+{ CKPTS_DIR         }-> outputs/ckpts/okvqa_prompt_2
+{ LOG_PATH          }-> outputs/logs/okvqa_prompt_2/log_20240701112451.txt
+{ RESULT_DIR        }-> outputs/results/okvqa_prompt_2
+{ RESULT_PATH       }-> outputs/results/okvqa_prompt_2/result_20240701112451.json
+{ RESUME            }-> False
+{ TASK              }-> ok
+{ RUN_MODE          }-> prompt
+{ DATA_TAG          }-> ok
+{ DATA_MODE         }-> finetune
+{ EVAL_NOW          }-> True
+{ NUM_WORKERS       }-> 8
+{ PIN_MEM           }-> True
+{ cfg_file          }-> configs/prompt.yml
+{ DEBUG             }-> False
+{ SEED              }-> 99
+{ EXAMPLES_PATH     }-> /root/datasets/okvqa/data/assets/answer_aware_examples_okvqa.json
+{ CANDIDATES_PATH   }-> /root/datasets/okvqa/data/assets/candidates_okvqa.json
+{ CAPTIONS_PATH     }-> /root/datasets/okvqa/data/assets/captions_okvqa.json
+{ MODEL             }-> text-davinci-002
+{ TEMPERATURE       }-> 0.0
+{ MAX_TOKENS        }-> 8
+{ SLEEP_PER_INFER   }-> 10
+{ PROMPT_HEAD       }-> Please answer the question according to the context and candidate answers. Each candidate answer is associated with a confidence score within a bracket. The true answer may not be included in the candidate answers.
+
+
+{ LINE_PREFIX       }-> ===
+
+{ N_EXAMPLES        }-> 20
+{ K_CANDIDATES      }-> 10
+{ T_INFER           }-> 5
+

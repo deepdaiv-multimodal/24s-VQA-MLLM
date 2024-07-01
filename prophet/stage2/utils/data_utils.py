@@ -82,6 +82,10 @@ class Qid2Data(Dict):
         qid_to_data = {}
         # ques_set = ques_set['questions']
         # anno_set = anno_set['annotations']
+        # print(qid_to_ques)
+        # print(len(qid_to_ques))
+        # exit()
+
         for qid in qid_to_ques:
             q_item = qid_to_ques[qid]
             t_item = qid_to_topk[qid]
