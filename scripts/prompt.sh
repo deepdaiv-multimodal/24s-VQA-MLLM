@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script is used to prompt GPT-3 to generate final answers.
+# This script is used to prompt InstructBLIP to generate final answers.
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -19,9 +19,9 @@ while [[ $# -gt 0 ]]; do
     --captions_path)
       CAPTIONS_PATH="$2"
       shift 2;;
-    # --openai_key)
-    #   OPENAI_KEY="$2"
-    #   shift 2;;
+    --image_path)
+      IMAGE_PATH="$2"
+      shift 2;;
     *)
       echo "Unknown argument: $1"
       exit 1;;
@@ -33,9 +33,10 @@ VERSION=${VERSION:-"prompt_okvqa"} # version name, default 'prompt_for_$TASK'
 EXAMPLES_PATH=${EXAMPLES_PATH:-"assets/answer_aware_examples_okvqa.json"} # path to the examples, default is the result from our experiments
 CANDIDATES_PATH=${CANDIDATES_PATH:-"assets/candidates_okvqa.json"} # path to the candidates, default is the result from our experiments
 CAPTIONS_PATH=${CAPTIONS_PATH:-"assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
-# OPENAI_KEY=${OPENAI_KEY:-""} # path to the captions
+IMAGE_PATH=${IMAGE_PATH:-"assets/images"} # path to the images folder, default is 'assets/images'
+#GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 
-# CUDA_VISIBLE_DEVICES=$GPU \
+#CUDA_VISIBLE_DEVICES=6 \
 python main.py \
     --task $TASK --run_mode prompt \
     --version $VERSION \
@@ -43,4 +44,6 @@ python main.py \
     --examples_path $EXAMPLES_PATH \
     --candidates_path $CANDIDATES_PATH \
     --captions_path $CAPTIONS_PATH \
-    # --openai_key $OPENAI_KEY
+    #--image_path $IMAGE_PATH \
+    --image_path $IMAGE_PATH\
+    #--gpu $GPU
