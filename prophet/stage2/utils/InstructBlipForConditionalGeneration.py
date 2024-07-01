@@ -29,8 +29,9 @@ class VisualGatedFusion(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, text_embeddings, visual_embeddings):
-        # if visual_embeddings.shape[-1] != self.key_proj.in_features:
-        #     raise ValueError(f"Expected visual_embeddings with last dimension {self.key_proj.in_features}, but got {visual_embeddings.shape[-1]}")
+        if visual_embeddings.shape[-1] != self.key_proj.in_features:
+            raise ValueError(f"Expected visual_embeddings with last dimension {self.key_proj.in_features}, but got {visual_embeddings.shape[-1]}")
+
         Q = self.query_proj(text_embeddings)
         K = self.key_proj(visual_embeddings)
         V = self.value_proj(visual_embeddings)
@@ -42,6 +43,7 @@ class VisualGatedFusion(nn.Module):
         return Fm
 
 
+
 class ResamplerDecoder(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(ResamplerDecoder, self).__init__()
@@ -50,6 +52,7 @@ class ResamplerDecoder(nn.Module):
     def forward(self, fused_embeddings):
         Fp = self.linear(fused_embeddings)
         return Fp
+
 
 class VisualAwarePromptingModule(nn.Module):
     def __init__(self, encoder_model, tokenizer, text_dim, visual_dim, output_dim):
@@ -70,7 +73,6 @@ class VisualAwarePromptingModule(nn.Module):
         Fp = self.resampler_decoder(Fm)
         return Fp
 
-
 class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
     config_class = InstructBlipConfig
     main_input_name = "pixel_values"
@@ -85,7 +87,7 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
 
         bert_model = BertModel.from_pretrained('bert-base-uncased')
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        self.visual_prompting_module = VisualAwarePromptingModule(bert_model, tokenizer, config.qformer_config.hidden_size, config.vision_config.hidden_size, config.text_config.hidden_size)
+        self.visual_prompting_module = VisualAwarePromptingModule(bert_model, tokenizer, config.qformer_config.hidden_size, config.vision_config.hidden_size, config.qformer_config.hidden_size)
 
         if config.use_decoder_only_language_model:
             language_model = AutoModelForCausalLM.from_config(config.text_config, attn_implementation=config._attn_implementation)
@@ -123,10 +125,9 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
                                      query_embeds=query_tokens, encoder_hidden_states=image_embeds,
                                      encoder_attention_mask=image_attention_mask, output_attentions=output_attentions,
                                      output_hidden_states=output_hidden_states, return_dict=return_dict)
-        query_output = query_outputs[0][:query_tokens.size(1), :]
+        query_output = query_outputs[0][:, :query_tokens.size(1), :]
         
         prompted_output = self.visual_prompting_module(visual_embeddings=image_embeds, text_prompts=prompts)
-        print(prompted_output.shape)
         language_model_inputs = self.language_projection(prompted_output)
         language_model_attention_mask = torch.ones(language_model_inputs.size()[:-1], dtype=torch.long, device=language_model_inputs.device)
 
@@ -218,9 +219,8 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
             prompts = [self.visual_prompting_module.tokenizer.decode(p, skip_special_tokens=True) for p in prompts]
         
         prompted_output = self.visual_prompting_module(visual_embeddings=image_embeds, text_prompts=prompts)
-        print(prompted_output.shape)
         language_model_inputs = self.language_projection(prompted_output)
-        language_attention_mask = torch.ones(language_model_inputs.size()[:-1], dtype=torch.long, device=language_model_inputs.device)
+        language_model_attention_mask = torch.ones(language_model_inputs.size()[:-1], dtype=torch.long, device=language_model_inputs.device)
 
         if input_ids is None:
             input_ids = (
@@ -230,9 +230,9 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
             )
         if attention_mask is None:
             attention_mask = torch.ones_like(input_ids)
-        attention_mask = torch.cat([language_attention_mask, attention_mask.to(language_attention_mask.device)], dim=1)
+        attention_mask = torch.cat([language_model_inputs.new_ones((batch_size, language_model_inputs.size(1))), attention_mask.to(language_model_inputs.device)], dim=1)
 
-        inputs_embeds = self.get_input_embeddings()(input_ids)
+        inputs_embeds = self.language_model.get_input_embeddings()(input_ids)
         inputs_embeds = torch.cat([language_model_inputs, inputs_embeds.to(language_model_inputs.device)], dim=1)
 
         if not self.language_model.config.is_encoder_decoder:

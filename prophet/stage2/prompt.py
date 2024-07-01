@@ -69,6 +69,8 @@ class Runner:
 
             response_txt = self.processor.decode(outputs.sequences[0], skip_special_tokens=True).strip()
 
+            print(response_txt)
+
             logprobs = []
             for score in outputs.scores:
                 logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
@@ -110,6 +112,7 @@ class Runner:
             context_prompt, _ = self.sample_make(ques, caption, cands, image_path, ans=gt_ans)
             prompt_text += context_prompt
             prompt_text += '\n\n'
+            print('get_context에 있음 : ', prompt_text)
         return prompt_text
 
     def run(self):
