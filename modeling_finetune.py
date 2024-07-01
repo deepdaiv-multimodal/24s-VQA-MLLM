@@ -48,6 +48,10 @@ class Pooler(nn.Module):
         cls_rep = self.norm(cls_rep)
         pooled_output = self.dense(cls_rep)
         pooled_output = self.activation(pooled_output)
+
+        # 마지막 차원을 768에서 평균으로 줄이기
+        pooled_output = pooled_output.mean(dim=1)  # 새로운 추가
+
         return pooled_output
 
 
@@ -195,19 +199,13 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
         outputs = self.beit3(textual_tokens=question, visual_tokens=image, text_padding_position=padding_mask)
         x = outputs["encoder_out"]
         
-        # 디버깅을 위한 형상 출력
-        #print(f"x shape: {x.shape}")
-        
         if x.dim() == 3:
-            cls_rep = x[:, 0, :]
-        elif x.dim() == 2:
-            # 필요한 경우 차원을 조정
-            cls_rep = x.unsqueeze(1)
+            # 모든 토큰에 대한 출력을 사용하도록 변경
+            cls_rep = x.mean(dim=1)  # 모든 토큰의 평균을 사용
         else:
             raise ValueError(f"Unexpected tensor dimensions: {x.dim()} with shape {x.shape}")
 
         # cls_rep 텐서의 형상을 출력하여 확인
-        #print(f"cls_rep shape: {cls_rep.shape}")
 
         cls_rep = self.pooler(cls_rep)
         logits = self.head(cls_rep)

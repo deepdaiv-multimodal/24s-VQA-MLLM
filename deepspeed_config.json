@@ -1,5 +1,5 @@
 {
-  "train_batch_size": 64,
+  "train_batch_size": 8,
   "gradient_accumulation_steps": 1,
   "steps_per_print": 1000,
   "optimizer": {
@@ -17,5 +17,6 @@
     "loss_scale_window": 1000,
     "hysteresis": 2,
     "min_loss_scale": 1
-  }
+  },
+  "logging_level": "ERROR"
 }

@@ -1,6 +1,8 @@
 import argparse
 import yaml
 import torch
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 from evaluation.okvqa_evaluate import OKEvaluater
 from evaluation.aokvqa_evaluate import AOKEvaluater
@@ -13,7 +15,7 @@ __C = Cfgs(args)
 with open(args.cfg_file, 'r') as f:
     yaml_dict = yaml.load(f, Loader=yaml.FullLoader)
 __C.override_from_dict(yaml_dict)
-print(__C)
+#print(__C)
 
 # build runner
 if __C.RUN_MODE == 'pretrain':

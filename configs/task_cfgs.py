@@ -78,7 +78,7 @@ class Cfgs(PATH):
         self.pretrained_model_path = '/content/drive/MyDrive/prophet/datasets/beit3/beit3_base_patch16_224.pth'
         self.lr_base = 5e-5
         self.weight_decay = 0.01
-        self.epochs = 10
+        self.epochs = 1
         self.batch_size = 64
 
         self.TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
