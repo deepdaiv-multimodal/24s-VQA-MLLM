@@ -58,10 +58,10 @@ class Runner:
                 total_logprob = torch.sum(torch.stack(logprobs))
                 prob = math.exp(total_logprob.item())
 
-                # print('image_path:',image_path)
-                # print('prompt_text:',prompt_text)
-                # print('response_txt:',response_txt)
-                # print('prob:', prob)
+                print('image_path:',image_path)
+                print('prompt_text:',prompt_text)
+                print('response_txt:',response_txt)
+                print('prob:', prob)
 
                 return response_txt, prob
 
@@ -76,11 +76,12 @@ class Runner:
       img = Image.open(image_path)
       return img 
     
-    def sample_make(self, ques, capt, cands, image_path, ans=None):
+    def sample_make(self, ques, capt, tag, cands, image_path, ans=None):
         line_prefix = self.__C.LINE_PREFIX
         cands = cands[:self.__C.K_CANDIDATES]
         # prompt_image = self.load_image(image_path)
         prompt_text = line_prefix + f'Context: {capt}\n'
+        prompt_text += line_prefix + f'Imaging tagging: {tag}\n'
         prompt_text += line_prefix + f'Question: {ques}\n'
         cands_with_conf = [f'{cand["answer"]}({cand["confidence"]:.2f})' for cand in cands]
         cands = ', '.join(cands_with_conf)
@@ -100,10 +101,11 @@ class Runner:
             iid_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid:012d}.jpg')
             ques = self.trainset.get_question(key)
             caption = self.trainset.get_caption(key)
+            tag = self.trainset.get_tags(key)
             cands = self.trainset.get_topk_candidates(key)
             gt_ans = self.trainset.get_most_answer(key)
-            examples.append((ques, caption, cands, gt_ans))
-            p = self.sample_make(ques, caption, cands, iid_path, ans=gt_ans)
+            examples.append((ques, caption, tag, cands, gt_ans))
+            p = self.sample_make(ques, caption, tag, cands, iid_path, ans=gt_ans)
             prompt_text += p
             # prompt_img.append(img)
             prompt_text += '\n\n'
@@ -156,14 +158,16 @@ class Runner:
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
             if qid in self.cache:
                 continue
+
             ques = self.valset.get_question(qid)
             caption = self.valset.get_caption(qid)
             cands = self.valset.get_topk_candidates(qid, self.__C.K_CANDIDATES)
             image_path = self.valset.get_image_path(qid)
             image_path = str(image_path)
+            tags = self.valset.get_tags(qid)
 
             # prompt_image = self.load_image(image_path)
-            prompt_query = self.sample_make(ques, caption, cands, image_path)
+            prompt_query = self.sample_make(ques, caption, tags, cands, image_path)
             example_qids = self.valset.get_similar_qids(qid, k=infer_times * N_inctx)
             random.shuffle(example_qids)
 
