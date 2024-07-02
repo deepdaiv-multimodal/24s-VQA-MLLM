@@ -1,13 +1,10 @@
-# ------------------------------------------------------------------------------ #
-# Author: Zhenwei Shao (https://github.com/ParadoxZW)
-# Description: Runner that handles the heuristics generations process
-# ------------------------------------------------------------------------------ #
-
-import os, sys
-# sys.path.append(os.getcwd())
-
+import os
+import sys
 from datetime import datetime
-import pickle, random, math, time
+import pickle
+import random
+import math
+import time
 import json
 import numpy as np
 import torch
@@ -23,7 +20,7 @@ from tqdm import tqdm
 
 from configs.task_cfgs import Cfgs
 from .utils.load_data import CommonData, DataSet
-from .model.mcan_for_finetune import MCANForFinetune
+from .model.beit3 import BEiT3ForVisualQuestionAnswering
 from .utils.optim import get_optim_for_finetune as get_optim
 
 class Runner(object):
@@ -40,9 +37,10 @@ class Runner(object):
             # Load parameters
             path = self.__C.CKPT_PATH
             print('Loading ckpt {}'.format(path))
-            net = MCANForFinetune(self.__C, dataset.ans_size)
+            net = BEiT3ForVisualQuestionAnswering(self.__C, num_classes=dataset.ans_size)
             ckpt = torch.load(path, map_location='cpu')
-            net.load_state_dict(ckpt['state_dict'], strict=False)
+            net.load_state_dict(ckpt, strict=False)
+            net.half()  # Model parameters to half precision
             net.cuda()
             if self.__C.N_GPU > 1:
                 net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
@@ -51,12 +49,11 @@ class Runner(object):
         else:
             net = self.net
 
-
         net.eval()
         
         dataloader = Data.DataLoader(
             dataset,
-            batch_size=self.__C.EVAL_BATCH_SIZE,
+            batch_size=1,  # Batch size set to 1
             shuffle=False,
             num_workers=self.__C.NUM_WORKERS,
             pin_memory=True
@@ -70,15 +67,22 @@ class Runner(object):
         for step, input_tuple in enumerate(dataloader):
             print("\rEvaluation: [step %4d/%4d]" % (
                 step,
-                int(data_size / self.__C.EVAL_BATCH_SIZE),
+                int(data_size / 1),  # Batch size set to 1
             ), end='          ')
 
-            input_tuple = [x.cuda() for x in input_tuple]
+            # Convert images to half precision and keep question IDs in long precision
+            img = input_tuple[0].cuda().half()
+            ques_ids = input_tuple[1].cuda().long()
 
-
-            pred, answer_latents = net(input_tuple[:-1], output_answer_latent=True)
+            output = net(img, question=ques_ids, output_answer_latent=True)
+            pred = output[0] if isinstance(output, tuple) else output
+            answer_latents = output[1] if isinstance(output, tuple) else None
             pred_np = pred.sigmoid().cpu().numpy()
-            answer_latents_np = answer_latents.cpu().numpy()
+            answer_latents_np = answer_latents.cpu().numpy() if answer_latents is not None else None
+
+            # Check the shape of pred_np
+            if len(pred_np.shape) == 1:
+                pred_np = pred_np[np.newaxis, :]
 
             # collect answers for every batch
             for i in range(len(pred_np)):
@@ -96,14 +100,18 @@ class Runner(object):
                     )
                 topk_results[qid] = ans_item
 
-                latent_np = answer_latents_np[i]
-                latent_results.append(latent_np)
-                np.save(
-                    os.path.join(self.__C.ANSWER_LATENTS_DIR, f'{qid}.npy'),
-                    latent_np
-                )
+                if answer_latents_np is not None:
+                    latent_np = answer_latents_np[i]
+                    latent_results.append(latent_np)
+                    np.save(
+                        os.path.join(self.__C.ANSWER_LATENTS_DIR, f'{qid}.npy'),
+                        latent_np
+                    )
         print()
         
+        print(f"Total topk results generated: {len(topk_results)}")
+        print(f"Total latent results generated: {len(latent_results)}")
+
         return topk_results, latent_results
 
     def run(self):
@@ -128,38 +136,49 @@ class Runner(object):
             self.__C.EVAL_SPLITS
         )
 
+        print(f"Total training questions: {len(train_set.qids)}")
+        print(f"Total testing questions: {len(test_set.qids)}")
+
         # forward VQA model
         train_topk_results, train_latent_results = self.eval(train_set)
         test_topk_results, test_latent_results = self.eval(test_set)
 
         # save topk candidates
-        topk_results = train_topk_results | test_topk_results
+        topk_results = {**train_topk_results, **test_topk_results}
         json.dump(
             topk_results,
             open(self.__C.CANDIDATE_FILE_PATH, 'w'),
             indent=4
         )
 
+        print(f"Total topk results saved: {len(topk_results)}")
+
         # search similar examples
-        train_features = np.vstack(train_latent_results)
-        train_features = train_features / np.linalg.norm(train_features, axis=1, keepdims=True)
+        if train_latent_results:
+            train_features = np.vstack(train_latent_results)
+            train_features = train_features / np.linalg.norm(train_features, axis=1, keepdims=True)
 
-        test_features = np.vstack(test_latent_results)
-        test_features = test_features / np.linalg.norm(test_features, axis=1, keepdims=True)
+        if test_latent_results:
+            test_features = np.vstack(test_latent_results)
+            test_features = test_features / np.linalg.norm(test_features, axis=1, keepdims=True)
 
-        # compute top-E similar examples for each testing input
-        E = self.__C.EXAMPLE_NUM
-        similar_qids = {}
-        print(f'\ncompute top-{E} similar examples for each testing input')
-        for i, test_qid in enumerate(tqdm(test_set.qids)):
-            # cosine similarity
-            dists = np.dot(test_features[i], train_features.T)
-            top_E = np.argsort(-dists)[:E]
-            similar_qids[test_qid] = [train_set.qids[j] for j in top_E]
-        
-        # save similar qids
-        with open(self.__C.EXAMPLE_FILE_PATH, 'w') as f:
-            json.dump(similar_qids, f)
+            # Check lengths of test and train features
+            min_len = min(len(test_features), len(train_features))
+
+            # compute top-E similar examples for each testing input
+            E = self.__C.EXAMPLE_NUM
+            similar_qids = {}
+            print(f'\ncompute top-{E} similar examples for each testing input')
+            for i, test_qid in enumerate(tqdm(test_set.qids[:min_len])):
+                # cosine similarity
+                dists = np.dot(test_features[i], train_features.T)
+                top_E = np.argsort(-dists)[:E]
+                similar_qids[test_qid] = [train_set.qids[j] for j in top_E]
+
+            # save similar qids
+            with open(self.__C.EXAMPLE_FILE_PATH, 'w') as f:
+                json.dump(similar_qids, f)
+            print(f"Total similar qids saved: {len(similar_qids)}")
 
 def heuristics_login_args(parser):
     parser.add_argument('--task', dest='TASK', help='task name, e.g., ok, aok_val, aok_test', type=str, required=True)
@@ -172,7 +191,7 @@ def heuristics_login_args(parser):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Parameters for pretraining')
+    parser = argparse.ArgumentParser(description='Parameters for heuristics generation')
     heuristics_login_args(parser)
     args = parser.parse_args()
     __C = Cfgs(args)

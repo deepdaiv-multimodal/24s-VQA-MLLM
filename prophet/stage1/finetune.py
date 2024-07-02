@@ -1,126 +1,192 @@
 import os
+import sys
+from datetime import datetime
+import pickle
+import random
+import math
+import time
+import json
+import numpy as np
 import torch
-import torch.optim as optim
-from torch.utils.data import DataLoader
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.nn.utils import clip_grad_norm_
+import torch.utils.data as Data
+import argparse
+from pathlib import Path
+import yaml
+from copy import deepcopy
+from tqdm import tqdm
+
+from configs.task_cfgs import Cfgs
 from .utils.load_data import CommonData, DataSet
 from .model.beit3 import BEiT3ForVisualQuestionAnswering
-import deepspeed
-import logging
-import json
-logging.getLogger().setLevel(logging.ERROR)
+from .utils.optim import get_optim_for_finetune as get_optim
 
-class Runner:
-    def __init__(self, __C, evaluator):
+class Runner(object):
+    def __init__(self, __C, *args, **kwargs):
         self.__C = __C
-        self.evaluator = evaluator
+        self.net = None
 
-    def train(self, train_set, valid_set):
-        net = BEiT3ForVisualQuestionAnswering(self.__C, num_classes=train_set.ans_size)
-
-        # Load pretrained weights
-        if os.path.exists(self.__C.PRETRAINED_MODEL_PATH):
-            checkpoint = torch.load(self.__C.PRETRAINED_MODEL_PATH, map_location="cuda")
-            net.load_state_dict(checkpoint, strict=False)
-            print(f"Loaded pretrained weights from {self.__C.PRETRAINED_MODEL_PATH}")
-
-        # 기본 AdamW 옵티마이저 설정
-        optimizer = optim.AdamW(
-            filter(lambda p: p.requires_grad, net.parameters()), 
-            lr=self.__C.LR_BASE, 
-            betas=self.__C.OPT_BETAS, 
-            weight_decay=self.__C.WEIGHT_DECAY
-        )
-
-        model_engine, optimizer, _, _ = deepspeed.initialize(
-            model=net,
-            optimizer=optimizer,
-            config=self.__C.deepspeed_config
-        )
-
-        dataloader = DataLoader(train_set, batch_size=1, shuffle=True, num_workers=8)
-        criterion = torch.nn.BCEWithLogitsLoss()  # BCEWithLogitsLoss를 사용합니다.
-
-        for epoch in range(self.__C.EPOCHS):
-            model_engine.train()
-            correct = 0
-            total = 0
-            
-            for step, input_tuple in enumerate(dataloader):
-                img, ques_ids, target = input_tuple
-
-                img = img.cuda()
-                ques_ids = ques_ids.cuda()
-                target = target.cuda().float()  # target 텐서를 float 타입으로 변환
-
-                optimizer.zero_grad()
-                pred = model_engine(img, question=ques_ids)
-
-                loss = criterion(pred, target)
-                model_engine.backward(loss)
-                model_engine.step()
-
-                # 정확도 계산
-                predicted = (torch.sigmoid(pred) > 0.5).float()  # BCE에서는 sigmoid를 사용하여 예측 값을 얻음
-                correct += (predicted == target).sum().item()
-                total += target.numel()
-
-                if step % 2000 == 0:
-                    print(f'Epoch {epoch}, Step {step}, Loss {loss.item()}')
-
-            accuracy = 100 * correct / total
-            print(f'Epoch {epoch}, Accuracy: {accuracy:.2f}%')
-
-            # 모델 체크포인트 저장
-            if not os.path.exists(self.__C.CKPTS_DIR):
-                os.makedirs(self.__C.CKPTS_DIR)
-            checkpoint_path = os.path.join(self.__C.CKPTS_DIR, f'epoch{epoch + 1}.pth')
-            model_engine.save_checkpoint(checkpoint_path)
-            print(f'Model checkpoint saved to {checkpoint_path}')
-
-            # 평가 수행
-            self.evaluate(valid_set, model_engine)
-
+    # heuristics generation
     @torch.no_grad()
-    def evaluate(self, valid_set, model_engine):
-        model_engine.eval()
-        dataloader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=8)
+    def eval(self, dataset):
+        data_size = dataset.data_size
 
-        results = []
-        correct = 0
-        total = 0
+        if self.net is None:
+            # Load parameters
+            path = self.__C.CKPT_PATH
+            print('Loading ckpt {}'.format(path))
+            net = BEiT3ForVisualQuestionAnswering(self.__C, num_classes=dataset.ans_size)
+            ckpt = torch.load(path, map_location='cpu')
+            net.load_state_dict(ckpt, strict=False)
+            net.half()  # Model parameters to half precision
+            net.cuda()
+            if self.__C.N_GPU > 1:
+                net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
+            print('Finish!')
+            self.net = net
+        else:
+            net = self.net
+
+        net.eval()
+        
+        dataloader = Data.DataLoader(
+            dataset,
+            batch_size=16,
+            shuffle=False,
+            num_workers=self.__C.NUM_WORKERS,
+            pin_memory=True
+        )
+
+        qid_idx = 0
+        topk_results = {}
+        latent_results = []
+        k = self.__C.CANDIDATE_NUM
 
         for step, input_tuple in enumerate(dataloader):
-            img, ques_ids, target = input_tuple
+            print("\rEvaluation: [step %4d/%4d]" % (
+                step,
+                int(data_size / self.__C.EVAL_BATCH_SIZE),
+            ), end='          ')
 
-            img = img.cuda()
-            ques_ids = ques_ids.cuda()
-            target = target.cuda().float()
+            # Convert images to half precision and keep question IDs in long precision
+            img = input_tuple[0].cuda().half()
+            ques_ids = input_tuple[1].cuda().long()
 
-            pred = model_engine(img, question=ques_ids)
-            predicted = (torch.sigmoid(pred) > 0.5).float()
-            correct += (predicted == target).sum().item()
-            total += target.numel()
+            output = net(img, question=ques_ids, output_answer_latent=True)
+            pred = output[0]
+            answer_latents = output[1]
+            pred_np = pred.sigmoid().cpu().numpy()
+            answer_latents_np = answer_latents.cpu().numpy()
 
-            # question_id와 단일 answer 저장
-            question_id = int(ques_ids[0].item())
-            answer_idx = torch.argmax(predicted).item()
-            answer_word = self.__C.ANSWER_LIST[answer_idx]
+            # Check the shape of pred_np
+            if len(pred_np.shape) == 1:
+                pred_np = pred_np[np.newaxis, :]
 
-            results.append({"question_id": question_id, "answer": answer_word})
+            # collect answers for every batch
+            for i in range(len(pred_np)):
+                qid = dataset.qids[qid_idx]
+                qid_idx += 1
+                ans_np = pred_np[i]
+                ans_idx = np.argsort(-ans_np)[:k]
+                ans_item = []
+                for idx in ans_idx:
+                    ans_item.append(
+                        {
+                            'answer': dataset.ix_to_ans[idx],
+                            'confidence': float(ans_np[idx])
+                        }
+                    )
+                topk_results[qid] = ans_item
 
-        accuracy = 100 * correct / total
-        print(f'Validation Accuracy: {accuracy:.2f}%')
+                latent_np = answer_latents_np[i]
+                latent_results.append(latent_np)
+                np.save(
+                    os.path.join(self.__C.ANSWER_LATENTS_DIR, f'{qid}.npy'),
+                    latent_np
+                )
+        print()
+        
+        return topk_results, latent_results
 
-        # 평가 결과를 파일에 저장
-        results_path = self.__C.RESULT_PATH
-        if not os.path.exists(os.path.dirname(results_path)):
-            os.makedirs(os.path.dirname(results_path))
-        with open(results_path, 'w') as f:
-            json.dump(results, f)
-        print(f'Evaluation results saved to {results_path}')
 
     def run(self):
+        # Set ckpts and log path
+        ## where checkpoints will be saved
+        Path(self.__C.CKPTS_DIR).mkdir(parents=True, exist_ok=True)
+        ## where the result file of topk candidates will be saved
+        Path(self.__C.CANDIDATE_FILE_PATH).parent.mkdir(parents=True, exist_ok=True)
+        ## where answer latents will be saved
+        Path(self.__C.ANSWER_LATENTS_DIR).mkdir(parents=True, exist_ok=True)
+
+        # build dataset entities        
         common_data = CommonData(self.__C)
-        train_set = DataSet(self.__C, common_data, self.__C.TRAIN_SPLITS)
-        valid_set = DataSet(self.__C, common_data, self.__C.EVAL_SPLITS)
-        self.train(train_set, valid_set)
+        train_set = DataSet(
+            self.__C,
+            common_data,
+            self.__C.TRAIN_SPLITS
+        )
+        test_set = DataSet(
+            self.__C,
+            common_data,
+            self.__C.EVAL_SPLITS
+        )
+
+        # forward VQA model
+        train_topk_results, train_latent_results = self.eval(train_set)
+        test_topk_results, test_latent_results = self.eval(test_set)
+
+        # save topk candidates
+        topk_results = {**train_topk_results, **test_topk_results}
+        json.dump(
+            topk_results,
+            open(self.__C.CANDIDATE_FILE_PATH, 'w'),
+            indent=4
+        )
+
+        # search similar examples
+        train_features = np.vstack(train_latent_results)
+        train_features = train_features / np.linalg.norm(train_features, axis=1, keepdims=True)
+
+        test_features = np.vstack(test_latent_results)
+        test_features = test_features / np.linalg.norm(test_features, axis=1, keepdims=True)
+
+        # Check lengths of test and train features
+        min_len = min(len(test_features), len(train_features))
+        
+        # compute top-E similar examples for each testing input
+        E = self.__C.EXAMPLE_NUM
+        similar_qids = {}
+        print(f'\ncompute top-{E} similar examples for each testing input')
+        for i, test_qid in enumerate(tqdm(test_set.qids[:min_len])):
+            # cosine similarity
+            dists = np.dot(test_features[i], train_features.T)
+            top_E = np.argsort(-dists)[:E]
+            similar_qids[test_qid] = [train_set.qids[j] for j in top_E]
+        
+        # save similar qids
+        with open(self.__C.EXAMPLE_FILE_PATH, 'w') as f:
+            json.dump(similar_qids, f)
+
+def heuristics_login_args(parser):
+    parser.add_argument('--task', dest='TASK', help='task name, e.g., ok, aok_val, aok_test', type=str, required=True)
+    parser.add_argument('--cfg', dest='cfg_file', help='optional config file', type=str, required=True)
+    parser.add_argument('--version', dest='VERSION', help='version name', type=str, required=True)
+    parser.add_argument('--ckpt_path', dest='CKPT_PATH', help='checkpoint path for heuristics', type=str, default=None)
+    parser.add_argument('--gpu', dest='GPU', help='gpu id', type=str, default=None)
+    parser.add_argument('--candidate_num', dest='CANDIDATE_NUM', help='topk candidates', type=int, default=None)
+    parser.add_argument('--example_num', dest='EXAMPLE_NUM', help='number of most similar examples to be searched, default: 200', type=int, default=None)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Parameters for heuristics generation')
+    heuristics_login_args(parser)
+    args = parser.parse_args()
+    __C = Cfgs(args)
+    with open(args.cfg_file, 'r') as f:
+        yaml_dict = yaml.load(f, Loader=yaml.FullLoader)
+    __C.override_from_dict(yaml_dict)
+    print(__C)
+    runner = Runner(__C)
+    runner.run()

@@ -26,8 +26,10 @@ TASK=${TASK:-ok} # task name, one of ['ok', 'aok_val', 'aok_test'], default 'ok'
 GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 VERSION=${VERSION:-finetuning_okvqa} # version name, default 'finetuning_for_$TASK'
 
+# Set the environment variable for CUDA
+export CUDA_VISIBLE_DEVICES=$GPU
+
 # run python script
-# CUDA_VISIBLE_DEVICES=$GPU \
 python main.py \
     --task $TASK --run_mode finetune \
     --cfg configs/finetune.yml \
