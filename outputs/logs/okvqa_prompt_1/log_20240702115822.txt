@@ -1,0 +1,33 @@
+{ TIMESTAMP         }-> 20240702115822
+{ VERSION           }-> okvqa_prompt_1
+{ CKPTS_DIR         }-> outputs/ckpts/okvqa_prompt_1
+{ LOG_PATH          }-> outputs/logs/okvqa_prompt_1/log_20240702115822.txt
+{ RESULT_DIR        }-> outputs/results/okvqa_prompt_1
+{ RESULT_PATH       }-> outputs/results/okvqa_prompt_1/result_20240702115822.json
+{ RESUME            }-> False
+{ TASK              }-> ok
+{ RUN_MODE          }-> prompt
+{ DATA_TAG          }-> ok
+{ DATA_MODE         }-> finetune
+{ EVAL_NOW          }-> True
+{ NUM_WORKERS       }-> 4
+{ PIN_MEM           }-> True
+{ cfg_file          }-> configs/prompt.yml
+{ DEBUG             }-> False
+{ SEED              }-> 99
+{ EXAMPLES_PATH     }-> outputs/results/okvqa_heuristics_1/examples.json
+{ CANDIDATES_PATH   }-> outputs/results/okvqa_heuristics_1/candidates.json
+{ CAPTIONS_PATH     }-> assets/captions_okvqa.json
+{ MODEL             }-> Salesforce/instructblip-flan-t5-xl
+{ TEMPERATURE       }-> 0.0
+{ MAX_TOKENS        }-> 8
+{ SLEEP_PER_INFER   }-> 10
+{ PROMPT_HEAD       }-> Please answer the question according to the context and candidate answers. Each candidate answer is associated with a confidence score within a bracket. The true answer may not be included in the candidate answers.
+
+
+{ LINE_PREFIX       }-> ===
+
+{ N_EXAMPLES        }-> 20
+{ K_CANDIDATES      }-> 10
+{ T_INFER           }-> 5
+

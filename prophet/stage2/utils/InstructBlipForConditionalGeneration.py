@@ -3,10 +3,13 @@ import torch.nn as nn
 from transformers import InstructBlipPreTrainedModel, InstructBlipConfig, AutoModelForCausalLM, AutoModelForSeq2SeqLM
 from transformers.models.instructblip.modeling_instructblip import InstructBlipVisionModel, InstructBlipQFormerModel, InstructBlipForConditionalGenerationModelOutput
 from transformers import BertTokenizer, BertModel
-
+from transformers.file_utils import ModelOutput
 from typing import Any, Optional, Tuple, Union, List
 
 class PromptEncoder(nn.Module):
+    """
+    Encode text prompts using a pre-trained language model and project to a desired output dimension.
+    """
     def __init__(self, encoder_model, tokenizer, output_dim):
         super(PromptEncoder, self).__init__()
         self.encoder = encoder_model
@@ -21,6 +24,9 @@ class PromptEncoder(nn.Module):
         return encoded_prompts
 
 class VisualGatedFusion(nn.Module):
+    """
+    Fuse text and visual embeddings using a gated mechanism.
+    """
     def __init__(self, text_dim, visual_dim):
         super(VisualGatedFusion, self).__init__()
         self.query_proj = nn.Linear(text_dim, text_dim)
@@ -29,9 +35,6 @@ class VisualGatedFusion(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, text_embeddings, visual_embeddings):
-        if visual_embeddings.shape[-1] != self.key_proj.in_features:
-            raise ValueError(f"Expected visual_embeddings with last dimension {self.key_proj.in_features}, but got {visual_embeddings.shape[-1]}")
-
         Q = self.query_proj(text_embeddings)
         K = self.key_proj(visual_embeddings)
         V = self.value_proj(visual_embeddings)
@@ -42,9 +45,10 @@ class VisualGatedFusion(nn.Module):
         Fm = (1 - lambda_) * text_embeddings + lambda_ * context
         return Fm
 
-
-
 class ResamplerDecoder(nn.Module):
+    """
+    Resample and decode fused embeddings to the desired output dimension.
+    """
     def __init__(self, input_dim, output_dim):
         super(ResamplerDecoder, self).__init__()
         self.linear = nn.Linear(input_dim, output_dim)
@@ -53,8 +57,10 @@ class ResamplerDecoder(nn.Module):
         Fp = self.linear(fused_embeddings)
         return Fp
 
-
 class VisualAwarePromptingModule(nn.Module):
+    """
+    Module that integrates prompt encoding, visual gated fusion, and resampling/decoding.
+    """
     def __init__(self, encoder_model, tokenizer, text_dim, visual_dim, output_dim):
         super(VisualAwarePromptingModule, self).__init__()
         self.prompt_encoder = PromptEncoder(encoder_model, tokenizer, text_dim)
@@ -89,16 +95,14 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
         self.visual_prompting_module = VisualAwarePromptingModule(bert_model, tokenizer, config.qformer_config.hidden_size, config.vision_config.hidden_size, config.qformer_config.hidden_size)
 
+        self.query_projection = nn.Linear(config.qformer_config.hidden_size, config.text_config.hidden_size)
+        self.prompt_projection = nn.Linear(config.qformer_config.hidden_size, config.text_config.hidden_size)
+        self.instruction_projection = nn.Linear(config.text_config.hidden_size, config.text_config.hidden_size)
+
         if config.use_decoder_only_language_model:
-            language_model = AutoModelForCausalLM.from_config(config.text_config, attn_implementation=config._attn_implementation)
+            language_model = AutoModelForCausalLM.from_config(config.text_config)
         else:
-            language_model = AutoModelForSeq2SeqLM.from_config(config.text_config, attn_implementation=config._attn_implementation)
-
-        if language_model._no_split_modules is not None:
-            self._no_split_modules.extend(language_model._no_split_modules)
-
-        if language_model._keep_in_fp32_modules is not None:
-            self._keep_in_fp32_modules.extend(language_model._keep_in_fp32_modules)
+            language_model = AutoModelForSeq2SeqLM.from_config(config.text_config)
 
         self.language_model = language_model
         self.post_init()
@@ -113,6 +117,7 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
                                            output_hidden_states=output_hidden_states, return_dict=return_dict,
                                            interpolate_pos_encoding=interpolate_pos_encoding)
         image_embeds = vision_outputs[0]
+        print(f"Image Embeddings Shape: {image_embeds.shape}")
 
         image_attention_mask = torch.ones(image_embeds.size()[:-1], dtype=torch.long, device=image_embeds.device)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
@@ -126,17 +131,37 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
                                      encoder_attention_mask=image_attention_mask, output_attentions=output_attentions,
                                      output_hidden_states=output_hidden_states, return_dict=return_dict)
         query_output = query_outputs[0][:, :query_tokens.size(1), :]
+        print(f"Query Output Shape: {query_output.shape}")
         
         prompted_output = self.visual_prompting_module(visual_embeddings=image_embeds, text_prompts=prompts)
+        print(f"Prompted Output Shape: {prompted_output.shape}")
+        
         language_model_inputs = self.language_projection(prompted_output)
+        print(f"Language Model Inputs Shape: {language_model_inputs.shape}")
+        
         language_model_attention_mask = torch.ones(language_model_inputs.size()[:-1], dtype=torch.long, device=language_model_inputs.device)
+        instruction_word_embeddings = self.language_model.get_input_embeddings()(input_ids)
+        print(f"Instruction Word Embeddings Shape: {instruction_word_embeddings.shape}")
+        
+        query_output = self.query_projection(query_output)
+        prompted_output = self.prompt_projection(prompted_output)
+        instruction_word_embeddings = self.instruction_projection(instruction_word_embeddings)
 
-        inputs_embeds = self.language_model.get_input_embeddings()(input_ids)
-        inputs_embeds = torch.cat([language_model_inputs, inputs_embeds.to(language_model_inputs.device)], dim=1)
+        print(f"Projected Query Output Shape: {query_output.shape}")
+        print(f"Projected Prompted Output Shape: {prompted_output.shape}")
+        print(f"Projected Instruction Word Embeddings Shape: {instruction_word_embeddings.shape}")
+
+        inputs_embeds = torch.cat([query_output, prompted_output, instruction_word_embeddings.to(prompted_output.device)], dim=1)
+        print(f"Concatenated Inputs Embeddings Shape: {inputs_embeds.shape}")
 
         if attention_mask is None:
             attention_mask = torch.ones_like(input_ids)
-        attention_mask = torch.cat([language_model_attention_mask.to(attention_mask.device), attention_mask], dim=1)
+        attention_mask = torch.cat([
+            torch.ones((inputs_embeds.size(0), query_output.size(1)), device=attention_mask.device),
+            torch.ones((inputs_embeds.size(0), prompted_output.size(1)), device=attention_mask.device),
+            attention_mask
+        ], dim=1)
+        print(f"Attention Mask Shape: {attention_mask.shape}")
 
         if self.config.use_decoder_only_language_model:
             outputs = self.language_model(inputs_embeds=inputs_embeds, attention_mask=attention_mask,
@@ -166,6 +191,7 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
         return InstructBlipForConditionalGenerationModelOutput(
             loss=loss, logits=logits, vision_outputs=vision_outputs, qformer_outputs=query_outputs, language_model_outputs=outputs
         )
+        
 
     @torch.no_grad()
     def generate(
@@ -191,6 +217,7 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
 
         image_embeds = vision_outputs[0]
         image_attention_mask = torch.ones(image_embeds.size()[:-1], dtype=torch.long, device=image_embeds.device)
+        print(f"Image Embeddings Shape: {image_embeds.shape}")
 
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
         query_attention_mask = torch.ones(query_tokens.size()[:-1], dtype=torch.long, device=image_embeds.device)
@@ -213,31 +240,46 @@ class InstructBlipForConditionalGeneration(InstructBlipPreTrainedModel):
             return_dict=True,
         )
         query_output = query_outputs.last_hidden_state[:, : query_tokens.size(1), :]
+        print(f"Query Output Shape: {query_output.shape}")
 
         # Ensure prompts is a list of strings if it's a tensor
         if isinstance(prompts, torch.Tensor):
             prompts = [self.visual_prompting_module.tokenizer.decode(p, skip_special_tokens=True) for p in prompts]
         
         prompted_output = self.visual_prompting_module(visual_embeddings=image_embeds, text_prompts=prompts)
+        print(f"Prompted Output Shape: {prompted_output.shape}")
+
         language_model_inputs = self.language_projection(prompted_output)
+        print(f"Language Model Inputs Shape: {language_model_inputs.shape}")
+        
         language_model_attention_mask = torch.ones(language_model_inputs.size()[:-1], dtype=torch.long, device=language_model_inputs.device)
 
-        if input_ids is None:
-            input_ids = (
-                torch.LongTensor([[self.config.text_config.bos_token_id]])
-                .repeat(batch_size, 1)
-                .to(image_embeds.device)
-            )
+        instruction_word_embeddings = self.language_model.get_input_embeddings()(input_ids)
+        print(f"Instruction Word Embeddings Shape: {instruction_word_embeddings.shape}")
+        
+        query_output = self.query_projection(query_output)
+        prompted_output = self.prompt_projection(prompted_output)
+        instruction_word_embeddings = self.instruction_projection(instruction_word_embeddings)
+
+        print(f"Projected Query Output Shape: {query_output.shape}")
+        print(f"Projected Prompted Output Shape: {prompted_output.shape}")
+        print(f"Projected Instruction Word Embeddings Shape: {instruction_word_embeddings.shape}")
+
+        inputs_embeds = torch.cat([query_output, prompted_output, instruction_word_embeddings.to(prompted_output.device)], dim=1)
+        print(f"Concatenated Inputs Embeddings Shape: {inputs_embeds.shape}")
+
         if attention_mask is None:
             attention_mask = torch.ones_like(input_ids)
-        attention_mask = torch.cat([language_model_inputs.new_ones((batch_size, language_model_inputs.size(1))), attention_mask.to(language_model_inputs.device)], dim=1)
-
-        inputs_embeds = self.language_model.get_input_embeddings()(input_ids)
-        inputs_embeds = torch.cat([language_model_inputs, inputs_embeds.to(language_model_inputs.device)], dim=1)
+        attention_mask = torch.cat([
+            torch.ones((batch_size, query_output.size(1)), device=attention_mask.device),
+            torch.ones((batch_size, prompted_output.size(1)), device=attention_mask.device),
+            attention_mask
+        ], dim=1)
+        print(f"Attention Mask Shape: {attention_mask.shape}")
 
         if not self.language_model.config.is_encoder_decoder:
-            generate_kwargs["max_length"] = generate_kwargs.get("max_length", 20) + language_model_inputs.shape[1] - 1
-            generate_kwargs["min_length"] = generate_kwargs.get("min_length", 0) + language_model_inputs.shape[1]
+            generate_kwargs["max_length"] = generate_kwargs.get("max_length", 20) + inputs_embeds.shape[1] - 1
+            generate_kwargs["min_length"] = generate_kwargs.get("min_length", 0) + inputs_embeds.shape[1]
 
         outputs = self.language_model.generate(
             inputs_embeds=inputs_embeds,

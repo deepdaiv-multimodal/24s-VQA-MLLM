@@ -1,22 +1,13 @@
 from transformers import BlipImageProcessor, AutoTokenizer, ProcessorMixin
 from transformers.feature_extraction_utils import BatchFeature
 
-#import os 
-#os.environ['CUDA_VISIBLE_DEVICES'] = '6'
-#os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
-
-
 class InstructBlipProcessor(ProcessorMixin):
-    attributes = ["image_processor", "tokenizer"]#, "qformer_tokenizer"]
+    attributes = ["image_processor", "tokenizer"]
     image_processor_class = "BlipImageProcessor"
     tokenizer_class = "AutoTokenizer"
 
     def __init__(self, image_processor, tokenizer, qformer_tokenizer):
-        print("Initializing InstructBlipProcessor with:")
-        print(f"image_processor: {image_processor}")
-        print(f"tokenizer: {tokenizer}")
-        print(f"qformer_tokenizer: {qformer_tokenizer}")
-        super().__init__(image_processor=image_processor, tokenizer=tokenizer)#, qformer_tokenizer=qformer_tokenizer)
+        super().__init__(image_processor=image_processor, tokenizer=tokenizer)
         self.qformer_tokenizer = qformer_tokenizer
 
     def __call__(self, images=None, text=None, prompts=None, add_special_tokens=True, padding=False, truncation=None,
@@ -54,10 +45,14 @@ class InstructBlipProcessor(ProcessorMixin):
         return encoding
 
     def batch_decode(self, *args, **kwargs):
-        return self.tokenizer.batch_decode(*args, **kwargs)
+        if 'skip_special_tokens' in kwargs:
+            kwargs.pop('skip_special_tokens')
+        return self.tokenizer.batch_decode(*args, skip_special_tokens=True, **kwargs)
 
     def decode(self, *args, **kwargs):
-        return self.tokenizer.decode(*args, **kwargs)
+        if 'skip_special_tokens' in kwargs:
+            kwargs.pop('skip_special_tokens')
+        return self.tokenizer.decode(*args, skip_special_tokens=True, **kwargs)
 
     @property
     def model_input_names(self):

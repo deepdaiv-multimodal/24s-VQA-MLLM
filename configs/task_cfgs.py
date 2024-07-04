@@ -102,7 +102,7 @@ class Cfgs(PATH):
         # ---- Model Training ----
         # ------------------------
 
-        self.NUM_WORKERS = 8
+        self.NUM_WORKERS = 0
         self.PIN_MEM = True
 
         # --------------------------------

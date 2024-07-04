@@ -33,7 +33,7 @@ VERSION=${VERSION:-"prompt_okvqa"} # version name, default 'prompt_for_$TASK'
 EXAMPLES_PATH=${EXAMPLES_PATH:-"assets/answer_aware_examples_okvqa.json"} # path to the examples, default is the result from our experiments
 CANDIDATES_PATH=${CANDIDATES_PATH:-"assets/candidates_okvqa.json"} # path to the candidates, default is the result from our experiments
 CAPTIONS_PATH=${CAPTIONS_PATH:-"assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
-IMAGE_PATH=${IMAGE_PATH:-"assets/images"} # path to the images folder, default is 'assets/images'
+# IMAGE_PATH=${IMAGE_PATH:-"assets/images"} # path to the images folder, default is 'assets/images'
 #GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 
 #CUDA_VISIBLE_DEVICES=6 \
@@ -45,5 +45,5 @@ python main.py \
     --candidates_path $CANDIDATES_PATH \
     --captions_path $CAPTIONS_PATH \
     #--image_path $IMAGE_PATH \
-    --image_path $IMAGE_PATH\
+    # --image_path $IMAGE_PATH\
     #--gpu $GPU
