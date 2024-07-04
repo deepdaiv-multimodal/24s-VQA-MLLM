@@ -75,7 +75,7 @@ class Cfgs(PATH):
         self.bert_init = False
 
         # 추가된 속성
-        self.pretrained_model_path = '/content/drive/MyDrive/prophet/datasets/beit3/beit3_base_patch16_224.pth'
+        self.pretrained_model_path = '/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3/beit3_base_patch16_224.pth'
         self.lr_base = 5e-5
         self.weight_decay = 0.01
         self.epochs = 10
@@ -126,7 +126,7 @@ class Cfgs(PATH):
         for attr in args.__dict__:
             if not hasattr(self, attr):  # 이미 존재하는 속성은 덮어쓰지 않습니다.
                 setattr(self, attr, getattr(args, attr))
-        
+
         self.load_config_from_yaml(args.cfg_file)
 
     def load_config_from_yaml(self, yaml_file):
@@ -146,20 +146,20 @@ class Cfgs(PATH):
         for key, value in dict_.items():
             if not hasattr(self, key):
                 setattr(self, key, value)
-    
+
     def set_silent_attr(self):
         self.__silent = []
         for attr in self.__dict__:
             self.__silent.append(attr)
-        
+
     @property
     def TRAIN_SPLITS(self):
         return TASK_TO_SPLIT[self.TASK][self.DATA_MODE]['train_split']
-    
+
     @property
     def EVAL_SPLITS(self):
         return TASK_TO_SPLIT[self.TASK][self.DATA_MODE]['eval_split']
-        
+
     @property
     def FEATURE_SPLIT(self):
         FEATURE_SPLIT = []
@@ -168,11 +168,11 @@ class Cfgs(PATH):
             if feat_split not in FEATURE_SPLIT:
                 FEATURE_SPLIT.append(feat_split)
         return FEATURE_SPLIT
-    
+
     @property
     def EVAL_QUESTION_PATH(self):
         return self.QUESTION_PATH[self.EVAL_SPLITS[0]]
-    
+
     @property
     def EVAL_ANSWER_PATH(self):
         if not self.EVAL_NOW:

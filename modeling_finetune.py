@@ -48,10 +48,6 @@ class Pooler(nn.Module):
         cls_rep = self.norm(cls_rep)
         pooled_output = self.dense(cls_rep)
         pooled_output = self.activation(pooled_output)
-
-        # 마지막 차원을 768에서 평균으로 줄이기
-        pooled_output = pooled_output.mean(dim=1)  # 새로운 추가
-
         return pooled_output
 
 
@@ -78,7 +74,7 @@ class BEiT3ForVisualReasoning(BEiT3Wrapper):
 
     def forward(self, image_a, image_b, text_description, padding_mask, **kwargs):
         bsz, _ = text_description.size()
-        
+
         vision_input = torch.cat((image_a, image_b), dim=0)
         language_input = torch.cat((text_description, text_description), dim=0)
         padding_mask = torch.cat((padding_mask, padding_mask), dim=0)
@@ -97,7 +93,7 @@ class BEiT3ForVisualReasoning(BEiT3Wrapper):
         a, b = torch.split(cls_rep, split_size_or_sections=[bsz, bsz], dim=0)
         cls_rep = torch.cat((a, b), dim=-1)
         return self.head(cls_rep)
-    
+
 
 class BEiT3ForImageClassification(BEiT3Wrapper):
     def __init__(self, args, num_classes, norm_layer=nn.LayerNorm, **kwargs):
@@ -146,7 +142,7 @@ class BEiT3ForCaptioning(BEiT3Wrapper):
             for idx in range(self.get_num_layers()):
                 if idx not in incremental_state:
                     incremental_state[idx] = {}
-        
+
         # for incremental decoding
         positions = None
         if image is None:
@@ -173,46 +169,43 @@ class BEiT3ForCaptioning(BEiT3Wrapper):
 
         return self.mlm_head(text_feats), incremental_state
 
-
 class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
-    def __init__(self, args, num_classes, norm_layer=nn.LayerNorm, **kwargs):
+    def __init__(
+            self, 
+            args, 
+            num_classes, 
+            norm_layer=nn.LayerNorm, 
+            **kwargs
+    ):
         super(BEiT3ForVisualQuestionAnswering, self).__init__(args=args)
-        
         embed_dim = args.encoder_embed_dim
-        
-        # Define pooler and head layers
-        self.pooler = Pooler(input_features=embed_dim, output_features=embed_dim, norm_layer=norm_layer)
-        self.pooler.apply(self._init_weights)
-        
-        self.head = nn.Sequential(
-            nn.Linear(embed_dim, embed_dim * 2),
-            norm_layer(embed_dim * 2),
-            nn.GELU(),
-            nn.Linear(embed_dim * 2, num_classes),
+        # self.pooler = Pooler(
+        #     input_features=embed_dim, 
+        #     output_features=embed_dim, 
+        #     norm_layer=norm_layer, 
+        # )
+        # self.pooler.apply(self._init_weights)
+        # self.head = nn.Sequential(
+        #     nn.Linear(embed_dim, embed_dim * 2), 
+        #     norm_layer(embed_dim * 2), 
+        #     nn.GELU(), 
+        #     nn.Linear(embed_dim * 2, num_classes), 
+        # )
+        # self.head.apply(self._init_weights)
+
+        self.proj_norm = nn.LayerNorm(embed_dim)
+        self.proj = nn.Linear(embed_dim, num_classes)
+
+    def forward(self, image, question, padding_mask, **kwargs):
+        outputs = self.beit3(
+            textual_tokens=question, 
+            visual_tokens=image, 
+            text_padding_position=padding_mask, 
         )
-        self.head.apply(self._init_weights)
-
-    def forward(self, image, question, padding_mask=None, **kwargs):
-        # 디버깅 출력 추가
-        #print(f"Question tensor range: min={question.min()}, max={question.max()}")
-
-        outputs = self.beit3(textual_tokens=question, visual_tokens=image, text_padding_position=padding_mask)
         x = outputs["encoder_out"]
-        
-        if x.dim() == 3:
-            # 모든 토큰에 대한 출력을 사용하도록 변경
-            cls_rep = x.mean(dim=1)  # 모든 토큰의 평균을 사용
-        else:
-            raise ValueError(f"Unexpected tensor dimensions: {x.dim()} with shape {x.shape}")
-
-        # cls_rep 텐서의 형상을 출력하여 확인
-
-        cls_rep = self.pooler(cls_rep)
-        logits = self.head(cls_rep)
-        return logits
-
-
-
+        # cls_rep = self.pooler(x)
+        proj_feat = self.proj_norm(x)
+        return proj_feat, x
 
 
 class BEiT3ForRetrieval(BEiT3Wrapper):
@@ -253,7 +246,7 @@ class BEiT3ForRetrieval(BEiT3Wrapper):
             language_cls = F.normalize(language_cls, dim=-1)
         else:
             language_cls = None
-        
+
         if only_infer:
             return vision_cls, language_cls
         else:
@@ -371,4 +364,10 @@ def beit3_base_patch16_384_retrieval(pretrained=False, **kwargs):
 def beit3_large_patch16_384_retrieval(pretrained=False, **kwargs):
     args = _get_large_config(img_size=384, **kwargs)
     model = BEiT3ForRetrieval(args, **kwargs)
+    return model
+
+@register_model
+def beit3_base_patch16_224_okvqa(pretrained=False, **kwargs):
+    args = _get_base_config(img_size=224, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
     return model

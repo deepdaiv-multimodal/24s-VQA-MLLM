@@ -17,7 +17,7 @@ import torch.nn.functional as F
 from timm.utils import ModelEma
 from timm.utils import accuracy, ModelEma
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
-from datasets import get_sentencepiece_model_for_beit3
+from .datasets import get_sentencepiece_model_for_beit3
 
 import utils
 
@@ -488,6 +488,17 @@ def train_one_epoch(
         optimizer.zero_grad()
 
     for data_iter_step, data in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
+        # print(data.keys()) # dict_keys(['image', 'language_tokens', 'padding_mask', 'qid'])
+        for key in data.keys():
+          if isinstance(data[key], torch.Tensor):
+              data[key] = data[key].cuda()
+
+        pred, proj = model(image=data['image'], question=data['language_tokens'], padding_mask=data['padding_mask'])
+        print(pred.shape, proj.shape)
+        exit()
+        # print(output)
+        # exit()
+
         step = data_iter_step // update_freq
         global_step = start_steps + step  # global training iteration
         # Update LR & WD for the first acc

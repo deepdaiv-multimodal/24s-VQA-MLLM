@@ -21,17 +21,17 @@ def soft_target(answers, ans_to_ix):
 class CommonData:
     def __init__(self, __C):
         print('Loading common data...')
-        
+
         self.imgid_to_path = {}
         for split in ['train2014', 'val2014']:
-            img_dir = f"/content/drive/MyDrive/prophet/datasets/coco2014/{split}/"
+            img_dir = f"/content/drive/MyDrive/24s-deep-daiv/ok-vqa/{split}_vqa/"
             img_paths = glob.glob(img_dir + '*.jpg')
             for img_path in img_paths:
                 img_id = int(img_path.split('/')[-1].split('_')[-1].split('.')[0])
                 self.imgid_to_path[img_id] = img_path
         print(f'== Total image number: {len(self.imgid_to_path)}')
 
-        self.tokenizer = XLMRobertaTokenizer("/content/drive/MyDrive/prophet/datasets/beit3.spm")
+        self.tokenizer = XLMRobertaTokenizer("/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3.spm")
         self.token_size = self.tokenizer.vocab_size
         self.ix_to_ans = json.load(open(__C.ANSWER_DICT_PATH[__C.DATA_TAG], 'r'))
         self.ans_to_ix = {ans: ix for ix, ans in enumerate(self.ix_to_ans)}
