@@ -26,6 +26,7 @@ class InstructBlipProcessor(ProcessorMixin):
                                            return_offsets_mapping=return_offsets_mapping, return_token_type_ids=return_token_type_ids,
                                            return_length=return_length, verbose=verbose, return_tensors=return_tensors, **kwargs)
             encoding.update(text_encoding)
+            print(f"text encoding: {text_encoding}")
 
         if prompts is not None:
             prompt_encoding = self.qformer_tokenizer(text=prompts, add_special_tokens=add_special_tokens, padding=padding,
@@ -35,12 +36,15 @@ class InstructBlipProcessor(ProcessorMixin):
                                                      return_special_tokens_mask=return_special_tokens_mask,
                                                      return_offsets_mapping=return_offsets_mapping, return_token_type_ids=return_token_type_ids,
                                                      return_length=return_length, verbose=verbose, return_tensors=return_tensors, **kwargs)
+            
             encoding["prompt_input_ids"] = prompt_encoding.pop("input_ids")
             encoding["prompt_attention_mask"] = prompt_encoding.pop("attention_mask")
+            print(f"prompt encoding: {prompt_encoding}")
 
         if images is not None:
             image_encoding = self.image_processor(images, return_tensors=return_tensors)
             encoding.update(image_encoding)
+            print(f"image encoding: {image_encoding}")
 
         return encoding
 

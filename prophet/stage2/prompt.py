@@ -9,9 +9,8 @@ from PIL import Image
 import math
 import argparse
 
-from .utils.InstructBlipProcessor import InstructBlipProcessor
-from .utils.InstructBlipForConditionalGeneration import InstructBlipForConditionalGeneration
-from transformers import BlipImageProcessor, AutoTokenizer, InstructBlipConfig, AutoProcessor
+from .utils.model import InstructBlipForConditionalGeneration
+from transformers import BlipImageProcessor, AutoTokenizer, InstructBlipConfig, AutoProcessor, InstructBlipProcessor
 
 from .utils.fancy_pbar import progress, info_column
 from .utils.data_utils import Qid2Data
@@ -22,18 +21,13 @@ class Runner:
         self.__C = __C
         self.evaluater = evaluater
 
-        image_processor = AutoProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl").image_processor
-        tokenizer = AutoTokenizer.from_pretrained("Salesforce/instructblip-flan-t5-xl")
-        qformer_tokenizer = AutoTokenizer.from_pretrained("Salesforce/instructblip-flan-t5-xl")
-        
-        
-        
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
-        self.processor = InstructBlipProcessor(image_processor, tokenizer, qformer_tokenizer)#.to(self.device)
-        
-        config = InstructBlipConfig.from_pretrained("Salesforce/instructblip-flan-t5-xl")
-        self.model = InstructBlipForConditionalGeneration(config).to(self.device)
+        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
+
+        self.model = InstructBlipForConditionalGeneration.from_pretrained(
+            "flant5xxl"
+        ).to(self.device)
 
     def infer_with_blip(self, image_path, prompt_text, instruction, _retry=0):
         if _retry > 0:
@@ -56,16 +50,18 @@ class Runner:
             if torch.cuda.is_available():
                 inputs = {key: value.to(self.device) for key, value in inputs.items()}
 
+            print(f"Processor inputs: {inputs}")
+
             print(f"Prompt text: {prompt_text}")
             print(f"Question : {instruction}")
             outputs = self.model.generate(pixel_values=inputs['pixel_values'],
-                                        input_ids=inputs['input_ids'],
-                                        attention_mask=inputs['attention_mask'],
-                                        prompts=inputs['prompt_input_ids'],
-                                        prompt_attention_mask=inputs['prompt_attention_mask'],
-                                        max_length=128,
-                                        return_dict_in_generate=True,
-                                        output_scores=True)
+                                          input_ids=inputs['input_ids'],
+                                          attention_mask=inputs['attention_mask'],
+                                          prompts=inputs['prompt_input_ids'],
+                                          prompt_attention_mask=inputs['prompt_attention_mask'],
+                                          max_length=128,
+                                          return_dict_in_generate=True,
+                                          output_scores=True)
 
             response_txt = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0].strip()
             print("Decoded response text:", response_txt)
