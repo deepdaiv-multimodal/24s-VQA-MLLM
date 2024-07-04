@@ -632,7 +632,9 @@ def create_ds_config(args):
 def merge_batch_tensors_by_dict_key(batch):
     batch_tensors = {}
     for tensor_key in batch[0]:
+        print('tensor_key:', tensor_key)
         if isinstance(batch[0][tensor_key], torch.Tensor):
+            # print(f"KeyError: '{tensor_key}'  the batch.")
             batch_tensors[tensor_key] = torch.stack([d[tensor_key] for d in batch])
         else:
             batch_tensors[tensor_key] = torch.tensor([d[tensor_key] for d in batch], dtype=torch.long)

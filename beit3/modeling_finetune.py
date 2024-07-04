@@ -1,10 +1,3 @@
-# --------------------------------------------------------
-# Image as a Foreign Language: BEiT Pretraining for Vision and Vision-Language Tasks (https://arxiv.org/abs/2208.10442)
-# Github source: https://github.com/microsoft/unilm/tree/master/beit3
-# Copyright (c) 2023 Microsoft
-# Licensed under The MIT License [see LICENSE for details]
-# --------------------------------------------------------'
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -16,14 +9,7 @@ from modeling_utils import BEiT3Wrapper, _get_base_config, _get_large_config
 
 
 class TwoLayerMLP(nn.Module):
-    def __init__(
-            self, 
-            in_features, 
-            hidden_features, 
-            out_features, 
-            norm_layer, 
-            norm_input=True, 
-    ):
+    def __init__(self, in_features, hidden_features, out_features, norm_layer, norm_input=True):
         super().__init__()
         self.norm1 = norm_layer(in_features) if norm_input else nn.Identity()
         self.dense1 = nn.Linear(in_features, hidden_features)
@@ -47,28 +33,34 @@ class Pooler(nn.Module):
         self.activation = nn.Tanh()
 
     def forward(self, x):
+        # x가 3차원이 아닌 경우 3차원으로 변환
+        if x.dim() == 2:
+            x = x.unsqueeze(1)
+
+        # x의 첫 번째 차원을 가져옴
         cls_rep = x[:, 0, :]
+
+        # cls_rep의 크기를 768로 맞춤
+        new_dim = (cls_rep.size(1) // 768) * 768
+        cls_rep = cls_rep[:, :new_dim]
+
+        cls_rep = cls_rep.view(cls_rep.size(0), -1, 768)
         cls_rep = self.norm(cls_rep)
         pooled_output = self.dense(cls_rep)
         pooled_output = self.activation(pooled_output)
         return pooled_output
 
 
+
 class BEiT3ForVisualReasoning(BEiT3Wrapper):
-    def __init__(
-            self, 
-            args, 
-            num_classes, 
-            norm_layer=nn.LayerNorm, 
-            **kwargs
-    ):
+    def __init__(self, args, num_classes, norm_layer=nn.LayerNorm, **kwargs):
         super(BEiT3ForVisualReasoning, self).__init__(args=args)
         embed_dim = args.encoder_embed_dim
         self.head = TwoLayerMLP(
-            in_features=embed_dim * 4, 
+            in_features=embed_dim * 4,
             hidden_features=embed_dim * 2,
-            out_features=num_classes, 
-            norm_layer=norm_layer, 
+            out_features=num_classes,
+            norm_layer=norm_layer,
         )
         init_scale = 0.001
         self.head.apply(self._init_weights)
@@ -82,15 +74,15 @@ class BEiT3ForVisualReasoning(BEiT3Wrapper):
 
     def forward(self, image_a, image_b, text_description, padding_mask, **kwargs):
         bsz, _ = text_description.size()
-        
+
         vision_input = torch.cat((image_a, image_b), dim=0)
         language_input = torch.cat((text_description, text_description), dim=0)
         padding_mask = torch.cat((padding_mask, padding_mask), dim=0)
 
         outputs = self.beit3(
-            textual_tokens=language_input, 
-            visual_tokens=vision_input, 
-            text_padding_position=padding_mask, 
+            textual_tokens=language_input,
+            visual_tokens=vision_input,
+            text_padding_position=padding_mask,
         )
         x = outputs["encoder_out"]
         multiway_split_position = outputs["multiway_split_position"]
@@ -101,16 +93,10 @@ class BEiT3ForVisualReasoning(BEiT3Wrapper):
         a, b = torch.split(cls_rep, split_size_or_sections=[bsz, bsz], dim=0)
         cls_rep = torch.cat((a, b), dim=-1)
         return self.head(cls_rep)
-    
+
 
 class BEiT3ForImageClassification(BEiT3Wrapper):
-    def __init__(
-            self, 
-            args, 
-            num_classes, 
-            norm_layer=nn.LayerNorm, 
-            **kwargs
-    ):
+    def __init__(self, args, num_classes, norm_layer=nn.LayerNorm, **kwargs):
         super(BEiT3ForImageClassification, self).__init__(args=args)
         embed_dim = args.encoder_embed_dim
         self.fc_norm = norm_layer(embed_dim)
@@ -131,11 +117,7 @@ class BEiT3ForImageClassification(BEiT3Wrapper):
 
 
 class BEiT3ForCaptioning(BEiT3Wrapper):
-    def __init__(
-            self, 
-            args, 
-            **kwargs
-    ):
+    def __init__(self, args, **kwargs):
         super(BEiT3ForCaptioning, self).__init__(args=args)
         embed_dim = args.encoder_embed_dim
         self.mlm_head = nn.Linear(embed_dim, args.vocab_size)
@@ -154,13 +136,13 @@ class BEiT3ForCaptioning(BEiT3Wrapper):
         uni_mask[t_start:t_end, i_start:i_end] = 1
         # full attention for image to image
         uni_mask[i_start:i_end, i_start:i_end] = 1
-        uni_mask = 1-uni_mask
+        uni_mask = 1 - uni_mask
 
         if incremental_state is not None:
             for idx in range(self.get_num_layers()):
                 if idx not in incremental_state:
                     incremental_state[idx] = {}
-        
+
         # for incremental decoding
         positions = None
         if image is None:
@@ -170,8 +152,8 @@ class BEiT3ForCaptioning(BEiT3Wrapper):
             positions = torch.arange(text_len, text_ids.size(1) + text_len, device=text_ids.device).long().unsqueeze(0)
 
         outputs = self.beit3(
-            textual_tokens=text_ids, 
-            visual_tokens=image, 
+            textual_tokens=text_ids,
+            visual_tokens=image,
             text_padding_position=padding_mask,
             attn_mask=uni_mask,
             incremental_state=incremental_state,
@@ -187,7 +169,6 @@ class BEiT3ForCaptioning(BEiT3Wrapper):
 
         return self.mlm_head(text_feats), incremental_state
 
-
 class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
     def __init__(
             self, 
@@ -197,7 +178,7 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
             **kwargs
     ):
         super(BEiT3ForVisualQuestionAnswering, self).__init__(args=args)
-        embed_dim = args.encoder_embed_dim
+        embed_dim = 768
         self.pooler = Pooler(
             input_features=embed_dim, 
             output_features=embed_dim, 
@@ -212,6 +193,9 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
         )
         self.head.apply(self._init_weights)
 
+        self.proj_norm = nn.LayerNorm(267264)
+        self.proj = nn.Linear(267264, num_classes)
+
     def forward(self, image, question, padding_mask, **kwargs):
         outputs = self.beit3(
             textual_tokens=question, 
@@ -219,16 +203,22 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
             text_padding_position=padding_mask, 
         )
         x = outputs["encoder_out"]
+        #bs = x.shape[0]
+        #x = x.view(bs, -1)
         cls_rep = self.pooler(x)
-        return self.head(cls_rep)
+        proj_feat = self.head(cls_rep)
+
+        #bs = x.shape[0]
+        #x_re = x.view(bs, -1)
+        # print(x_re.shape)
+        # exit()
+        #proj_feat = self.proj_norm(x_re)
+        #proj_feat = self.proj(proj_feat)
+        return proj_feat, x
 
 
 class BEiT3ForRetrieval(BEiT3Wrapper):
-    def __init__(
-            self, 
-            args,
-            **kwargs
-    ):
+    def __init__(self, args, **kwargs):
         super(BEiT3ForRetrieval, self).__init__(args=args)
         embed_dim = args.encoder_embed_dim
         self.language_head = nn.Linear(embed_dim, embed_dim, bias=False)
@@ -236,17 +226,17 @@ class BEiT3ForRetrieval(BEiT3Wrapper):
         self.language_head.apply(self._init_weights)
         self.vision_head.apply(self._init_weights)
         self.criterion = utils.ClipLoss(
-            rank=utils.get_rank(), 
-            world_size=utils.get_world_size(), 
+            rank=utils.get_rank(),
+            world_size=utils.get_world_size(),
         )
         self.logit_scale = nn.Parameter(torch.ones([]) * np.log(1 / 0.07))
 
     def forward(self, image=None, text_description=None, padding_mask=None, only_infer=False, **kwargs):
         if image is not None:
             outputs = self.beit3(
-                textual_tokens=None, 
-                visual_tokens=image, 
-                text_padding_position=None, 
+                textual_tokens=None,
+                visual_tokens=image,
+                text_padding_position=None,
             )
             x = outputs["encoder_out"]
             vision_cls = self.vision_head(x[:, 0, :])
@@ -256,16 +246,16 @@ class BEiT3ForRetrieval(BEiT3Wrapper):
 
         if text_description is not None:
             outputs = self.beit3(
-                textual_tokens=text_description, 
-                visual_tokens=None, 
-                text_padding_position=padding_mask, 
+                textual_tokens=text_description,
+                visual_tokens=None,
+                text_padding_position=padding_mask,
             )
             x = outputs["encoder_out"]
             language_cls = self.language_head(x[:, 0, :])
             language_cls = F.normalize(language_cls, dim=-1)
         else:
             language_cls = None
-        
+
         if only_infer:
             return vision_cls, language_cls
         else:
@@ -308,8 +298,7 @@ def beit3_large_patch16_224_nlvr2(pretrained=False, **kwargs):
 def beit3_base_patch16_384_vqav2(pretrained=False, **kwargs):
     args = _get_base_config(img_size=384, **kwargs)
     args.normalize_output = False
-    num_classes = kwargs.get('num_classes', 3129)
-    model = BEiT3ForVisualQuestionAnswering(args, num_classes=num_classes, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=3129, **kwargs)
     return model
 
 
@@ -317,8 +306,7 @@ def beit3_base_patch16_384_vqav2(pretrained=False, **kwargs):
 def beit3_base_patch16_480_vqav2(pretrained=False, **kwargs):
     args = _get_base_config(img_size=480, **kwargs)
     args.normalize_output = False
-    num_classes = kwargs.get('num_classes', 3129)
-    model = BEiT3ForVisualQuestionAnswering(args, num_classes=num_classes, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=3129, **kwargs)
     return model
 
 
@@ -326,8 +314,7 @@ def beit3_base_patch16_480_vqav2(pretrained=False, **kwargs):
 def beit3_large_patch16_384_vqav2(pretrained=False, **kwargs):
     args = _get_large_config(img_size=384, **kwargs)
     args.normalize_output = False
-    num_classes = kwargs.get('num_classes', 3129)
-    model = BEiT3ForVisualQuestionAnswering(args, num_classes=num_classes, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=3129, **kwargs)
     return model
 
 
@@ -335,8 +322,7 @@ def beit3_large_patch16_384_vqav2(pretrained=False, **kwargs):
 def beit3_large_patch16_480_vqav2(pretrained=False, **kwargs):
     args = _get_large_config(img_size=480, **kwargs)
     args.normalize_output = False
-    num_classes = kwargs.get('num_classes', 3129)
-    model = BEiT3ForVisualQuestionAnswering(args, num_classes=num_classes, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=3129, **kwargs)
     return model
 
 
@@ -344,8 +330,7 @@ def beit3_large_patch16_480_vqav2(pretrained=False, **kwargs):
 def beit3_large_patch16_768_vqav2(pretrained=False, **kwargs):
     args = _get_large_config(img_size=768, **kwargs)
     args.normalize_output = False
-    num_classes = kwargs.get('num_classes', 3129)
-    model = BEiT3ForVisualQuestionAnswering(args, num_classes=num_classes, **kwargs)
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=3129, **kwargs)
     return model
 
 
@@ -388,4 +373,11 @@ def beit3_base_patch16_384_retrieval(pretrained=False, **kwargs):
 def beit3_large_patch16_384_retrieval(pretrained=False, **kwargs):
     args = _get_large_config(img_size=384, **kwargs)
     model = BEiT3ForRetrieval(args, **kwargs)
+    return model
+
+@register_model
+def beit3_large_patch16_224_okvqa(pretrained=False, **kwargs):
+    args = _get_large_config(img_size=224, **kwargs)
+    args.normalize_output = False
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
     return model

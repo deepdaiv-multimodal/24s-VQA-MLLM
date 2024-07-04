@@ -11,13 +11,13 @@ class PATH:
         self.LOG_ROOT = 'outputs/logs/'
         self.CKPT_ROOT = 'outputs/ckpts/'
         self.RESULTS_ROOT = 'outputs/results/'
-        self.DATASET_ROOT = 'datasets/'
+        self.DATASET_ROOT = '/root/datasets/okvqa/data/'
         self.ASSETS_ROOT = 'assets/'
 
 
         self.IMAGE_DIR = {
-            'train2014': self.DATASET_ROOT + 'coco2014/train2014/',
-            'val2014': self.DATASET_ROOT + 'coco2014/val2014/',
+            'train2014': self.DATASET_ROOT + 'train2014/',
+            'val2014': self.DATASET_ROOT + 'val2014/',
             # 'test2015': self.DATASET_ROOT + 'coco2015/test2015/',
             'train2017': self.DATASET_ROOT + 'coco2017/train2017/',
             'val2017': self.DATASET_ROOT + 'coco2017/val2017/',

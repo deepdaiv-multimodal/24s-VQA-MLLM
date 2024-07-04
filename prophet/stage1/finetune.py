@@ -4,7 +4,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from .utils.load_data import CommonData, DataSet
 from .model.beit3 import BEiT3ForVisualQuestionAnswering
-import deepspeed
+# import deepspeed
 import utils
 import os, sys
 from timm.optim.lookahead import Lookahead
@@ -28,16 +28,17 @@ from .utils.optim import get_optim_for_finetune as get_optim
 from beit3.utils import NativeScalerWithGradNormCount as NativeScaler
 from beit3.engine_for_finetuning import train_one_epoch, evaluate, VQAHandler
 from beit3.datasets import create_downstream_dataset
+import beit3.modeling_finetune
 
 # Define args directly in the script
 class Args:
     def __init__(self):
-        self.model = 'beit3_base_patch16_480'
+        self.model = 'beit3_large_patch16_224'
         self.task = 'vqav2'
         self.input_size = 480
         self.drop_path = 0.1
         self.checkpoint_activations = False
-        self.sentencepiece_model = '/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3.spm'
+        self.sentencepiece_model = '/root/datasets/okvqa/data/beit3.spm'
         self.vocab_size = 64010
         self.num_max_bpe_tokens = 64
         self.model_ema = False
@@ -66,7 +67,7 @@ class Args:
         self.finetune = ''
         self.model_key = 'model|module'
         self.model_prefix = ''
-        self.data_path = '/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets'
+        self.data_path = '/root/datasets/okvqa/data'
         self.output_dir = ''
         self.log_dir = None
         self.device = 'cuda'
@@ -110,6 +111,7 @@ class Args:
         self.zero_stage = 0
 
 args = Args()
+
 def save_model(ouput_dir, epoch, model, model_without_ddp, optimizer, loss_scaler, model_ema=None):
     output_dir = Path(output_dir)
     if loss_scaler is not None:
@@ -174,14 +176,14 @@ class Runner:
         # model_config = "%s_%s" % ('beit3_large_patch16_480', 'okvqa')
 
         model = create_model(
-                  'beit3_base_patch16_224_okvqa',
+                  'beit3_large_patch16_224_okvqa',
                   pretrained=False,
                   drop_path_rate=0.1,
-                  vocab_size=4477,
+                #   vocab_size=4477,
                   checkpoint_activations='store_true',
               )
               
-        utils.load_model_and_may_interpolate('/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3/beit3_base_patch16_224.pth', model, 'model|module', '')
+        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
 
         model.to("cuda")
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -209,30 +211,31 @@ class Runner:
               epoch * num_training_steps_per_epoch, lr_schedule_values, loss_scaler, 
               None, 1, None, None, 'vqav2', None,
           )
-          if (epoch + 1) % args.save_ckpt_freq == 0 or epoch + 1 == args.epochs:
-              utils.save_model(
-                  '/content/drive/MyDrive/prophet', model=model, model_without_ddp=model, optimizer=optimizer,
-                  loss_scaler=loss_scaler, epoch=epoch, model_ema=None)
-          if data_loader_val is not None:
-              predictions, _ = evaluate(data_loader_val, model, "cuda", task_handler)
-              prediction_file = utils.dump_predictions(args, predictions, f"vqav2_val_e{epoch}")
-              result_file = os.path.join('/content/drive/MyDrive/prophet', f"vqav2_result_val_e{epoch}.json")
-              task_key = "CIDEr"
-              if utils.is_main_process():
-                  test_stats = utils.coco_caption_eval('/content/drive/MyDrive/prophet', prediction_file, "{}_val".format(vqav2))
-                  utils.write_result_to_jsonl(test_stats, result_file)
-                  torch.distributed.barrier()
-                  if not utils.is_main_process():
-                      test_stats = utils.read_result_from_jsonl(result_file)
 
-              print(f"Performance of the network on the {len(data_loader_val.dataset)} val images: {test_stats[task_key]:.1f}%")
-              if max_accuracy < test_stats[task_key]:
-                  max_accuracy = test_stats[task_key]
+          if epoch % args.save_ckpt_freq == 0 or epoch == args.epochs:
+              save_model(ouput_dir='/root/datasets/okvqa/data/beit3_ckpt', epoch=epoch, model=model, model_without_ddp=model, optimizer=optimizer,
+                  loss_scaler=loss_scaler, model_ema=None)
+                  
+        #   if data_loader_val is not None:
+        #       predictions, _ = evaluate(data_loader_val, model, "cuda", task_handler)
+        #       prediction_file = utils.dump_predictions(args, predictions, f"vqav2_val_e{epoch}")
+        #       result_file = os.path.join('/root/datasets/okvqa/data/beit3_ckpt', f"vqav2_result_val_e{epoch}.json")
+        #       task_key = "CIDEr"
+        #       if utils.is_main_process():
+        #           test_stats = utils.coco_caption_eval('/content/drive/MyDrive/prophet', prediction_file, "{}_val".format(vqav2))
+        #           utils.write_result_to_jsonl(test_stats, result_file)
+        #           torch.distributed.barrier()
+        #           if not utils.is_main_process():
+        #               test_stats = utils.read_result_from_jsonl(result_file)
 
-              print(f'Max performance: {max_accuracy:.2f}%')
+        #       print(f"Performance of the network on the {len(data_loader_val.dataset)} val images: {test_stats[task_key]:.1f}%")
+        #       if max_accuracy < test_stats[task_key]:
+        #           max_accuracy = test_stats[task_key]
+
+        #       print(f'Max performance: {max_accuracy:.2f}%')
               
               log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
-                          **{f'val_{k}': v for k, v in test_stats.items()},
+                        #   **{f'val_{k}': v for k, v in test_stats.items()},
                           'epoch': epoch,
                           'n_parameters': n_parameters}
 

@@ -26,7 +26,7 @@ class BaseDataset(torch.utils.data.Dataset):
         self.tokenizer = tokenizer
         self.num_max_bpe_tokens = num_max_bpe_tokens
         self.data_path = data_path
-        self.image_path = '/content/drive/MyDrive/24s-deep-daiv/ok-vqa'
+        # self.image_path = '/root/datasets/okvqa/data'
         items = []
         self.index_files = index_files
 
@@ -51,9 +51,9 @@ class BaseDataset(torch.utils.data.Dataset):
     def get_index_files(split):
         raise NotImplementedError()
 
-    def _get_image(self, image_path: str):
-        image_path = os.path.join(self.image_path, image_path)
-        image = self.loader(image_path)
+    def _get_image(self, data_path: str):
+        data_path = os.path.join(self.data_path, data_path)
+        image = self.loader(data_path)
         return self.transform(image)
 
     def _get_text_segment(self, text_segment, max_len=None):
@@ -112,29 +112,29 @@ class BaseDataset(torch.utils.data.Dataset):
 class OKVQADataset(BaseDataset):
     def __init__(self, data_path, **kwargs):
         super().__init__(data_path=data_path, **kwargs)
-        ans2label_file = os.path.join(data_path, "/content/drive/MyDrive/24s-deep-daiv/ok-vqa/answer2label.txt")
+        ans2label_file = os.path.join(data_path, "/root/datasets/okvqa/data/answer2label.txt")
         ans2label = {}
         label2ans = []
         with open(ans2label_file, mode="r", encoding="utf-8") as reader:
             for i, line in enumerate(reader):
                 data = json.loads(line)
-                # ans = data["answer"]
-                # label = data["label"]
-                # label = int(label)
-                # assert label == i
-                # ans2label[ans] = i
-                # label2ans.append(ans)
+                ans = data["answer"]
+                label = data["label"]
+                label = int(label)
+                assert label == i
+                ans2label[ans] = i
+                label2ans.append(ans)
         
-        # self.ans2label = ans2label
-        # self.label2ans = label2ans
+        self.ans2label = ans2label
+        self.label2ans = label2ans
         self.answer = data
 
     @staticmethod
     def get_index_files(split, task=None):
         if split == "train":
-            return ("/content/drive/MyDrive/24s-deep-daiv/ok-vqa/okvqa.train.jsonl", "/content/drive/MyDrive/24s-deep-daiv/ok-vqa/okvqa.trainable_val.jsonl")
+            return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
         elif split == "val":
-            return ("/content/drive/MyDrive/24s-deep-daiv/ok-vqa/okvqa.rest_val.jsonl", )
+            return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
         # elif split == "test":
         #     return ("vqa.test.jsonl", )
         # elif split == "test-dev":
@@ -144,13 +144,13 @@ class OKVQADataset(BaseDataset):
 
     def __getitem__(self, index: int):
         data = super().__getitem__(index)
-        # if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
-        #     labels = [0.] * len(self.label2ans)
-        #     for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
-        #         labels[l] = s
-        #     data["labels"] = torch.FloatTensor(labels)
-        # else:
-        data["qid"] = self.items[index]["qid"]
+        #if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
+        labels = [0.] * len(self.label2ans)
+        for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
+            labels[l] = s
+        data["labels"] = torch.FloatTensor(labels)
+        #else:
+            #data["qid"] = self.items[index]["qid"]
         return data
 
     @staticmethod
@@ -270,8 +270,8 @@ class OKVQADataset(BaseDataset):
         for split in ["train", "val"]:
             annot = annotations[split]
             split_name = {
-                "train": "train2014_vqa",
-                "val": "val2014_vqa",
+                "train": "train2014",
+                "val": "val2014",
             }[split]
             paths = list(glob.glob(f"{data_path}/{split_name}/*.jpg"))
             print(f"Found {len(paths)} image paths in {split_name}.")
@@ -411,7 +411,7 @@ def build_transform(is_train):
 
 def get_sentencepiece_model_for_beit3():
     from transformers import XLMRobertaTokenizer
-    return XLMRobertaTokenizer('/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3.spm')
+    return XLMRobertaTokenizer('/root/datasets/okvqa/data/beit3.spm')
 
 
 def create_dataset_by_split(split, is_train=True):
@@ -425,7 +425,7 @@ def create_dataset_by_split(split, is_train=True):
     #     opt_kwargs["mask_prob"] = args.captioning_mask_prob
 
     dataset = OKVQADataset(
-        data_path='/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM', split=split, 
+        data_path='/root/datasets/okvqa/data', split=split, 
         transform=transform, tokenizer=tokenizer, 
         num_max_bpe_tokens=64, 
         task='okvqa', **opt_kwargs, 
@@ -433,10 +433,10 @@ def create_dataset_by_split(split, is_train=True):
 
     if is_train:
         batch_size = 16
-    # elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
-    #     batch_size = args.eval_batch_size
-    # else:
-    #     batch_size = int(args.batch_size * 1.5)
+    elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
+        batch_size = args.eval_batch_size
+    else:
+        batch_size = int(args.batch_size * 1.5)
 
     return create_dataloader(
         dataset, is_train=is_train, batch_size=batch_size, 
@@ -453,10 +453,10 @@ def create_downstream_dataset(is_eval=False):
             create_dataset_by_split(split="val", is_train=True)
 
 # if __name__ == "__main__":
-#   tokenizer = XLMRobertaTokenizer("/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3.spm")
+#   tokenizer = XLMRobertaTokenizer("/root/datasets/okvqa/data/beit3.spm")
 
 #   OKVQADataset.make_dataset_index(
-#       data_path="/content/drive/MyDrive/24s-deep-daiv/ok-vqa",
+#       data_path="/root/datasets/okvqa/data",
 #       tokenizer=tokenizer,
-#       annotation_data_path="/content/drive/MyDrive/24s-deep-daiv/ok-vqa",
+#       annotation_data_path="/root/datasets/okvqa/data/okvqa",
 #   )

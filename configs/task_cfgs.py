@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from datetime import datetime
 import yaml
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from .task_to_split import *
 from .path_cfgs import PATH
 
@@ -75,7 +75,7 @@ class Cfgs(PATH):
         self.bert_init = False
 
         # 추가된 속성
-        self.pretrained_model_path = '/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/datasets/beit3/beit3_base_patch16_224.pth'
+        self.pretrained_model_path = '/root/datasets/okvqa/data/beit3_large_patch16_224.pth'
         self.lr_base = 5e-5
         self.weight_decay = 0.01
         self.epochs = 10

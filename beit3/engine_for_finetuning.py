@@ -202,15 +202,12 @@ class VQAHandler(TaskHandler):
         self.label2ans = None
 
     def train_batch(self, model, image, language_tokens, padding_mask, labels):
-        logits = model(
+        logits, _ = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
-
-        # logits과 labels의 크기를 일치시키기 위한 코드 추가
-        if logits.size() != labels.size():
-            min_size = min(logits.size(1), labels.size(1))
-            logits = logits[:, :min_size]
-            labels = labels[:, :min_size]
+        
+        bs = logits.shape[0]
+        logits = logits.view(bs, -1)
 
         loss = self.criterion(input=logits.float(), target=labels.float()) * labels.shape[1]
         return {"loss": loss}
@@ -221,7 +218,7 @@ class VQAHandler(TaskHandler):
         self.label2ans = data_loader.dataset.label2ans
 
     def eval_batch(self, model, image, language_tokens, padding_mask, labels=None, qid=None):
-        logits = model(
+        logits, _ = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
 
@@ -489,15 +486,9 @@ def train_one_epoch(
 
     for data_iter_step, data in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         # print(data.keys()) # dict_keys(['image', 'language_tokens', 'padding_mask', 'qid'])
-        for key in data.keys():
-          if isinstance(data[key], torch.Tensor):
-              data[key] = data[key].cuda()
-
-        pred, proj = model(image=data['image'], question=data['language_tokens'], padding_mask=data['padding_mask'])
-        print(pred.shape, proj.shape)
-        exit()
-        # print(output)
-        # exit()
+        # for key in data.keys():
+        #   if isinstance(data[key], torch.Tensor):
+        #       data[key] = data[key].cuda()
 
         step = data_iter_step // update_freq
         global_step = start_steps + step  # global training iteration
@@ -506,6 +497,7 @@ def train_one_epoch(
             for i, param_group in enumerate(optimizer.param_groups):
                 if lr_schedule_values is not None:
                     param_group["lr"] = lr_schedule_values[global_step] * param_group["lr_scale"]
+
         # put input data into cuda
         for tensor_key in data.keys():
             data[tensor_key] = data[tensor_key].to(device, non_blocking=True)
@@ -513,12 +505,19 @@ def train_one_epoch(
             if loss_scaler is None and tensor_key.startswith("image"):
                 data[tensor_key] = data[tensor_key].half()
 
+        # pred, proj = model(image=data['image'], question=data['language_tokens'], padding_mask=data['padding_mask'])
+
+        # print(pred.shape, proj.shape) # torch.Size([16, 2910]) torch.Size([16, 261, 1024])
+        # print('labels:', data['labels'].shape) # torch.Size([16, 2910])
+        # print(output)
+        # exit()
+
         # mixup for imagenet finetuning
-        if mixup_fn is not None:
-            data["image"], data["label"] = mixup_fn(data["image"], data["label"])
+        # if mixup_fn is not None:
+        #     data["image"], data["label"] = mixup_fn(data["image"], data["label"])
         
-        if task in ["coco_captioning", "nocaps"]:
-            data["global_step"] = global_step
+        # if task in ["coco_captioning", "nocaps"]:
+        #     data["global_step"] = global_step
 
         if loss_scaler is None:
             results = handler.train_batch(model, **data)
