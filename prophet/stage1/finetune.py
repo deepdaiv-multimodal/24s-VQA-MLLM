@@ -29,13 +29,14 @@ from beit3.utils import NativeScalerWithGradNormCount as NativeScaler
 from beit3.engine_for_finetuning import train_one_epoch, evaluate, VQAHandler
 from beit3.datasets import create_downstream_dataset
 import beit3.modeling_finetune
-
+import beit3.utils as utils
+from beit3.utils import save_on_master
 # Define args directly in the script
 class Args:
     def __init__(self):
-        self.model = 'beit3_large_patch16_224'
         self.task = 'vqav2'
         self.input_size = 480
+        # self.drop_path = 0.15
         self.drop_path = 0.1
         self.checkpoint_activations = False
         self.sentencepiece_model = '/root/datasets/okvqa/data/beit3.spm'
@@ -47,9 +48,10 @@ class Args:
         self.opt = 'adamw'
         self.opt_eps = 1e-8
         self.opt_betas = [0.9, 0.98]
-        self.clip_grad = None
+        # self.clip_grad = Nonelr
         self.momentum = 0.9
         self.weight_decay = 0.01
+        # self.lr = 2e-5
         self.lr = 3e-5
         self.layer_decay = 1.0
         self.task_head_lr_weight = 20
@@ -57,8 +59,8 @@ class Args:
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 16
-        self.eval_batch_size = None
+        self.batch_size = 128
+        self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1
         self.save_ckpt_freq = 5
@@ -68,7 +70,7 @@ class Args:
         self.model_key = 'model|module'
         self.model_prefix = ''
         self.data_path = '/root/datasets/okvqa/data'
-        self.output_dir = ''
+        self.output_dir = '/root/datasets/okvqa/data/beit3_ckpt'
         self.log_dir = None
         self.device = 'cuda'
         self.seed = 0
@@ -84,7 +86,7 @@ class Args:
         self.local_rank = -1
         self.dist_on_itp = False
         self.dist_url = 'env://'
-        self.task_cache_path = None
+        self.task_cache_path = '/root/datasets/okvqa/data/beit3_ckpt'
         self.nb_classes = 1000
         self.mixup = 0
         self.cutmix = 0
@@ -112,8 +114,8 @@ class Args:
 
 args = Args()
 
-def save_model(ouput_dir, epoch, model, model_without_ddp, optimizer, loss_scaler, model_ema=None):
-    output_dir = Path(output_dir)
+def save_model(output_dir, epoch, model, model_without_ddp, optimizer, loss_scaler, model_ema=None):
+    output_dir = Path(args.output_dir)
     if loss_scaler is not None:
         checkpoint_paths = [output_dir / ('checkpoint-%s.pth' % epoch)]
         for checkpoint_path in checkpoint_paths:
@@ -169,40 +171,51 @@ class Runner:
         data_loader_train, data_loader_val = create_downstream_dataset()
         data_size = train_set.data_size
 
-        # Define the MCAN model
-        path = self.__C.pretrained_model_path
-        print('Loading ckpt {}'.format(path))
-
-        # model_config = "%s_%s" % ('beit3_large_patch16_480', 'okvqa')
-
         model = create_model(
-                  'beit3_large_patch16_224_okvqa',
+                  'beit3_base_patch16_224_okvqa',
                   pretrained=False,
-                  drop_path_rate=0.1,
+                  drop_path_rate=args.drop_path,
                 #   vocab_size=4477,
                   checkpoint_activations='store_true',
               )
               
-        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
+        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
+        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
 
         model.to("cuda")
+
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
-        # print('number of params:', n_parameters)
-        total_batch_size = 16 * utils.get_world_size()
-        # print(total_batch_size)
-        num_training_steps_per_epoch = data_size // total_batch_size
-        # print(num_training_steps_per_epoch)
+
+        total_batch_size = args.batch_size * args.update_freq * utils.get_world_size()
+        num_training_steps_per_epoch = len(data_loader_train.dataset) // total_batch_size
+
         num_layers = model.get_num_layers()
         lrs = list(0.9 ** (num_layers + 1 - i) for i in range(num_layers + 2))
-        assigner = LayerDecayValueAssigner(lrs)
+        assigner = LayerDecayValueAssigner([1.0, args.task_head_lr_weight], scale_handler=get_is_head_flag_for_vit)
+
         skip_weight_decay_list = model.no_weight_decay()
+
+        # optimizer 
         optimizer = create_optimizer(
             model, skip_list=skip_weight_decay_list,
             get_num_layer=assigner.get_layer_id if assigner is not None else None, 
             get_layer_scale=assigner.get_scale if assigner is not None else None)
+
         loss_scaler = NativeScaler()
-        lr_schedule_values = utils.cosine_scheduler(5e-4, 1e-6, 100, num_training_steps_per_epoch, 5, -1)
+
+        lr_schedule_values = utils.cosine_scheduler(
+            args.lr, args.min_lr, args.epochs, num_training_steps_per_epoch,
+            warmup_epochs=args.warmup_epochs, warmup_steps=args.warmup_steps,
+        )   
+
+        utils.auto_load_model(
+            args=args, model=model, model_without_ddp=model,
+            optimizer=optimizer, loss_scaler=loss_scaler, model_ema=args.model_ema)
+
+
         task_handler = VQAHandler()
+
+
         max_accuracy = 0.0
 
         for epoch in range(100):
@@ -213,20 +226,18 @@ class Runner:
           )
 
           if epoch % args.save_ckpt_freq == 0 or epoch == args.epochs:
-              save_model(ouput_dir='/root/datasets/okvqa/data/beit3_ckpt', epoch=epoch, model=model, model_without_ddp=model, optimizer=optimizer,
+              save_model(output_dir=args.output_dir, epoch=epoch, model=model, model_without_ddp=model, optimizer=optimizer,
                   loss_scaler=loss_scaler, model_ema=None)
                   
         #   if data_loader_val is not None:
         #       predictions, _ = evaluate(data_loader_val, model, "cuda", task_handler)
-        #       prediction_file = utils.dump_predictions(args, predictions, f"vqav2_val_e{epoch}")
-        #       result_file = os.path.join('/root/datasets/okvqa/data/beit3_ckpt', f"vqav2_result_val_e{epoch}.json")
-        #       task_key = "CIDEr"
         #       if utils.is_main_process():
-        #           test_stats = utils.coco_caption_eval('/content/drive/MyDrive/prophet', prediction_file, "{}_val".format(vqav2))
+        #           test_stats = utils.coco_caption_eval(args.output_dir, prediction_file, "{}_val".format(vqav2))
         #           utils.write_result_to_jsonl(test_stats, result_file)
-        #           torch.distributed.barrier()
-        #           if not utils.is_main_process():
-        #               test_stats = utils.read_result_from_jsonl(result_file)
+
+        #       torch.distributed.barrier()
+        #       if not utils.is_main_process():
+        #           test_stats = utils.read_result_from_jsonl(result_file)
 
         #       print(f"Performance of the network on the {len(data_loader_val.dataset)} val images: {test_stats[task_key]:.1f}%")
         #       if max_accuracy < test_stats[task_key]:

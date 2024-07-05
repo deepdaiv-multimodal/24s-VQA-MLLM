@@ -531,14 +531,16 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
         if model_key in checkpoint:
             checkpoint_model = checkpoint[model_key]
             print("Load state_dict by model_key = %s" % model_key)
+            # print('checkpoint_model', checkpoint_model.keys())
             break
     
     if checkpoint_model is None:
         checkpoint_model = checkpoint
     
     state_dict = model.state_dict()
+
     for k in ['head.weight', 'head.bias']:
-        if k in checkpoint_model and checkpoint_model[k].shape != state_dict[k].shape:
+        if k in checkpoint_model.keys() and checkpoint_model[k].shape != state_dict[k].shape:
             print(f"Removing key {k} from pretrained checkpoint")
             del checkpoint_model[k]
 
@@ -572,6 +574,10 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
                     # only the position tokens are interpolated
                     pos_tokens = pos_embed_checkpoint[:, num_extra_tokens:]
                 pos_tokens = pos_tokens.reshape(-1, orig_size, orig_size, embedding_size).permute(0, 3, 1, 2)
+
+                if pos_tokens.dtype == torch.float16:
+                    pos_tokens = pos_tokens.to(torch.float32)
+
                 pos_tokens = torch.nn.functional.interpolate(
                     pos_tokens, size=(new_size, new_size), mode='bicubic', align_corners=False)
                 pos_tokens = pos_tokens.permute(0, 2, 3, 1).flatten(1, 2)
@@ -581,6 +587,7 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
                 checkpoint_model[pos_embed_key] = new_pos_embed
 
     load_state_dict(model, checkpoint_model, prefix=model_prefix)
+    # exit()
 
 
 def create_ds_config(args):

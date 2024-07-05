@@ -214,6 +214,8 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
         # exit()
         #proj_feat = self.proj_norm(x_re)
         #proj_feat = self.proj(proj_feat)
+        # print('proj_feat:', proj_feat.shape, 'x:', x.shape)
+        # exit()
         return proj_feat, x
 
 
@@ -376,8 +378,8 @@ def beit3_large_patch16_384_retrieval(pretrained=False, **kwargs):
     return model
 
 @register_model
-def beit3_large_patch16_224_okvqa(pretrained=False, **kwargs):
-    args = _get_large_config(img_size=224, **kwargs)
+def beit3_base_patch16_224_okvqa(pretrained=False, **kwargs):
+    args = _get_base_config(img_size=480, **kwargs)
     args.normalize_output = False
     model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
     return model

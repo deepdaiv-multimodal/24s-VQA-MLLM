@@ -15,7 +15,7 @@ import utils
 from .glossary import normalize_word
 from .randaug import RandomAugment
 
-input_size=224
+input_size=480
 
 class BaseDataset(torch.utils.data.Dataset):
     def __init__(
@@ -73,6 +73,7 @@ class BaseDataset(torch.utils.data.Dataset):
         num_tokens = len(tokens)
         padding_mask = [0] * num_tokens + [1] * (max_len - num_tokens)
         return tokens + [self.pad_token_id] * (max_len - num_tokens), padding_mask, num_tokens
+    
 
     def _get_image_text_example(self, index: int, data: dict):
         item = self.items[index]
@@ -141,14 +142,15 @@ class OKVQADataset(BaseDataset):
         #     return ("vqa.test-dev.jsonl", )            
         # else:
         #     raise RuntimeError("split %s is not found!" % split)
+    
 
     def __getitem__(self, index: int):
         data = super().__getitem__(index)
-        #if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
-        labels = [0.] * len(self.label2ans)
-        for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
-            labels[l] = s
-        data["labels"] = torch.FloatTensor(labels)
+        if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
+            labels = [0.] * len(self.label2ans)
+            for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
+                labels[l] = s
+            data["labels"] = torch.FloatTensor(labels)   #(16, 2910)
         #else:
             #data["qid"] = self.items[index]["qid"]
         return data
@@ -432,7 +434,7 @@ def create_dataset_by_split(split, is_train=True):
     )
 
     if is_train:
-        batch_size = 16
+        batch_size = 128
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
         batch_size = args.eval_batch_size
     else:
