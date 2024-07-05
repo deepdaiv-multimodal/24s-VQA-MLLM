@@ -9,27 +9,34 @@ from PIL import Image
 import math
 import argparse
 
-from .utils.model import InstructBlipForConditionalGeneration
-from transformers import BlipImageProcessor, AutoTokenizer, InstructBlipConfig, AutoProcessor, InstructBlipProcessor
+
+from transformers import InstructBlipProcessor
+from .utils.custom import InstructBlipForConditionalGeneration
+from transformers import BlipImageProcessor, AutoTokenizer, InstructBlipConfig, AutoProcessor
 
 from .utils.fancy_pbar import progress, info_column
 from .utils.data_utils import Qid2Data
 from configs.task_cfgs import Cfgs
+
+import os
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] ='0'
 
 class Runner:
     def __init__(self, __C, evaluater):
         self.__C = __C
         self.evaluater = evaluater
 
+        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
+        
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
-        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
+        
+        config = InstructBlipConfig.from_pretrained("Salesforce/instructblip-flan-t5-xl")
+        self.model = InstructBlipForConditionalGeneration(config).to(self.device)
 
-        self.model = InstructBlipForConditionalGeneration.from_pretrained(
-            "flant5xxl"
-        ).to(self.device)
-
-    def infer_with_blip(self, image_path, prompt_text, instruction, _retry=0):
+    def infer_with_blip(self, image_path, prompt_text, ques, _retry=0):
         if _retry > 0:
             print('retrying...')
             st = 2 ** _retry
@@ -44,40 +51,47 @@ class Runner:
                 raise FileNotFoundError(f"The image at path {image_path} does not exist.")
 
             image = Image.open(image_path).convert("RGB")
-            print("Image loaded successfully")
-
-            inputs = self.processor(images=image, text=instruction, prompts=prompt_text, return_tensors="pt", truncation=True, max_length=512)
+            # Ensure `ques` is a string or list of strings
+            if not isinstance(ques, str):
+              if isinstance(ques, list):
+                ques = [str(q) for q in ques]
+              else:
+                ques = str(ques)
+                
+            inputs = self.processor(images=image, text=prompt_text, return_tensors="pt", truncation=True, max_length=512) #prompts=prompt_text,
             if torch.cuda.is_available():
                 inputs = {key: value.to(self.device) for key, value in inputs.items()}
+                
+            outputs, scores = self.model.generate_with_scores(
+                                          **inputs,
+                                          do_sample=False,
+                                          num_beams=5,
+                                          max_length=256,
+                                          min_length=1,
+                                          top_p=0.9,
+                                          repetition_penalty=1.5,
+                                          length_penalty=1.0,
+                                          temperature=1,
+                                      )
 
-            print(f"Processor inputs: {inputs}")
-
-            print(f"Prompt text: {prompt_text}")
-            print(f"Question : {instruction}")
-            outputs = self.model.generate(pixel_values=inputs['pixel_values'],
-                                          input_ids=inputs['input_ids'],
-                                          attention_mask=inputs['attention_mask'],
-                                          prompts=inputs['prompt_input_ids'],
-                                          prompt_attention_mask=inputs['prompt_attention_mask'],
-                                          max_length=128,
-                                          return_dict_in_generate=True,
-                                          output_scores=True)
-
-            response_txt = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0].strip()
-            print("Decoded response text:", response_txt)
-
+            response_txt = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
+            
+            print(prompt_text)
+            print(response_txt)
+            
             logprobs = []
-            for score in outputs.scores:
+            for score in scores:
                 logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
             total_logprob = torch.sum(torch.stack(logprobs))
             prob = math.exp(total_logprob.item())
+            print(prob)
 
         except FileNotFoundError as e:
             print(e)
             return "Image not found", 0
         except Exception as e:
             print(type(e), e)
-            return self.infer_with_blip(image_path, prompt_text, instruction, _retry + 1)
+            return self.infer_with_blip(image_path, prompt_text, _retry + 1)
 
         return response_txt, prob
 
@@ -85,6 +99,7 @@ class Runner:
         line_prefix = self.__C.LINE_PREFIX
         cands = cands[:self.__C.K_CANDIDATES]
         prompt_text = line_prefix + f'Context: {capt}\n'
+        prompt_text += line_prefix + f'Question: {ques}\n'
         cands_with_conf = [f'{cand["answer"]}({cand["confidence"]:.2f})' for cand in cands]
         cands = ', '.join(cands_with_conf)
         prompt_text += line_prefix + f'Candidates: {cands}\n'
@@ -92,6 +107,8 @@ class Runner:
         if ans is not None:
             prompt_text += f' {ans}'
         return prompt_text, image_path
+
+        
 
     def get_context(self, example_qids):
         prompt_text = self.__C.PROMPT_HEAD
@@ -109,9 +126,11 @@ class Runner:
         return prompt_text
 
     def run(self):
+        ## 로그 저장 위치 설정
         Path(self.__C.LOG_PATH).parent.mkdir(parents=True, exist_ok=True)
         with open(self.__C.LOG_PATH, 'w') as f:
             f.write(str(self.__C) + '\n')
+        ## 결과 저장 위치 설정
         Path(self.__C.RESULT_DIR).mkdir(parents=True, exist_ok=True)
 
         self.cache = {}
@@ -127,6 +146,8 @@ class Runner:
         N_inctx = self.__C.N_EXAMPLES
 
         print()
+        random.seed(42)
+        sampled_keys = random.sample(list(self.valset.qid_to_data.keys()),1000)
 
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
             if qid in self.cache:
@@ -142,6 +163,7 @@ class Runner:
 
             prompt_info_list = []
             ans_pool = {}
+            # 다중 추론
             for t in range(infer_times):
                 prompt_in_ctx = self.get_context(example_qids[(N_inctx * t):(N_inctx * t + N_inctx)])
                 prompt_text = prompt_in_ctx + prompt_query
@@ -159,6 +181,7 @@ class Runner:
                 prompt_info_list.append(prompt_info)
                 time.sleep(self.__C.SLEEP_PER_INFER)
 
+            # 다수결 투표
             if len(ans_pool) == 0:
                 answer = self.valset.get_topk_candidates(qid, 1)[0]['answer']
             else:
@@ -177,6 +200,8 @@ class Runner:
                 if ll > 21 and ll % 10 == 0:
                     rt_accuracy = self.valset.rt_evaluate(self.cache.values())
                     info_column.info = f'Acc: {rt_accuracy}'
+                if 11 % 100 ==0:
+                  print(rt_accuracy)
 
         self.evaluater.save(self.__C.RESULT_PATH)
         if self.__C.EVAL_NOW:
@@ -190,8 +215,8 @@ def prompt_login_args(parser):
     parser.add_argument('--version', dest='VERSION', help='version name', type=str, required=True)
     parser.add_argument('--cfg', dest='cfg_file', help='optional config file', type=str, default='configs/prompt.yml')
     parser.add_argument('--examples_path', dest='EXAMPLES_PATH', help='answer-aware example file path, default: "assets/answer_aware_examples_for_ok.json"', type=str, default=None)
-    parser.add_argument('--candidates_path', dest='CANDIDATES_PATH', help='candidates file path, default: "assets/candidates_for_ok.json"', type=str, default=None)
-    parser.add_argument('--captions_path', dest='CAPTIONS_PATH', help='captions file path, default: "assets/captions_for_ok.json"', type=str, default=None)
+    parser.add_argument('--candidates_path', dest='CANDIDATES_PATH', help='candidates file path, default: "assets/candidates_for.ok.json"', type=str, default=None)
+    parser.add_argument('--captions_path', dest='CAPTIONS_PATH', help='captions file path, default: "assets/captions_for.ok.json"', type=str, default=None)
     parser.add_argument('--image_path', dest='IMAGE_PATH', help='path to the images folder', type=str, required=True)
 
 if __name__ == '__main__':
