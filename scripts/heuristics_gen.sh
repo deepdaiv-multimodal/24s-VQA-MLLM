@@ -36,6 +36,8 @@ EXAMPLE_NUM=${EXAMPLE_NUM:-100} # number of examples to be generated
 VERSION=${VERSION:-"heuristics_okvqa"} # version name, default 'heuristics1_for_$TASK'
 
 # CUDA_VISIBLE_DEVICES=$GPU \
+export CUDA_VISIBLE_DEVICES=$GPU
+
 python main.py \
     --task $TASK --run_mode heuristics \
     --version $VERSION \

@@ -87,13 +87,19 @@ class Runner:
         # making context text for one testing input
         prompt_text = self.__C.PROMPT_HEAD
         examples = []
+        prompt_img = []
         for key in example_qids:
+            iid = int(str(key)[:-1])
+            iid_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid:012d}.jpg')
             ques = self.trainset.get_question(key)
             caption = self.trainset.get_caption(key)
+            tag = self.trainset.get_tags(key)
             cands = self.trainset.get_topk_candidates(key)
             gt_ans = self.trainset.get_most_answer(key)
-            examples.append((ques, caption, cands, gt_ans))
-            prompt_text += self.sample_make(ques, caption, cands, ans=gt_ans)
+            examples.append((ques, caption, tag, cands, gt_ans))
+            p = self.sample_make(ques, caption, tag, cands, iid_path, ans=gt_ans)
+            prompt_text += p
+            # prompt_img.append(img)
             prompt_text += '\n\n'
         return prompt_text
     

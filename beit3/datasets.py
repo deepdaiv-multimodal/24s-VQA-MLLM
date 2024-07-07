@@ -39,6 +39,7 @@ class BaseDataset(torch.utils.data.Dataset):
                     items.append(data)
                 print("Load %d image-text pairs from %s. " % (len(items) - offset, index_file))
                 offset = len(items)
+
         self.items = items
         self.bos_token_id = tokenizer.bos_token_id
         self.eos_token_id = tokenizer.eos_token_id
@@ -129,13 +130,18 @@ class OKVQADataset(BaseDataset):
         self.ans2label = ans2label
         self.label2ans = label2ans
         self.answer = data
+        # self.ix_to_ans = json.load(open("/root/datasets/okvqa/data/answer2label.txt", 'r'))
 
     @staticmethod
     def get_index_files(split, task=None):
         if split == "train":
-            return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
+            return ("/root/datasets/okvqa/data/okvqa.train.jsonl", )
         elif split == "val":
-            return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
+            return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
+        # if split == "train":
+        #     return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
+        # elif split == "val":
+        #     return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
         # elif split == "test":
         #     return ("vqa.test.jsonl", )
         # elif split == "test-dev":
@@ -146,13 +152,13 @@ class OKVQADataset(BaseDataset):
 
     def __getitem__(self, index: int):
         data = super().__getitem__(index)
-        if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
-            labels = [0.] * len(self.label2ans)
-            for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
-                labels[l] = s
-            data["labels"] = torch.FloatTensor(labels)   #(16, 2910)
+        # if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
+        labels = [0.] * len(self.label2ans)
+        for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
+            labels[l] = s
+        data["labels"] = torch.FloatTensor(labels)   #(16, 2910)
         #else:
-            #data["qid"] = self.items[index]["qid"]
+        data["qid"] = self.items[index]["qid"]
         return data
 
     @staticmethod
@@ -434,7 +440,7 @@ def create_dataset_by_split(split, is_train=True):
     )
 
     if is_train:
-        batch_size = 128
+        batch_size = 1
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
         batch_size = args.eval_batch_size
     else:

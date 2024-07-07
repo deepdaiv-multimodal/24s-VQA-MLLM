@@ -36,8 +36,8 @@ class Args:
     def __init__(self):
         self.task = 'vqav2'
         self.input_size = 480
-        # self.drop_path = 0.15
-        self.drop_path = 0.1
+        self.drop_path = 0.15
+        # self.drop_path = 0.1
         self.checkpoint_activations = False
         self.sentencepiece_model = '/root/datasets/okvqa/data/beit3.spm'
         self.vocab_size = 64010
@@ -51,15 +51,15 @@ class Args:
         # self.clip_grad = Nonelr
         self.momentum = 0.9
         self.weight_decay = 0.01
-        # self.lr = 2e-5
-        self.lr = 3e-5
+        self.lr = 2e-5
+        # self.lr = 3e-5
         self.layer_decay = 1.0
         self.task_head_lr_weight = 20
         self.warmup_lr = 1e-6
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 128
+        self.batch_size = 32
         self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1
@@ -70,7 +70,7 @@ class Args:
         self.model_key = 'model|module'
         self.model_prefix = ''
         self.data_path = '/root/datasets/okvqa/data'
-        self.output_dir = '/root/datasets/okvqa/data/beit3_ckpt'
+        self.output_dir = '/root/datasets/okvqa/data/beit3_large_ckpt'
         self.log_dir = None
         self.device = 'cuda'
         self.seed = 0
@@ -86,7 +86,7 @@ class Args:
         self.local_rank = -1
         self.dist_on_itp = False
         self.dist_url = 'env://'
-        self.task_cache_path = '/root/datasets/okvqa/data/beit3_ckpt'
+        self.task_cache_path = '/root/datasets/okvqa/data/beit3_large_ckpt'
         self.nb_classes = 1000
         self.mixup = 0
         self.cutmix = 0
@@ -179,8 +179,8 @@ class Runner:
                   checkpoint_activations='store_true',
               )
               
-        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
-        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
+        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
+        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
 
         model.to("cuda")
 

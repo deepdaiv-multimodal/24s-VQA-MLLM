@@ -17,7 +17,7 @@ class Cfgs(PATH):
         if self.GPU is not None:
             self.GPU_IDS = [int(i) for i in self.GPU.split(',')]
             self.CURRENT_GPU = self.GPU_IDS[0]
-            torch.cuda.set_device(f'cuda:{self.CURRENT_GPU}')
+            # torch.cuda.set_device(f'cuda:{self.CURRENT_GPU}')
             self.N_GPU = len(self.GPU_IDS)
             self.SEED = getattr(args, 'SEED', 1111)
             torch.manual_seed(self.SEED)
