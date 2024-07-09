@@ -4,8 +4,8 @@
 # ------------------------------------------------------------------------------ #
 
 import torch
+
 import os, sys
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # sys.path.append(os.getcwd())
 
 import pickle
@@ -71,15 +71,53 @@ class Runner:
                 if retry_count >= max_retries:
                     raise e
                 time.sleep(2 ** retry_count)  # Exponential backoff
+
     
-    def load_image(self, image_path):
-      img = Image.open(image_path)
-      return img 
+    def gpt3_infer(self, prompt_text, _retry=0):
+        # print(prompt_text)
+        # exponential backoff
+        if _retry > 0:
+            print('retrying...')
+            st = 2 ** _retry
+            time.sleep(st)
+        
+        if self.__C.DEBUG:
+            # print(prompt_text)
+            time.sleep(0.05)
+            return 0, 0
+
+        try:
+            # print('calling gpt3...')
+            response = openai.Completion.create(
+                engine=self.__C.MODEL,
+                prompt=prompt_text,
+                temperature=self.__C.TEMPERATURE,
+                max_tokens=self.__C.MAX_TOKENS,
+                logprobs=1,
+                stop=["\n", "<|endoftext|>"],
+                # timeout=20,
+            )
+            # print('gpt3 called.')
+        except Exception as e:
+            print(type(e), e)
+            if str(e) == 'You exceeded your current quota, please check your plan and billing details.':
+                exit(1)
+            return self.gpt3_infer(prompt_text, _retry + 1)
+
+        response_txt = response.choices[0].text.strip()
+        # print(response_txt)
+        plist = []
+        for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
+            if response['choices'][0]['logprobs']['tokens'][ii] in ["\n", "<|endoftext|>"]:
+                break
+            plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
+        prob = math.exp(sum(plist))
+        
+        return response_txt, prob
     
     def sample_make(self, ques, capt, tag, cands, image_path, ans=None):
         line_prefix = self.__C.LINE_PREFIX
         cands = cands[:self.__C.K_CANDIDATES]
-        # prompt_image = self.load_image(image_path)
         prompt_text = line_prefix + f'Context: {capt}\n'
         prompt_text += line_prefix + f'Imaging tagging: {tag}\n'
         prompt_text += line_prefix + f'Question: {ques}\n'
@@ -133,14 +171,13 @@ class Runner:
             self.__C.TRAIN_SPLITS,
             True
         )
-
+        
         self.valset = Qid2Data(
             self.__C, 
             self.__C.EVAL_SPLITS,
             self.__C.EVAL_NOW,
             json.load(open(self.__C.EXAMPLES_PATH, 'r'))
         )
-
 
         # if 'aok' in self.__C.TASK:
         #     from evaluation.aokvqa_evaluate import AOKEvaluater as Evaluater
@@ -154,6 +191,7 @@ class Runner:
         infer_times = self.__C.T_INFER
         N_inctx = self.__C.N_EXAMPLES
         
+        print()
 
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
             if qid in self.cache:
@@ -176,11 +214,9 @@ class Runner:
             # multi-times infer
             for t in range(infer_times):
                 # print(f'Infer {t}...')
-                # image_in_ctx, prompt_in_ctx = self.get_context(example_qids[(N_inctx * t):(N_inctx * t + N_inctx)])
                 prompt_in_ctx = self.get_context(example_qids[(N_inctx * t):(N_inctx * t + N_inctx)])
                 prompt_text = prompt_in_ctx + prompt_query
-                # prompt_image = image_in_ctx + [image]
-                gen_text, gen_prob = self.instructblip_infer(image_path, prompt_text)
+                gen_text, gen_prob = self.gpt3_infer(prompt_text)
 
                 ans = self.evaluater.prep_ans(gen_text)
                 if ans != '':
@@ -191,8 +227,6 @@ class Runner:
                     'answer': gen_text,
                     'confidence': gen_prob
                 }
-                # print('prompt_info:', prompt_info)
-                
                 prompt_info_list.append(prompt_info)
                 time.sleep(self.__C.SLEEP_PER_INFER)
             
@@ -212,7 +246,7 @@ class Runner:
 
             ll = len(self.cache)
             if self.__C.EVAL_NOW and not self.__C.DEBUG:
-                if ll > 0 and ll % 10 == 0:
+                if ll > 21 and ll % 10 == 0:
                     rt_accuracy = self.valset.rt_evaluate(self.cache.values())
                     info_column.info = f'Acc: {rt_accuracy}'
 
@@ -230,7 +264,7 @@ def prompt_login_args(parser):
     parser.add_argument('--examples_path', dest='EXAMPLES_PATH', help='answer-aware example file path, default: "assets/answer_aware_examples_for_ok.json"', type=str, default=None)
     parser.add_argument('--candidates_path', dest='CANDIDATES_PATH', help='candidates file path, default: "assets/candidates_for_ok.json"', type=str, default=None)
     parser.add_argument('--captions_path', dest='CAPTIONS_PATH', help='captions file path, default: "assets/captions_for_ok.json"', type=str, default=None)
-    # parser.add_argument('--openai_key', dest='OPENAI_KEY', help='openai api key', type=str, default=None)
+    parser.add_argument('--openai_key', dest='OPENAI_KEY', help='openai api key', type=str, default=None)
 
 
 if __name__ == '__main__':

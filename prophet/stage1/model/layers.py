@@ -122,7 +122,7 @@ class SA_v(nn.Module):
 
         self.dropout1 = nn.Dropout(__C.DROPOUT_R)
         self.norm1 = nn.LayerNorm(__C.HIDDEN_SIZE)
-        self.rope = RoPE2d(self.internal_dim, __C.IMG_FEAT_GRID)
+        self.rope = RoPE2d(self.internal_dim, 197)  # seq_len을 197로 설정
 
     def forward(self, *args):
         x, *_ = args

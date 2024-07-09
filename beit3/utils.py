@@ -21,7 +21,7 @@ import torch
 import torch.distributed as dist
 import torch.nn as nn
 import torch.nn.functional as F
-from torch._six import inf
+from torch import inf
 from torchmetrics import Metric
 from tensorboardX import SummaryWriter
 
@@ -531,14 +531,16 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
         if model_key in checkpoint:
             checkpoint_model = checkpoint[model_key]
             print("Load state_dict by model_key = %s" % model_key)
+            # print('checkpoint_model', checkpoint_model.keys())
             break
     
     if checkpoint_model is None:
         checkpoint_model = checkpoint
     
     state_dict = model.state_dict()
+
     for k in ['head.weight', 'head.bias']:
-        if k in checkpoint_model and checkpoint_model[k].shape != state_dict[k].shape:
+        if k in checkpoint_model.keys() and checkpoint_model[k].shape != state_dict[k].shape:
             print(f"Removing key {k} from pretrained checkpoint")
             del checkpoint_model[k]
 
@@ -572,6 +574,10 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
                     # only the position tokens are interpolated
                     pos_tokens = pos_embed_checkpoint[:, num_extra_tokens:]
                 pos_tokens = pos_tokens.reshape(-1, orig_size, orig_size, embedding_size).permute(0, 3, 1, 2)
+
+                if pos_tokens.dtype == torch.float16:
+                    pos_tokens = pos_tokens.to(torch.float32)
+
                 pos_tokens = torch.nn.functional.interpolate(
                     pos_tokens, size=(new_size, new_size), mode='bicubic', align_corners=False)
                 pos_tokens = pos_tokens.permute(0, 2, 3, 1).flatten(1, 2)
@@ -581,6 +587,7 @@ def load_model_and_may_interpolate(ckpt_path, model, model_key, model_prefix):
                 checkpoint_model[pos_embed_key] = new_pos_embed
 
     load_state_dict(model, checkpoint_model, prefix=model_prefix)
+    # exit()
 
 
 def create_ds_config(args):
@@ -632,7 +639,9 @@ def create_ds_config(args):
 def merge_batch_tensors_by_dict_key(batch):
     batch_tensors = {}
     for tensor_key in batch[0]:
+        print('tensor_key:', tensor_key)
         if isinstance(batch[0][tensor_key], torch.Tensor):
+            # print(f"KeyError: '{tensor_key}'  the batch.")
             batch_tensors[tensor_key] = torch.stack([d[tensor_key] for d in batch])
         else:
             batch_tensors[tensor_key] = torch.tensor([d[tensor_key] for d in batch], dtype=torch.long)

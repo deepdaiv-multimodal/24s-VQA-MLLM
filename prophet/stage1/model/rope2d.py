@@ -1,63 +1,37 @@
-# ------------------------------------------------------------------------------ #
-# Author: Zhenwei Shao (https://github.com/ParadoxZW)
-# Description: A 2D version of rotary positional embeddings 
-# (https://arxiv.org/abs/2104.09864).
-# ------------------------------------------------------------------------------ #
-
-
 import math
 import torch
 import torch.nn.functional as F
 from torch import nn
-# from einops import rearrange, repeat
 
 def rotate_every_two(x):
-    shape = x.shape
-    # x = rearrange(x, '... (d j) -> ... d j', j = 2)
-    # x1, x2 = x.unbind(dim = -1)
-    x = x.view(*shape[:-1], -1, 2)[..., [1, 0]]
-    x = x.view(*shape)
-    return x
+    x = x.view(x.shape[:-1] + (x.shape[-1] // 2, 2))
+    x1, x2 = x.unbind(-1)
+    return torch.stack((-x2, x1), dim=-1).view(x.shape[:-2] + (x.shape[-2] * 2,))
 
 def apply_rotary_pos_emb(q, k, sinu_pos):
     sin, cos = sinu_pos
-    q, k = map(lambda t: (t * cos) + (rotate_every_two(t) * sin), (q, k))
+    q_len, q_dim = q.shape[-2:]
+    k_len, k_dim = k.shape[-2:]
+
+    sin_q = sin[:q_len, :q_dim].view(1, 1, q_len, q_dim).expand(q.shape[0], q.shape[1], q_len, q_dim)
+    cos_q = cos[:q_len, :q_dim].view(1, 1, q_len, q_dim).expand(q.shape[0], q.shape[1], q_len, q_dim)
+    
+    sin_k = sin[:k_len, :k_dim].view(1, 1, k_len, k_dim).expand(k.shape[0], k.shape[1], k_len, k_dim)
+    cos_k = cos[:k_len, :k_dim].view(1, 1, k_len, k_dim).expand(k.shape[0], k.shape[1], k_len, k_dim)
+
+    q = (q * cos_q) + (rotate_every_two(q) * sin_q)
+    k = (k * cos_k) + (rotate_every_two(k) * sin_k)
+    
     return q, k
 
-# rotary embeddings for 2d position
 class RoPE2d(nn.Module):
-    def __init__(self, in_dim, size):
+    def __init__(self, dim, seq_len):
         super().__init__()
-        dim = in_dim // 2
-        inv_freq = 1. / (40 ** (torch.arange(0, dim, 2).float() / dim))
-        position = torch.arange(0, size, dtype=torch.float)
-        sinusoid_inp = torch.einsum("i,j->ij", position, inv_freq)
-        _sin = sinusoid_inp.sin()
-        _cos = sinusoid_inp.cos()
-        _sin, _cos = map(
-            lambda x: x.unsqueeze(-1).repeat(1, 1, 2),
-            (_sin, _cos)
-        )
-        _sin[..., 0] = -_sin[..., 0]
-        _sin, _cos = map(lambda x: x.view(*x.shape[:-2], -1), (_sin, _cos))
-        _sin, _cos = map(
-            lambda x: torch.cat([
-                x.unsqueeze(0).repeat(size, 1, 1),
-                x.unsqueeze(1).repeat(1, size, 1)
-            ], dim=-1).view(-1, in_dim),
-            (_sin, _cos)
-        )
-        self.register_buffer('sin', _sin)
-        self.register_buffer('cos', _cos)
+        inv_freq = 1. / (10000 ** (torch.arange(0, dim, 2).float() / dim))
+        pos = torch.arange(seq_len, dtype=torch.float)
+        sinusoid_inp = torch.einsum('i,j->ij', pos, inv_freq)
+        self.register_buffer('sin', sinusoid_inp.sin().unsqueeze(-1).expand(-1, -1, 2).reshape(sinusoid_inp.shape[0], -1))
+        self.register_buffer('cos', sinusoid_inp.cos().unsqueeze(-1).expand(-1, -1, 2).reshape(sinusoid_inp.shape[0], -1))
 
-    def forward(self, k, q):
-        q, k = apply_rotary_pos_emb(q, k, (self.sin, self.cos))
-        return q, k
-
-if __name__ == '__main__':
-    rope = RoPE2d(512, size=4)
-    q = torch.randn(1, 16, 512)
-    k = torch.randn(1, 16, 512)
-    q, k = rope(q, k)
-    print(q.shape, k.shape)
-    
+    def forward(self, q, k):
+        return apply_rotary_pos_emb(q, k, (self.sin, self.cos))
