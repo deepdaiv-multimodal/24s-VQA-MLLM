@@ -3,6 +3,8 @@
 # Description: Runner that handles the prompting process
 # ------------------------------------------------------------------------------ #
 
+import torch
+
 import os, sys
 # sys.path.append(os.getcwd())
 
@@ -21,12 +23,55 @@ from .utils.fancy_pbar import progress, info_column
 from .utils.data_utils import Qid2Data
 from configs.task_cfgs import Cfgs
 
+from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
+from PIL import Image 
 
 class Runner:
     def __init__(self, __C, evaluater):
         self.__C = __C
         self.evaluater = evaluater
-        openai.api_key = __C.OPENAI_KEY
+        # openai.api_key = __C.OPENAI_KEY
+
+        # instructBLIP loading 
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"Using device: {self.device}")
+        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
+        self.model = InstructBlipForConditionalGeneration.from_pretrained("Salesforce/instructblip-flan-t5-xl", load_in_4bit=False).to(self.device)
+
+    def instructblip_infer(self, image_path, prompt_text, max_retries=3):
+        retry_count = 0
+        while retry_count < max_retries:
+            try:      
+                if not os.path.isfile(image_path):
+                    print(f"File not found: '{image_path}', skipping...")
+                    return None, None  # 이미지가 없을 경우 그냥 패스
+                
+                image = Image.open(image_path).convert('RGB')
+                inputs = self.processor(images=image, text=prompt_text, return_tensors="pt", truncation=True, max_length=512).to(self.device)
+                outputs = self.model.generate(**inputs, max_length=512, return_dict_in_generate=True, output_scores=True)
+
+                response_txt = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0].strip()
+
+                logprobs = []
+                for score in outputs.scores:
+                    logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
+                total_logprob = torch.sum(torch.stack(logprobs))
+                prob = math.exp(total_logprob.item())
+
+                # print('image_path:',image_path)
+                # print('prompt_text:',prompt_text)
+                # print('response_txt:',response_txt)
+                # print('prob:', prob)
+
+                return response_txt, prob
+
+            except Exception as e:
+                print(type(e), e)
+                retry_count += 1
+                if retry_count >= max_retries:
+                    raise e
+                time.sleep(2 ** retry_count)  # Exponential backoff
+
     
     def gpt3_infer(self, prompt_text, _retry=0):
         # print(prompt_text)
@@ -125,6 +170,7 @@ class Runner:
             self.__C.TRAIN_SPLITS,
             True
         )
+        
         self.valset = Qid2Data(
             self.__C, 
             self.__C.EVAL_SPLITS,

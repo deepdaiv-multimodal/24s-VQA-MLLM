@@ -25,8 +25,8 @@ class PATH:
         }
 
         self.FEATS_DIR = {
-            'train2014': self.DATASET_ROOT + 'coco2014_feats/train2014/',
-            'val2014': self.DATASET_ROOT + 'coco2014_feats/val2014/',
+            'train2014': self.DATASET_ROOT + 'ok-vqa/coco2014_feats/',
+            'val2014': self.DATASET_ROOT + 'ok-vqa/coco2014_feats/',
             'train2017': self.DATASET_ROOT + 'coco2017_feats/train2017/',
             'val2017': self.DATASET_ROOT + 'coco2017_feats/val2017/',
             'test2017': self.DATASET_ROOT + 'coco2017_feats/test2017/',
@@ -57,7 +57,7 @@ class PATH:
 
         self.ANSWER_DICT_PATH = {
             'v2': self.ASSETS_ROOT + 'answer_dict_vqav2.json',
-            'ok': self.ASSETS_ROOT + 'answer_dict_okvqa.json',
+            'ok': self.ASSETS_ROOT + 'assets/answer_dict_okvqa.json',
             'aok': self.ASSETS_ROOT + 'answer_dict_aokvqa.json',
         }
 
