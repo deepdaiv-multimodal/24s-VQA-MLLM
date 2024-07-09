@@ -1,0 +1,27 @@
+# eval.yml
+
+TASK: ok
+VERSION: evaluation
+
+# Dataset settings
+TRAIN_SPLITS: train
+EVAL_SPLITS: val
+
+# File paths
+EVAL_ANSWER_PATH: /path/to/your/evaluation/answer_file.json
+EVAL_QUESTION_PATH: /path/to/your/evaluation/question_file.json
+RESULT_PATH: /path/to/your/evaluation/results.json
+CKPT_PATH: /content/drive/MyDrive/prophet/outputs/ckpts/okvqa_finetune_1/epoch8.pth/global_step9016/mp_rank_00_model_states.pt
+
+# Model settings
+NUM_CLASSES: 4477  # Update this based on your dataset
+PRETRAINED_MODEL_PATH: /path/to/your/pretrained/model.pth
+GPU_IDS: [0]
+N_GPU: 1
+
+# Evaluation settings
+EVAL_BATCH_SIZE: 16
+NUM_WORKERS: 4
+
+# Others
+LOG_PATH: /path/to/your/logs/eval.log

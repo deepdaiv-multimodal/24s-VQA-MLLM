@@ -3,12 +3,10 @@
 # Description: dataset utils for stage2
 # ------------------------------------------------------------------------------ #
 
-import os 
 import json
 from typing import Dict
 import pickle
 from collections import Counter
-from PIL import Image 
 
 # following two score is rough, and only for print accuracies during inferring.
 def ok_score(gt_answers):
@@ -90,19 +88,10 @@ class Qid2Data(Dict):
             caption = iid_to_capt[iid].strip()
             if caption[-1] != '.':
                 caption += '.'
-
-            # Load Image 
-            iid_int = int(iid)
-            for split in splits:
-              if 'train' in split:
-                image_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid_int:012d}.jpg')
-              elif 'test' in split:
-                image_path = os.path.join(self.__C.IMAGE_DIR['val2014'], f'COCO_val2014_{iid_int:012d}.jpg')
             
             qid_to_data[qid] = {
                 'question_id': qid,
                 'image_id': iid,
-                'image_path': image_path,
                 'question': q_item['question'],
                 # 'most_answer': most_answer,
                 # 'gt_scores': ans2score,
@@ -156,8 +145,6 @@ class Qid2Data(Dict):
     def get_question(self, qid):
         return self[qid]['question']
     
-    def get_image_path(self, qid):
-      return self[qid]['image_path']
     
     def get_gt_answers(self, qid):
         if not self.annotated:
