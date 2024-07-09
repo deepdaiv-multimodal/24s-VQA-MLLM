@@ -3,11 +3,12 @@
 # Description: dataset utils for stage2
 # ------------------------------------------------------------------------------ #
 
+import os 
 import json
 from typing import Dict
 import pickle
 from collections import Counter
-import os
+from PIL import Image 
 
 # following two score is rough, and only for print accuracies during inferring.
 def ok_score(gt_answers):
@@ -45,8 +46,6 @@ def aok_score(gt_answers):
     return ans2score
 
 
-# utils/data_utils.py
-
 class Qid2Data(Dict):
     def __init__(self, __C, splits, annotated=False, similar_examples=None):
         super().__init__()
@@ -83,24 +82,42 @@ class Qid2Data(Dict):
         qid_to_data = {}
         # ques_set = ques_set['questions']
         # anno_set = anno_set['annotations']
+
         for qid in qid_to_ques:
             q_item = qid_to_ques[qid]
             t_item = qid_to_topk[qid]
 
             iid = str(q_item['image_id'])
+
             caption = iid_to_capt[iid].strip()
             if caption[-1] != '.':
                 caption += '.'
-            
+
+            # Load Image & tags 
+            iid_int = int(iid)
+            train_tags = json.load(open(__C.DATASET_ROOT+'okvqa_train_tagging.json'))
+            val_tags = json.load(open(__C.DATASET_ROOT+'okvqa_val_tagging.json'))
+
+            for split in splits:
+              if 'train' in split:
+                image_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid_int:012d}.jpg')
+                tag = train_tags[str(iid_int)]
+              elif 'test' in split:
+                image_path = os.path.join(self.__C.IMAGE_DIR['val2014'], f'COCO_val2014_{iid_int:012d}.jpg')
+                tag = val_tags[str(iid_int)]
+
             qid_to_data[qid] = {
                 'question_id': qid,
                 'image_id': iid,
+                'image_path': image_path,
                 'question': q_item['question'],
                 # 'most_answer': most_answer,
                 # 'gt_scores': ans2score,
                 'topk_candidates': t_item,
                 'caption': caption,
+                'tag': tag
             }
+
             if annotated:
                 a_item = qid_to_anno[qid]
                 if 'answers' in a_item:
@@ -132,15 +149,27 @@ class Qid2Data(Dict):
                 if 'similar_qids' not in item:
                     raise ValueError(f'qid {qid} does not have similar_qids')
         
+        
+
     def __getitem__(self, __key):
         return self.qid_to_data[__key]
     
+
     def get_caption(self, qid):
         caption = self[qid]['caption']
+        # if with_tag:
+        #     tags = self.get_tags(qid, k_tags)
+        #     caption += ' ' + ', '.join(tags) + '.'
         return caption
     
     def get_question(self, qid):
         return self[qid]['question']
+
+    def get_tags(self, qid):
+        return self[qid]['tag']
+    
+    def get_image_path(self, qid):
+      return self[qid]['image_path']
     
     def get_gt_answers(self, qid):
         if not self.annotated:
@@ -163,21 +192,7 @@ class Qid2Data(Dict):
         if k is not None:
             similar_qids = similar_qids[:k]
         return similar_qids
-
-    def get_image_path(self, qid):
-        image_id = self[qid]['image_id']
-        image_id=int(image_id)
-        ### 여기에 image_id.jpg가 되어야 하는ㄴ데.. 
-        image_path = self.__C.IMAGE_PATH+'/train2014'+f'/COCO_train2014_{image_id:012d}.jpg' #"/COCO_val2014_000000581929.jpg"
-        if os.path.isfile(image_path):
-          #print(image_path)
-          return image_path
-        else :
-          image_path= self.__C.IMAGE_PATH+'/val2014'+f'/COCO_val2014_{image_id:012d}.jpg'
-          #print(image_path)
-          return image_path
-        
-
+    
     def evaluate_by_threshold(self, ans_set, threshold=1.0):
         if not self.annotated:
             return -1

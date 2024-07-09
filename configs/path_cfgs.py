@@ -14,6 +14,7 @@ class PATH:
         self.DATASET_ROOT = '/root/datasets/okvqa/data/'
         #self.DATASET_ROOT = '/content/drive/MyDrive/24s-deep-daiv/'
         self.ASSETS_ROOT = 'assets/'
+        self.IMAGE_PATH = '/root/datasets/okvqa/data/train2014/'
 
 
         self.IMAGE_DIR = {

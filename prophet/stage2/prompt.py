@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image
 import math
 import argparse
-
+import random
 
 from transformers import InstructBlipProcessor
 from .utils.custom import InstructBlipForConditionalGeneration
@@ -76,15 +76,15 @@ class Runner:
 
             response_txt = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
             
-            print(prompt_text)
-            print(response_txt)
+            # print(prompt_text)
+            # print(response_txt)
             
             logprobs = []
             for score in scores:
                 logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
             total_logprob = torch.sum(torch.stack(logprobs))
             prob = math.exp(total_logprob.item())
-            print(prob)
+            # print(prob)
 
         except FileNotFoundError as e:
             print(e)
@@ -114,6 +114,7 @@ class Runner:
         prompt_text = self.__C.PROMPT_HEAD
         examples = []
         for key in example_qids:
+            key = str(key)
             ques = self.trainset.get_question(key)
             caption = self.trainset.get_caption(key)
             cands = self.trainset.get_topk_candidates(key)
@@ -145,18 +146,16 @@ class Runner:
         infer_times = self.__C.T_INFER
         N_inctx = self.__C.N_EXAMPLES
 
-        print()
         random.seed(42)
-        sampled_keys = random.sample(list(self.valset.qid_to_data.keys()),1000)
-
-        for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
+        sampled_keys = random.sample(list(self.valset.qid_to_data.keys()), 1000)
+        for qid in progress.track(sampled_keys, description="Working...  "):
             if qid in self.cache:
                 continue
             ques = self.valset.get_question(qid)
             caption = self.valset.get_caption(qid)
             cands = self.valset.get_topk_candidates(qid, self.__C.K_CANDIDATES)
             image_path = self.valset.get_image_path(qid)
-
+            tags = self.valset.get_tags(qid)
             prompt_query, image_path = self.sample_make(ques, caption, cands, image_path)
             example_qids = self.valset.get_similar_qids(qid, k=infer_times * N_inctx)
             random.shuffle(example_qids)

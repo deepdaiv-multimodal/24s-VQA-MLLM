@@ -36,7 +36,9 @@ CAPTIONS_PATH=${CAPTIONS_PATH:-"assets/captions_okvqa.json"} # path to the capti
 # IMAGE_PATH=${IMAGE_PATH:-"assets/images"} # path to the images folder, default is 'assets/images'
 #GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 
-#CUDA_VISIBLE_DEVICES=6 \
+
+
+# CUDA_VISIBLE_DEVICES=$GPU \
 python main.py \
     --task $TASK --run_mode prompt \
     --version $VERSION \
@@ -44,6 +46,6 @@ python main.py \
     --examples_path $EXAMPLES_PATH \
     --candidates_path $CANDIDATES_PATH \
     --captions_path $CAPTIONS_PATH \
-    #--image_path $IMAGE_PATH \
+    # --image_path $IMAGE_PATH 
     # --image_path $IMAGE_PATH\
     #--gpu $GPU
