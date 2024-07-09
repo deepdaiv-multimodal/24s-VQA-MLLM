@@ -80,15 +80,30 @@ class Qid2Data(Dict):
         qid_to_data = {}
         # ques_set = ques_set['questions']
         # anno_set = anno_set['annotations']
+
         for qid in qid_to_ques:
             q_item = qid_to_ques[qid]
             t_item = qid_to_topk[qid]
 
             iid = str(q_item['image_id'])
+
             caption = iid_to_capt[iid].strip()
             if caption[-1] != '.':
                 caption += '.'
-            
+
+            # Load Image & tags 
+            iid_int = int(iid)
+            train_tags = json.load(open(__C.DATASET_ROOT+'okvqa_train_tagging.json'))
+            val_tags = json.load(open(__C.DATASET_ROOT+'okvqa_val_tagging.json'))
+
+            for split in splits:
+              if 'train' in split:
+                image_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid_int:012d}.jpg')
+                tag = train_tags[str(iid_int)]
+              elif 'test' in split:
+                image_path = os.path.join(self.__C.IMAGE_DIR['val2014'], f'COCO_val2014_{iid_int:012d}.jpg')
+                tag = val_tags[str(iid_int)]
+
             qid_to_data[qid] = {
                 'question_id': qid,
                 'image_id': iid,
@@ -97,7 +112,9 @@ class Qid2Data(Dict):
                 # 'gt_scores': ans2score,
                 'topk_candidates': t_item,
                 'caption': caption,
+                'tag': tag
             }
+
             if annotated:
                 a_item = qid_to_anno[qid]
                 if 'answers' in a_item:
@@ -144,6 +161,9 @@ class Qid2Data(Dict):
     
     def get_question(self, qid):
         return self[qid]['question']
+
+    def get_tags(self, qid):
+        return self[qid]['tag']
     
     
     def get_gt_answers(self, qid):
