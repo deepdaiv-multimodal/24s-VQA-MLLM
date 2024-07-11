@@ -518,11 +518,12 @@ def train_one_epoch(
         # if task in ["coco_captioning", "nocaps"]:
         #     data["global_step"] = global_step
 
+
         if loss_scaler is None:
             results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'])
         else:
             with torch.cuda.amp.autocast():
-                results = handler.train_batch(model, **data)
+                results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'])
 
         loss = results.pop("loss")
         loss_value = loss.item()
