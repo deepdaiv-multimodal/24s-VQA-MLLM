@@ -440,7 +440,7 @@ def create_dataset_by_split(split, is_train=True):
     )
 
     if is_train:
-        batch_size = 1
+        batch_size = 16
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
         batch_size = args.eval_batch_size
     else:

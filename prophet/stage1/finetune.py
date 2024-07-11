@@ -59,7 +59,7 @@ class Args:
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 32
+        self.batch_size = 16
         self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1
@@ -166,10 +166,12 @@ class Runner:
     def __init__(self, __C, evaluator):
         self.__C = __C
         self.evaluator = evaluator
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def train(self, train_set, eval_set=None):
         data_loader_train, data_loader_val = create_downstream_dataset()
         data_size = train_set.data_size
+        print(f'Length of train data loader: {len(data_loader_train)}, valid data loader: {len(data_loader_val)}')
 
         model = create_model(
                   'beit3_base_patch16_224_okvqa',
@@ -182,7 +184,7 @@ class Runner:
         # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
         utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
 
-        model.to("cuda")
+        model.to(self.device)
 
         n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
@@ -208,9 +210,9 @@ class Runner:
             warmup_epochs=args.warmup_epochs, warmup_steps=args.warmup_steps,
         )   
 
-        utils.auto_load_model(
-            args=args, model=model, model_without_ddp=model,
-            optimizer=optimizer, loss_scaler=loss_scaler, model_ema=args.model_ema)
+        # utils.auto_load_model(
+        #     args=args, model=model, model_without_ddp=model,
+        #     optimizer=optimizer, loss_scaler=loss_scaler, model_ema=args.model_ema)
 
 
         task_handler = VQAHandler()
@@ -220,7 +222,7 @@ class Runner:
 
         for epoch in range(100):
           train_stats = train_one_epoch(
-              model, data_loader_train, optimizer, "cuda", task_handler, epoch, 
+              model, data_loader_train, optimizer, self.device, task_handler, epoch, 
               epoch * num_training_steps_per_epoch, lr_schedule_values, loss_scaler, 
               None, 1, None, None, 'vqav2', None,
           )
@@ -250,110 +252,6 @@ class Runner:
                           'epoch': epoch,
                           'n_parameters': n_parameters}
 
-        # net = BEiT3ForVisualQuestionAnswering(self.__C, num_classes=train_set.ans_size)
-
-        # # Define the optimizer
-        # if self.__C.RESUME:
-        #     raise NotImplementedError('Resume training is not needed as the finetuning is fast')
-        # else:
-        #     optim = get_optim(self.__C, net)
-        #     start_epoch = 0
-
-        # # load to gpu
-        # net.cuda()
-        # # Define the multi-gpu training if needed
-        # if self.__C.N_GPU > 1:
-        #     net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
-
-        # # Define the binary cross entropy loss
-        # loss_fn = torch.nn.BCEWithLogitsLoss(reduction='sum')
-        # epoch_loss = 0
-
-        # # Define multi-thread dataloader
-        # dataloader = Data.DataLoader(
-        #     train_set,
-        #     batch_size=self.__C.BATCH_SIZE,
-        #     shuffle=True,
-        #     num_workers=self.__C.NUM_WORKERS,
-        #     pin_memory=self.__C.PIN_MEM,
-        #     drop_last=True
-        # )
-
-        # # Training script
-        # for epoch in range(start_epoch, self.__C.MAX_EPOCH):
-        #     net.train()
-        #     # Save log information
-        #     with open(self.__C.LOG_PATH, 'a+') as logfile:
-        #         logfile.write(
-        #             f'nowTime: {datetime.now():%Y-%m-%d %H:%M:%S}\n'
-        #         )
-
-        #     time_start = time.time()
-
-        #     # Iteration
-        #     for step, input_tuple in enumerate(dataloader):
-        #         iteration_loss = 0
-        #         optim.zero_grad()
-        #         input_tuple = [x.cuda() for x in input_tuple]
-        #         SUB_BATCH_SIZE = self.__C.BATCH_SIZE // self.__C.GRAD_ACCU_STEPS
-        #         for accu_step in range(self.__C.GRAD_ACCU_STEPS):
-
-        #             sub_tuple = [x[accu_step * SUB_BATCH_SIZE:
-        #                 (accu_step + 1) * SUB_BATCH_SIZE] for x in input_tuple]
-                    
-        #             sub_ans_iter = sub_tuple[-1]
-        #             pred = net(sub_tuple[:-1])
-        #             loss = loss_fn(pred, sub_ans_iter)
-        #             loss.backward()
-        #             loss_item = loss.item()
-        #             iteration_loss += loss_item
-        #             epoch_loss += loss_item# * self.__C.GRAD_ACCU_STEPS
-
-        #         print("\r[version %s][epoch %2d][step %4d/%4d][Task %s][Mode %s] loss: %.4f, lr: %.2e" % (
-        #             self.__C.VERSION,
-        #             epoch + 1,
-        #             step,
-        #             int(data_size / self.__C.BATCH_SIZE),
-        #             self.__C.TASK,
-        #             self.__C.RUN_MODE,
-        #             iteration_loss / self.__C.BATCH_SIZE,
-        #             optim.current_lr(),
-        #         ), end='          ')
-
-        #         optim.step()
-
-        #     time_end = time.time()
-        #     print('Finished in {}s'.format(int(time_end - time_start)))
-
-        #     # Logging
-        #     with open(self.__C.LOG_PATH, 'a+') as logfile:
-        #         logfile.write(f'epoch = {epoch + 1}  loss = {epoch_loss / data_size}\nlr = {optim.current_lr()}\n\n')
-            
-        #     optim.schedule_step(epoch)
-
-        #     # Save checkpoint
-        #     state = {
-        #         'state_dict': net.state_dict() if self.__C.N_GPU == 1 \
-        #             else net.module.state_dict(),
-        #         'optimizer': optim.optimizer.state_dict(),
-        #         'warmup_lr_scale': optim.warmup_lr_scale,
-        #         'decay_lr_scale': optim.decay_lr_scale,
-        #     }
-        #     torch.save(
-        #         state,
-        #         f'{self.__C.CKPTS_DIR}/epoch{epoch + 1}.pkl'
-        #     )
-
-
-        #     # Eval after every epoch
-        #     if eval_set is not None:
-        #         self.eval(
-        #             eval_set,
-        #             net,
-        #             eval_now=True
-        #         )
-            
-        #     epoch_loss = 0
 
 
     def run(self):

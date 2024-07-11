@@ -39,6 +39,7 @@ CAPTIONS_PATH=${CAPTIONS_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLL
 # OPENAI_KEY=${OPENAI_KEY:-""} # path to the captions
 
 # CUDA_VISIBLE_DEVICES=$GPU \
+export CUDA_VISIBLE_DEVICES=$GPU
 python main.py \
     --task $TASK --run_mode prompt \
     --version $VERSION \
