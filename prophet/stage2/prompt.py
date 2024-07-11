@@ -58,10 +58,10 @@ class Runner:
                 total_logprob = torch.sum(torch.stack(logprobs))
                 prob = math.exp(total_logprob.item())
 
-                # print('image_path:',image_path)
-                # print('prompt_text:',prompt_text)
-                # print('response_txt:',response_txt)
-                # print('prob:', prob)
+                print('image_path:',image_path)
+                print('prompt_text:',prompt_text)
+                print('response_txt:',response_txt)
+                print('prob:', prob)
 
                 return response_txt, prob
 
@@ -115,10 +115,11 @@ class Runner:
         
         return response_txt, prob
     
-    def sample_make(self, ques, capt, cands, ans=None):
+    def sample_make(self, ques, capt, tag, cands, image_path, ans=None):
         line_prefix = self.__C.LINE_PREFIX
         cands = cands[:self.__C.K_CANDIDATES]
         prompt_text = line_prefix + f'Context: {capt}\n'
+        prompt_text += line_prefix + f'Imaging tagging: {tag}\n'
         prompt_text += line_prefix + f'Question: {ques}\n'
         cands_with_conf = [f'{cand["answer"]}({cand["confidence"]:.2f})' for cand in cands]
         cands = ', '.join(cands_with_conf)
@@ -195,11 +196,16 @@ class Runner:
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
             if qid in self.cache:
                 continue
+
             ques = self.valset.get_question(qid)
             caption = self.valset.get_caption(qid)
             cands = self.valset.get_topk_candidates(qid, self.__C.K_CANDIDATES)
+            image_path = self.valset.get_image_path(qid)
+            image_path = str(image_path)
+            tags = self.valset.get_tags(qid)
 
-            prompt_query = self.sample_make(ques, caption, cands)
+            # prompt_image = self.load_image(image_path)
+            prompt_query = self.sample_make(ques, caption, tags, cands, image_path)
             example_qids = self.valset.get_similar_qids(qid, k=infer_times * N_inctx)
             random.shuffle(example_qids)
 

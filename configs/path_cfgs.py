@@ -12,12 +12,15 @@ class PATH:
         self.CKPT_ROOT = 'outputs/ckpts/'
         self.RESULTS_ROOT = 'outputs/results/'
         self.DATASET_ROOT = '/root/datasets/okvqa/data/'
+        # self.DATASET_ROOT = '/content/drive/MyDrive/24s-deep-daiv/ok-vqa/'
         self.ASSETS_ROOT = 'assets/'
 
 
         self.IMAGE_DIR = {
             'train2014': self.DATASET_ROOT + 'train2014/',
             'val2014': self.DATASET_ROOT + 'val2014/',
+            # 'train2014': self.DATASET_ROOT + 'train2014_vqa/',
+            # 'val2014': self.DATASET_ROOT + 'val2014_vqa/',
             # 'test2015': self.DATASET_ROOT + 'coco2015/test2015/',
             'train2017': self.DATASET_ROOT + 'coco2017/train2017/',
             'val2017': self.DATASET_ROOT + 'coco2017/val2017/',
@@ -39,6 +42,8 @@ class PATH:
             'v2valvg_no_ok': self.DATASET_ROOT + 'vqav2/v2valvg_no_ok_questions.json',
             'oktrain': self.DATASET_ROOT + 'okvqa/OpenEnded_mscoco_train2014_questions.json',
             'oktest': self.DATASET_ROOT + 'okvqa/OpenEnded_mscoco_val2014_questions.json',
+            # 'oktrain': self.DATASET_ROOT + 'OpenEnded_mscoco_train2014_questions.json',
+            # 'oktest': self.DATASET_ROOT + 'OpenEnded_mscoco_val2014_questions.json',
             'aoktrain': self.DATASET_ROOT + 'aokvqa/aokvqa_v1p0_train.json',
             'aokval': self.DATASET_ROOT + 'aokvqa/aokvqa_v1p0_val.json',
             'aoktest': self.DATASET_ROOT + 'aokvqa/aokvqa_v1p0_test.json',
@@ -51,13 +56,15 @@ class PATH:
             'v2valvg_no_ok': self.DATASET_ROOT + 'vqav2/v2valvg_no_ok_annotations.json',
             'oktrain': self.DATASET_ROOT + 'okvqa/mscoco_train2014_annotations.json',
             'oktest': self.DATASET_ROOT + 'okvqa/mscoco_val2014_annotations.json',
+            # 'oktrain': self.DATASET_ROOT + 'mscoco_train2014_annotations.json',
+            # 'oktest': self.DATASET_ROOT + 'mscoco_val2014_annotations.json',
             'aoktrain': self.DATASET_ROOT + 'aokvqa/aokvqa_v1p0_train.json',
             'aokval': self.DATASET_ROOT + 'aokvqa/aokvqa_v1p0_val.json',
         }
 
         self.ANSWER_DICT_PATH = {
             'v2': self.ASSETS_ROOT + 'answer_dict_vqav2.json',
-            'ok': self.ASSETS_ROOT + 'assets/answer_dict_okvqa.json',
+            'ok': self.ASSETS_ROOT + 'answer_dict_okvqa.json',
             'aok': self.ASSETS_ROOT + 'answer_dict_aokvqa.json',
         }
 
