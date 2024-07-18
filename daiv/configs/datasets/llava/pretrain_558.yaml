@@ -1,0 +1,6 @@
+datasets:
+  llava_pretrain:
+    data_type: images
+    build_info:
+      storage: daiv/data/llava
+      vis_root: daiv/data/llava/images

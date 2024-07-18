@@ -13,23 +13,23 @@ import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 
-import bliva.tasks as tasks
-from bliva.common.config import Config
-from bliva.common.dist_utils import get_rank, init_distributed_mode
-from bliva.common.logger import setup_logger
-from bliva.common.optims import (
+import daiv.tasks as tasks
+from daiv.common.config import Config
+from daiv.common.dist_utils import get_rank, init_distributed_mode
+from daiv.common.logger import setup_logger
+from daiv.common.optims import (
     LinearWarmupCosineLRScheduler,
     LinearWarmupStepLRScheduler,
 )
-from bliva.common.registry import registry
-from bliva.common.utils import now
+from daiv.common.registry import registry
+from daiv.common.utils import now
 
 # imports modules for registration
-from bliva.datasets.builders import *
-from bliva.models import *
-from bliva.processors import *
-from bliva.runners import *
-from bliva.tasks import *
+from daiv.datasets.builders import *
+from daiv.models import *
+from daiv.processors import *
+from daiv.runners import *
+from daiv.tasks import *
 import torch.distributed as dist
 
 import wandb
@@ -102,6 +102,7 @@ def main():
     task = tasks.setup_task(cfg)
     datasets = task.build_datasets(cfg)
     model = task.build_model(cfg)
+    #print(model)
 
     runner = get_runner_class(cfg)(
         cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets

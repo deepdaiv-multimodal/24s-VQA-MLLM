@@ -1,0 +1,6 @@
+datasets:
+  textvqa:
+    data_type: images
+    build_info:
+      storage: daiv/data/textVQA
+      vis_root: daiv/data/textVQA/train_images

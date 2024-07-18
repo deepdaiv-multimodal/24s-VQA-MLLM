@@ -2,7 +2,7 @@ import argparse
 import numpy as np
 import argparse
 from PIL import Image
-from bliva.models import load_model_and_preprocess
+from daiv.models import load_model_and_preprocess
 
 def disable_torch_init():
         """

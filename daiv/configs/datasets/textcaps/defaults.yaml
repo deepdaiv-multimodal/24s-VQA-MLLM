@@ -1,0 +1,6 @@
+datasets:
+  textcaps:
+    data_type: images # [images|videos|features]
+    build_info:
+      storage: daiv/data/textCaps
+      vis_root: daiv/data/textCaps/train_images

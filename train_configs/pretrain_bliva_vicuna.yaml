@@ -19,13 +19,13 @@ model:
   num_query_token: 32
 
   # path to Vicuna checkpoint
-  llm_model: "path to Vicuna checkpoint"
+  llm_model: "lmsys/vicuna-7b-v1.5"
 
   # generation configs
   prompt: ""
 
 datasets:      
-  llava_pretrain: 
+  ok_vqa: 
     vis_processor:
         train:
           name: "blip_image_train"
@@ -65,5 +65,5 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: True
+  distributed: False
 

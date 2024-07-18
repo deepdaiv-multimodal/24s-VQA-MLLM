@@ -1,0 +1,6 @@
+datasets:
+  stvqa:
+    data_type: images
+    build_info:
+      storage: daiv/data/STVQA
+      vis_root: daiv/data/STVQA/train
