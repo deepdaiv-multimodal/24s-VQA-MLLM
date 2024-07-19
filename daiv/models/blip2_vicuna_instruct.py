@@ -117,17 +117,20 @@ class Blip2VicunaInstruct(Blip2Base):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_features = self.visual_encoder(image)  # Get image features
+            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
             image_features = image_features[:, 1:]  # Remove CLS token
-
-            image_embeds_mcan = self.MCAN.img_feat_linear(image_features)  # Project to MCAN dimension
-            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
-
+            
+            # Generate image_embeds_mcan as in stage1
+            image_embeds_mcan = self.ln_vision(self.visual_encoder(image))
+            image_embeds_mcan = self.MCAN.img_feat_linear(image_embeds_mcan)  # Project to MCAN dimension
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
+
+            # Generate image_embeds_llm as in BLIVA
+            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
             image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
         text_for_mcan = samples["text_input"]
-        text_for_llm = samples["text_input"]  # 인퍼런스할 때는 여기에 question-aware prompt
+        text_for_llm = samples["text_input"]  # Inference 시에는 여기 question-aware prompt를 넣음
 
         # Process text for MCAN
         text_tokens_mcan = self.tokenizer(
@@ -136,7 +139,7 @@ class Blip2VicunaInstruct(Blip2Base):
         text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
         text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
         text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
-
+        
         # Process text for LLM
         text_tokens_llm = self.tokenizer(
             text_for_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
@@ -203,66 +206,60 @@ class Blip2VicunaInstruct(Blip2Base):
     ):
         image = samples["image"]
         with self.maybe_autocast():
-            image_features = self.visual_encoder(image)  # Get image features
+            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
             image_features = image_features[:, 1:]  # Remove CLS token
-
-            image_embeds_mcan = self.MCAN.img_feat_linear(image_features)  # Project to MCAN dimension
-            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
-
+            
+            # Generate image_embeds_mcan as in stage1
+            image_embeds_mcan = self.ln_vision(self.visual_encoder(image))
+            image_embeds_mcan = self.MCAN.img_feat_linear(image_embeds_mcan)  # Project to MCAN dimension
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
+
+            # Generate image_embeds_llm as in BLIVA
+            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
             image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        text_for_mcan = samples["text_input"]
-        text_for_llm = samples["text_input"]  # 인퍼런스할 때는 여기에 question-aware prompt
+            text_for_mcan = samples["text_input"]
+            text_for_llm = samples["text_input"] # For inference, question-aware prompts
 
-        # Process text for MCAN
-        text_tokens_mcan = self.tokenizer(
-            text_for_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input_ids.to(image.device)
-        text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
-        text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
-        text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
+            # Process text for MCAN
+            text_tokens_mcan = self.tokenizer(
+                text_for_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+            ).input.ids.to(image.device)
+            text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
+            text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
+            text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
 
-        # Process text for LLM
-        text_tokens_llm = self.tokenizer(
-            text_for_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input.ids.to(image.device)
-        text_embeds_llm = self.text_proj(self.MCAN.embedding(text_tokens_llm))
-        text_atts_llm = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+            # Process text for LLM
+            text_tokens_llm = self.tokenizer(
+                text_for_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+            ).input.ids.to(image.device)
+            text_embeds_llm = self.text_proj(self.MCAN.embedding(text_tokens_llm))
+            text_atts_llm = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
+            mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
 
-        inputs_llm = torch.cat([self.llm_proj(mcan_output), image_embeds_llm, text_embeds_llm], dim=1)
-        atts_llm = torch.cat([torch.ones(mcan_output.size()[:-1], dtype=torch.long).to(image.device), image_atts_llm, text_atts_llm], dim=1)
+            inputs_llm = torch.cat([self.llm_proj(mcan_output), image_embeds_llm, text_embeds_llm], dim=1)
+            atts_llm = torch.cat([torch.ones(mcan_output.size()[:-1], dtype=torch.long).to(image.device), image_atts_llm, text_atts_llm], dim=1)
 
-        self.llm_tokenizer.padding_side = "right"
+            if "prompt" in samples.keys():
+                prompt = samples["prompt"]
+            else:
+                prompt = self.prompt
 
-        text = [t + self.llm_tokenizer.eos_token for t in samples["text_output"]]
+            prompt = [prompt] * image.size(0)
 
-        llm_tokens = self.llm_tokenizer(
-            text,
-            return_tensors="pt",
-            padding="longest",
-            truncation=True,
-            max_length=self.max_txt_len,
-        ).to(image.device)
+            llm_tokens = self.llm_tokenizer(
+                prompt,
+                return_tensors="pt",
+                padding="longest",
+                truncation=True,
+                max_length=self.max_txt_len,
+            ).to(image.device)
+            attention_mask = torch.cat([atts_llm, llm_tokens.attention_mask], dim=1)
 
-        targets = llm_tokens.input_ids.masked_fill(
-            llm_tokens.input.ids == self.llm_tokenizer.pad_token_id, -100
-        )
-        if self.prompt:
-            targets[:, : self.prompt_length] = -100  # do not apply loss to the prompt
+            inputs_embeds = self.llm_model.model.embed_tokens(llm_tokens.input.ids)
+            inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
 
-        empty_targets = (
-            torch.ones(atts_llm.size(), dtype=torch.long).to(image.device).fill_(-100)
-        )
-        targets = torch.cat([empty_targets, targets], dim=1)
-
-        inputs_embeds = self.llm_model.model.embed_tokens(llm_tokens.input.ids)
-        inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
-        attention_mask = torch.cat([atts_llm, llm_tokens.attention_mask], dim=1)
-
-        with self.maybe_autocast():
             outputs = self.llm_model.generate(
                 inputs_embeds=inputs_embeds,
                 attention_mask=attention_mask,
@@ -277,12 +274,12 @@ class Blip2VicunaInstruct(Blip2Base):
                 length_penalty=length_penalty,
                 num_return_sequences=num_captions,
             )
-        output_text = self.llm_tokenizer.batch_decode(
-            outputs, skip_special_tokens=True
-        )
+            output_text = self.llm_tokenizer.batch_decode(
+                outputs, skip_special_tokens=True
+            )
 
-        output_text = [text.strip() for text in output_text]
-        return output_text
+            output_text = [text.strip() for text in output_text]
+            return output_text
 
     def predict_answers(
         self,
@@ -299,65 +296,76 @@ class Blip2VicunaInstruct(Blip2Base):
     ):
         image = samples["image"]
         with self.maybe_autocast():
-            image_features = self.visual_encoder(image)  # Get image features
+            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
             image_features = image_features[:, 1:]  # Remove CLS token
-
-            image_embeds_mcan = self.MCAN.img_feat_linear(image_features)  # Project to MCAN dimension
-            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
+            
+            # Generate image_embeds_mcan as in stage1
+            image_embeds_mcan = self.ln_vision(self.visual_encoder(image))
+            image_embeds_mcan = self.MCAN.img_feat_linear(image_embeds_mcan)  # Project to MCAN dimension
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
+
+            # Generate image_embeds_llm as in BLIVA
+            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
             image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        text_for_mcan = samples["text_input"]
-        text_for_llm = samples["text_input"]  # 인퍼런스할 때는 여기에 question-aware prompt
+            text_for_mcan = samples["text_input"]
+            text_for_llm = samples["text_output"]
 
-        # Process text for MCAN
-        text_tokens_mcan = self.tokenizer(
-            text_for_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input.ids.to(image.device)
-        text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
-        text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
-        text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
+            # Process text for MCAN
+            text_tokens_mcan = self.tokenizer(
+                text_for_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+            ).input.ids.to(image.device)
+            text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
+            text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
+            text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
 
-        # Process text for LLM
-        text_tokens_llm = self.tokenizer(
-            text_for_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input.ids.to(image.device)
-        text_embeds_llm = self.text_proj(self.MCAN.embedding(text_tokens_llm))
-        text_atts_llm = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+            # Process text for LLM
+            text_tokens_llm = self.tokenizer(
+                text_for_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+            ).input.ids.to(image.device)
+            text_embeds_llm = self.text_proj(self.MCAN.embedding(text_tokens_llm))
+            text_atts_llm = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
+            mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
 
-        inputs_llm = torch.cat([self.llm_proj(mcan_output), image_embeds_llm, text_embeds_llm], dim=1)
-        atts_llm = torch.cat([torch.ones(mcan_output.size()[:-1], dtype=torch.long).to(image.device), image_atts_llm, text_atts_llm], dim=1)
+            inputs_llm = torch.cat([self.llm_proj(mcan_output), image_embeds_llm, text_embeds_llm], dim=1)
+            atts_llm = torch.cat([torch.ones(mcan_output.size()[:-1], dtype=torch.long).to(image.device), image_atts_llm, text_atts_llm], dim=1)
 
-        self.llm_tokenizer.padding_side = "left"
-        llm_tokens = self.llm_tokenizer(
-            text_input,
-            return_tensors="pt",
-            padding="longest",
-            truncation=True,
-            max_length=self.max_txt_len,
-        ).to(image.device)
+            if isinstance(samples["text_input"], str):
+                samples["text_input"] = [samples["text_input"]]
+            if prompt:
+                text_input = [prompt.format(question) for question in samples["text_input"]]
+            else:
+                text_input = samples["text_input"]
 
-        attention_mask = torch.cat([atts_llm, llm_tokens.attention_mask], dim=1)
+            self.llm_tokenizer.padding_side = "left"
+            llm_tokens = self.llm_tokenizer(
+                text_input,
+                return_tensors="pt",
+                padding="longest",
+                truncation=True,
+                max_length=self.max_txt_len,
+            ).to(image.device)
 
-        inputs_embeds = self.llm_model.model.embed_tokens(llm_tokens.input.ids)
-        inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
+            attention_mask = torch.cat([atts_llm, llm_tokens.attention_mask], dim=1)
 
-        outputs = self.llm_model.generate(
-            inputs_embeds=inputs_embeds,
-            attention_mask=attention_mask,
-            do_sample=False,
-            num_beams=num_beams,
-            max_new_tokens=max_len,
-            min_length=min_len,
-            eos_token_id=self.eos_token_id,
-            length_penalty=length_penalty,
-        )
-        output_text = self.llm_tokenizer.batch_decode(
-            outputs, skip_special_tokens=True
-        )
-        output_text = [text.strip() for text in output_text]
+            inputs_embeds = self.llm_model.model.embed_tokens(llm_tokens.input.ids)
+            inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
+
+            outputs = self.llm_model.generate(
+                inputs_embeds=inputs_embeds,
+                attention_mask=attention_mask,
+                do_sample=False,
+                num_beams=num_beams,
+                max_new_tokens=max_len,
+                min_length=min_len,
+                eos_token_id=self.eos_token_id,
+                length_penalty=length_penalty,
+            )
+            output_text = self.llm_tokenizer.batch_decode(
+                outputs, skip_special_tokens=True
+            )
+            output_text = [text.strip() for text in output_text]
         if self._apply_lemmatizer or ("apply_lemmatizer" in samples.keys() and samples["apply_lemmatizer"]):
             output_text = self._lemmatize(output_text)
 
