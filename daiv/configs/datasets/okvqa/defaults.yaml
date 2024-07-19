@@ -9,7 +9,7 @@ datasets:
     data_type: images # [images|videos|features]
     build_info:
       storage: daiv/data/raw_data #daiv/data/okvqa
-      vis_root: /home/intern24/daiv/coco/images #/root/datasets/okvqa/data/train2014 
+      vis_root: /root/datasets/okvqa/data/train2014 
     # build_info:
     #   Be careful not to append minus sign (-) before split to avoid itemizing
     #   annotations:

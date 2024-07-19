@@ -98,8 +98,13 @@ class Blip2VicunaInstruct(Blip2Base):
             self.llm_tokenizer.eos_token, add_special_tokens=False
         ).input_ids[0]
 
-        self.llm_proj = nn.Linear(
+        self.vis_proj = nn.Linear(
             self.Config.IMG_FEAT_SIZE, self.llm_model.config.hidden_size
+        )
+
+        
+        self.llm_proj = nn.Linear(
+            self.Config.HIDDEN_SIZE, self.llm_model.config.hidden_size
         )
 
         self.text_proj = nn.Linear(
@@ -126,7 +131,7 @@ class Blip2VicunaInstruct(Blip2Base):
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
 
             # Generate image_embeds_llm as in BLIVA
-            image_embeds_llm = self.llm_proj(image_features)  # Project to LLM dimension
+            image_embeds_llm = self.vis_proj(image_features)  # Project to LLM dimension
             image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
         text_for_mcan = samples["text_input"]
@@ -147,9 +152,23 @@ class Blip2VicunaInstruct(Blip2Base):
         text_embeds_llm = self.text_proj(self.MCAN.embedding(text_tokens_llm))
         text_atts_llm = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
+        txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
+        
+        img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan)
+        txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
 
+        ##Normalization
+        mcan_output = img_mcan_output + txt_mcan_output
+        mcan_output = self.MCAN.proj_norm(mcan_output)
+        mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
+
+        mcan_output = mcan_output.unsqueeze(1)
+
+        print(f'mcan output ; {mcan_output.size()}')
+        print(f'image_embeds_llm ; {image_embeds_llm.size()}')
+        print(f'txt_embeds_llm ; {text_embeds_llm.size()}')
         inputs_llm = torch.cat([self.llm_proj(mcan_output), image_embeds_llm, text_embeds_llm], dim=1)
+        
         atts_llm = torch.cat([torch.ones(mcan_output.size()[:-1], dtype=torch.long).to(image.device), image_atts_llm, text_atts_llm], dim=1)
 
         self.llm_tokenizer.padding_side = "right"
