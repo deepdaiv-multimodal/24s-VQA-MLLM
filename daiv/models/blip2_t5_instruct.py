@@ -93,7 +93,7 @@ class Blip2T5Instruct(Blip2Base):
                 param.data = param.data.bfloat16()
 
         self.vision_proj = nn.Linear(self.Config.IMG_FEAT_SIZE, self.t5_model.config.hidden_size)
-        self.text_proj = nn.Linear(self.Config.HIDDEN_SIZE, self.t5_model.config.hidden_size)
+        self.t5_proj = nn.Linear(self.Config.HIDDEN_SIZE, self.t5_model.config.hidden_size)
         self.text_embed_proj = nn.Linear(self.Config.WORD_EMBED_SIZE, self.t5_model.config.hidden_size)
 
         self.max_txt_len = max_txt_len
@@ -120,7 +120,7 @@ class Blip2T5Instruct(Blip2Base):
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
 
         text_input_mcan = samples["text_input"]
-        text_input_llm = samples["text_input"]
+        # text_input_llm = samples["text_input"]
 
         # Process text for MCAN
         text_tokens_mcan = self.tokenizer(
@@ -137,46 +137,59 @@ class Blip2T5Instruct(Blip2Base):
 
         
         ##Normalization
-        mcan_output = img_mcan_output + txt_mcan_output
-        mcan_output = self.MCAN.proj_norm(mcan_output)
-        mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
+        # mcan_output = img_mcan_output + txt_mcan_output
+        # mcan_output = self.MCAN.proj_norm(mcan_output)
+        # mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
 
-        combined_features_mcan = mcan_output.unsqueeze(1)
+        # combined_features_mcan = mcan_output.unsqueeze(1)
 
 
-        text_embeds_llm_mcan = self.text_proj(combined_features_mcan)
-        atts_llm_mcan = torch.ones(text_embeds_llm_mcan.size()[:-1], dtype=torch.long).to(image.device)
+        # text_embeds_llm_mcan = self.text_proj(combined_features_mcan)
+        # atts_llm_mcan = torch.ones(text_embeds_llm_mcan.size()[:-1], dtype=torch.long).to(image.device)
+        inputs_t5 = self.t5_proj(img_mcan_output)
+        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device)
 
         # Process text for LLM
-        text_tokens_llm = self.tokenizer(
-            text_input_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input_ids.to(image.device)
-        text_embeds_llm = self.text_embed_proj(self.MCAN.embedding(text_tokens_llm))
-        atts_llm_text = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+        # text_tokens_llm = self.tokenizer(
+        #     text_input_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+        # ).input_ids.to(image.device)
+        # text_embeds_llm = self.text_embed_proj(self.MCAN.embedding(text_tokens_llm))
+        # atts_llm_text = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan, text_embeds_llm], dim=1)
-        atts_llm = torch.cat([image_atts_llm, atts_llm_mcan, atts_llm_text], dim=1)
-        # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan], dim=1)
-        # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan], dim=1)
+        # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan, text_embeds_llm], dim=1)
+        # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan, atts_llm_text], dim=1)
+        inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan], dim=1)
+        atts_llm = torch.cat([image_atts_llm, atts_llm_mcan], dim=1)
 
-        text_output = [t + self.t5_tokenizer.eos_token for t in samples["text_output"]]
+        # text_output = [t + self.t5_tokenizer.eos_token for t in samples["text_output"]]
 
-        t5_tokens = self.t5_tokenizer(
-            text_output,
-            return_tensors="pt",
-            padding="longest",
-            truncation=True,
-            max_length=self.max_txt_len,
-        ).to(image.device)
-        targets = t5_tokens.input_ids.masked_fill(
-            t5_tokens.input_ids == self.t5_tokenizer.pad_token_id, -100
-        )
+        with self.maybe_autocast(dtype=torch.bfloat16):
+            input_tokens = self.t5_tokenizer(
+                samples["text_input"],
+                return_tensors="pt",
+                padding="longest",
+                truncation=True,
+                max_length=self.max_txt_len,
+            ).to(image.device)
 
-        inputs_embeds = self.t5_model.encoder.embed_tokens(t5_tokens.input_ids)
-        inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
-        attention_mask = torch.cat([atts_llm, t5_tokens.attention_mask], dim=1)
+            output_tokens = self.t5_output_tokenizer(
+                samples["text_output"],
+                padding="longest",
+                truncation=True,
+                max_length=self.max_output_txt_len,
+                return_tensors="pt",
+            ).to(image.device)
 
-        with self.maybe_autocast():
+            encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1)
+
+            targets = output_tokens.input_ids.masked_fill(
+                output_tokens.input_ids == self.t5_tokenizer.pad_token_id, -100
+            )
+
+            inputs_embeds = self.t5_model.encoder.embed_tokens(t5_tokens.input_ids)
+            inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
+            attention_mask = torch.cat([atts_llm, t5_tokens.attention_mask], dim=1)
+
             outputs = self.t5_model(
                 inputs_embeds=inputs_embeds,
                 attention_mask=attention_mask,
