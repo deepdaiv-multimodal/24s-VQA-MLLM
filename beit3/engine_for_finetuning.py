@@ -20,6 +20,7 @@ from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from .datasets import get_sentencepiece_model_for_beit3
 
 import utils
+import logging
 
 
 class TaskHandler(object):
@@ -202,7 +203,11 @@ class VQAHandler(TaskHandler):
         # self.criterion = nn.CrossEntropyLoss(reduction='mean')
         self.label2ans = None
 
-    def train_batch(self, model, image, language_tokens, padding_mask, labels):
+        # self.log_file = '/root/workspace/BEiT3/24s-VQA-MLLM/outputs/logs/beit3-base/trial1.log'
+        # logging.basicConfig(filename=self.log_file, level=logging.INFO, format='%(asctime)s - %(message)s')
+        # self.logger = logging.getLogger()
+
+    def train_batch(self, model, image, language_tokens, padding_mask, labels, epoch):
         logits, _ = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
@@ -215,6 +220,7 @@ class VQAHandler(TaskHandler):
         logits = logits.view(bs, -1)
 
         loss = self.criterion(input=logits.float(), target=labels.float()) * labels.shape[1]
+        # self.logger.info(f'Epoch: {epoch}, Training loss: {loss}') 
         return {"loss": loss}
 
     def before_eval(self, metric_logger, data_loader, **kwargs):
@@ -244,6 +250,7 @@ class VQAHandler(TaskHandler):
 
     def after_eval(self, **kwargs):
         if len(self.predictions) == 0:
+            # self.logger.info(f'VQAScore: {score:.3f}')  # 로그 파일에 Score 기록
             print('* Score {score.global_avg:.3f}'.format(score=self.metric_logger.score))
             return {k: meter.global_avg for k, meter in self.metric_logger.meters.items()}, "score"
         else:
@@ -520,10 +527,10 @@ def train_one_epoch(
 
 
         if loss_scaler is None:
-            results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'])
+            results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'], epoch=epoch)
         else:
             with torch.cuda.amp.autocast():
-                results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'])
+                results = handler.train_batch(model, data['image'], data['language_tokens'], data['padding_mask'], data['labels'], epoch=epoch)
 
         loss = results.pop("loss")
         loss_value = loss.item()

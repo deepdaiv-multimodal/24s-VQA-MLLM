@@ -19,6 +19,9 @@ while [[ $# -gt 0 ]]; do
     --captions_path)
       CAPTIONS_PATH="$2"
       shift 2;;
+    --gpu)
+      GPU="$2"
+      shift 2;;
     # --openai_key)
     #   OPENAI_KEY="$2"
     #   shift 2;;
@@ -30,16 +33,17 @@ done
 
 TASK=${TASK:-ok} # task name, one of ['ok', 'aok_val', 'aok_test'], default 'ok'
 VERSION=${VERSION:-"prompt_okvqa"} # version name, default 'prompt_for_$TASK'
-# EXAMPLES_PATH=${EXAMPLES_PATH:-"/root/datasets/okvqa/data/assets/answer_aware_examples_okvqa.json"} # path to the examples, default is the result from our experiments
-# CANDIDATES_PATH=${CANDIDATES_PATH:-"/root/datasets/okvqa/data/assets/candidates_okvqa.json"} # path to the candidates, default is the result from our experiments
-# CAPTIONS_PATH=${CAPTIONS_PATH:-"/root/datasets/okvqa/data/assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
-EXAMPLES_PATH=${EXAMPLES_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/answer_aware_examples_okvqa.json"} # path to the examples, default is the result from our experiments
-CANDIDATES_PATH=${CANDIDATES_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/candidates_okvqa.json"} # path to the candidates, default is the result from our experiments
-CAPTIONS_PATH=${CAPTIONS_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
+EXAMPLES_PATH=${EXAMPLES_PATH:-"/root/workspace/BEiT3/24s-VQA-MLLM/assets/examples_okvqa_beit3.json"} # path to the examples, default is the result from our experiments
+CANDIDATES_PATH=${CANDIDATES_PATH:-"/root/workspace/BEiT3/24s-VQA-MLLM/assets/candidates_okvqa_beit3.json"} # path to the candidates, default is the result from our experiments
+CAPTIONS_PATH=${CAPTIONS_PATH:-"/root/datasets/okvqa/data/assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
+# EXAMPLES_PATH=${EXAMPLES_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/answer_aware_examples_okvqa.json"} # path to the examples, default is the result from our experiments
+# CANDIDATES_PATH=${CANDIDATES_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/candidates_okvqa.json"} # path to the candidates, default is the result from our experiments
+# CAPTIONS_PATH=${CAPTIONS_PATH:-"/content/drive/MyDrive/24s-deep-daiv/24s-VQA-MLLM/assets/captions_okvqa.json"} # path to the captions, default is the result from our experiments
 # OPENAI_KEY=${OPENAI_KEY:-""} # path to the captions
 
 # CUDA_VISIBLE_DEVICES=$GPU \
 export CUDA_VISIBLE_DEVICES=$GPU
+
 python main.py \
     --task $TASK --run_mode prompt \
     --version $VERSION \
@@ -47,4 +51,5 @@ python main.py \
     --examples_path $EXAMPLES_PATH \
     --candidates_path $CANDIDATES_PATH \
     --captions_path $CAPTIONS_PATH \
+    --gpu $GPU
     # --openai_key $OPENAI_KEY

@@ -5,7 +5,7 @@ from timm.models.registry import register_model
 import numpy as np
 
 import utils
-from modeling_utils import BEiT3Wrapper, _get_base_config, _get_large_config
+from .modeling_utils import BEiT3Wrapper, _get_base_config, _get_large_config
 
 
 class TwoLayerMLP(nn.Module):
@@ -379,7 +379,7 @@ def beit3_large_patch16_384_retrieval(pretrained=False, **kwargs):
 
 @register_model
 def beit3_base_patch16_224_okvqa(pretrained=False, **kwargs):
-    args = _get_large_config(img_size=480, **kwargs)
+    args = _get_base_config(img_size=480, **kwargs)
     args.normalize_output = False
     model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
     return model

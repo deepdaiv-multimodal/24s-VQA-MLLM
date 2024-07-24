@@ -3,7 +3,7 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from .utils.load_data import CommonData, DataSet
-from .model.beit3 import BEiT3ForVisualQuestionAnswering
+# from .model.beit3 import BEiT3ForVisualQuestionAnswering
 # import deepspeed
 import utils
 import os, sys
@@ -31,13 +31,19 @@ from beit3.datasets import create_downstream_dataset
 import beit3.modeling_finetune
 import beit3.utils as utils
 from beit3.utils import save_on_master
+import logging 
+
+log_file = ''
+logging.basicConfig(filename=log_file, level=logging.INFO)
+logger = logging.getLogger()
+
 # Define args directly in the script
 class Args:
     def __init__(self):
         self.task = 'vqav2'
         self.input_size = 480
-        self.drop_path = 0.15
-        # self.drop_path = 0.1
+        # self.drop_path = 0.15
+        self.drop_path = 0.1
         self.checkpoint_activations = False
         self.sentencepiece_model = '/root/datasets/okvqa/data/beit3.spm'
         self.vocab_size = 64010
@@ -51,15 +57,15 @@ class Args:
         # self.clip_grad = Nonelr
         self.momentum = 0.9
         self.weight_decay = 0.01
-        self.lr = 2e-5
-        # self.lr = 3e-5
+        # self.lr = 2e-5
+        self.lr = 3e-5
         self.layer_decay = 1.0
         self.task_head_lr_weight = 20
         self.warmup_lr = 1e-6
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 16
+        self.batch_size = 64
         self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1
@@ -70,7 +76,7 @@ class Args:
         self.model_key = 'model|module'
         self.model_prefix = ''
         self.data_path = '/root/datasets/okvqa/data'
-        self.output_dir = '/root/datasets/okvqa/data/beit3_large_ckpt'
+        self.output_dir = '/root/workspace/BEiT3/24s-VQA-MLLM/outputs/results/beit3-base'
         self.log_dir = None
         self.device = 'cuda'
         self.seed = 0
@@ -86,7 +92,7 @@ class Args:
         self.local_rank = -1
         self.dist_on_itp = False
         self.dist_url = 'env://'
-        self.task_cache_path = '/root/datasets/okvqa/data/beit3_large_ckpt'
+        self.task_cache_path = '/root/workspace/BEiT3/24s-VQA-MLLM/outputs/results/beit3-base'
         self.nb_classes = 1000
         self.mixup = 0
         self.cutmix = 0
@@ -168,9 +174,10 @@ class Runner:
         self.evaluator = evaluator
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def train(self, train_set, eval_set=None):
+    # def train(self, train_set, eval_set=None):
+    def train(self):
         data_loader_train, data_loader_val = create_downstream_dataset()
-        data_size = train_set.data_size
+        # data_size = train_set.data_size
         print(f'Length of train data loader: {len(data_loader_train)}, valid data loader: {len(data_loader_val)}')
 
         model = create_model(
@@ -181,8 +188,8 @@ class Runner:
                   checkpoint_activations='store_true',
               )
               
-        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
-        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
+        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
+        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
 
         model.to(self.device)
 
@@ -230,32 +237,32 @@ class Runner:
           if epoch % args.save_ckpt_freq == 0 or epoch == args.epochs:
               save_model(output_dir=args.output_dir, epoch=epoch, model=model, model_without_ddp=model, optimizer=optimizer,
                   loss_scaler=loss_scaler, model_ema=None)
+              predictions, _ = evaluate(data_loader_val, model, self.device, task_handler)
                   
-        #   if data_loader_val is not None:
-        #       predictions, _ = evaluate(data_loader_val, model, "cuda", task_handler)
-        #       if utils.is_main_process():
-        #           test_stats = utils.coco_caption_eval(args.output_dir, prediction_file, "{}_val".format(vqav2))
-        #           utils.write_result_to_jsonl(test_stats, result_file)
+        #   if epoch % 10 == 0:
+        #       predictions, _ = evaluate(data_loader_val, model, self.device, task_handler)
+            #   if utils.is_main_process():
+            #       test_stats = utils.coco_caption_eval(args.output_dir, prediction_file, "{}_val".format(vqav2))
+            #       utils.write_result_to_jsonl(test_stats, result_file)
 
-        #       torch.distributed.barrier()
-        #       if not utils.is_main_process():
-        #           test_stats = utils.read_result_from_jsonl(result_file)
+            #   torch.distributed.barrier()
+            #   if not utils.is_main_process():
+            #       test_stats = utils.read_result_from_jsonl(result_file)
 
-        #       print(f"Performance of the network on the {len(data_loader_val.dataset)} val images: {test_stats[task_key]:.1f}%")
-        #       if max_accuracy < test_stats[task_key]:
-        #           max_accuracy = test_stats[task_key]
+            #   print(f"Performance of the network on the {len(data_loader_val.dataset)} val images: {test_stats[task_key]:.1f}%")
+            #   if max_accuracy < test_stats[task_key]:
+            #       max_accuracy = test_stats[task_key]
 
-        #       print(f'Max performance: {max_accuracy:.2f}%')
+            #   print(f'Max performance: {max_accuracy:.2f}%')
               
               log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
                         #   **{f'val_{k}': v for k, v in test_stats.items()},
                           'epoch': epoch,
                           'n_parameters': n_parameters}
 
-
-
     def run(self):
         common_data = CommonData(self.__C)
-        train_set = DataSet(self.__C, common_data, self.__C.TRAIN_SPLITS)
-        valid_set = DataSet(self.__C, common_data, self.__C.EVAL_SPLITS)
-        self.train(train_set, valid_set)
+        # train_set = DataSet(self.__C, common_data, self.__C.TRAIN_SPLITS)
+        # valid_set = DataSet(self.__C, common_data, self.__C.EVAL_SPLITS)
+        # self.train(train_set, valid_set)
+        self.train()

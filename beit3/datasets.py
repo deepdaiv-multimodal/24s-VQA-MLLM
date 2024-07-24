@@ -10,10 +10,13 @@ from torchvision.datasets.folder import default_loader
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, IMAGENET_INCEPTION_MEAN, IMAGENET_INCEPTION_STD
 from timm.data.transforms import RandomResizedCropAndInterpolation
 from timm.data import create_transform
+from torch.utils.data import Dataset, DataLoader
 
 import utils
 from .glossary import normalize_word
 from .randaug import RandomAugment
+
+from torch.utils.data import ConcatDataset
 
 input_size=480
 
@@ -57,24 +60,37 @@ class BaseDataset(torch.utils.data.Dataset):
         image = self.loader(data_path)
         return self.transform(image)
 
+    # def _get_text_segment(self, text_segment, max_len=None):
+    #     if isinstance(text_segment, str):
+    #         tokens = self.tokenizer.tokenize(text_segment)
+    #     else:
+    #         tokens = text_segment[:]
+    #     if len(tokens) == 0:
+    #         raise RuntimeError("The text segment should contains at least one tokens!")
+    #     if max_len is None:
+    #         max_len = self.num_max_bpe_tokens
+
+    #     if len(tokens) > max_len - 2:
+    #         tokens = tokens[:max_len - 2]
+
+    #     tokens = [self.bos_token_id] + tokens[:] + [self.eos_token_id]
+    #     num_tokens = len(tokens)
+    #     padding_mask = [0] * num_tokens + [1] * (max_len - num_tokens)
+    #     return tokens + [self.pad_token_id] * (max_len - num_tokens), padding_mask, num_tokens
+
     def _get_text_segment(self, text_segment, max_len=None):
         if isinstance(text_segment, str):
-            tokens = self.tokenizer.tokenize(text_segment)
+            tokens = self.tokenizer.encode(
+                text_segment, add_special_tokens=True,
+                max_length=max_len, padding='max_length', truncation=True
+            )
         else:
             tokens = text_segment[:]
         if len(tokens) == 0:
             raise RuntimeError("The text segment should contains at least one tokens!")
-        if max_len is None:
-            max_len = self.num_max_bpe_tokens
 
-        if len(tokens) > max_len - 2:
-            tokens = tokens[:max_len - 2]
-
-        tokens = [self.bos_token_id] + tokens[:] + [self.eos_token_id]
-        num_tokens = len(tokens)
-        padding_mask = [0] * num_tokens + [1] * (max_len - num_tokens)
-        return tokens + [self.pad_token_id] * (max_len - num_tokens), padding_mask, num_tokens
-    
+        padding_mask = [1 if token == self.pad_token_id else 0 for token in tokens]
+        return tokens, padding_mask, len(tokens)
 
     def _get_image_text_example(self, index: int, data: dict):
         item = self.items[index]
@@ -83,9 +99,20 @@ class BaseDataset(torch.utils.data.Dataset):
         data["image"] = img
 
         text_segment = item["text_segment"]
-        language_tokens, padding_mask, _ = self._get_text_segment(text_segment)
-        data["language_tokens"] = language_tokens
-        data["padding_mask"] = padding_mask
+        language_tokens, padding_mask, _ = self._get_text_segment(text_segment, max_len=self.num_max_bpe_tokens)
+        data["language_tokens"] = torch.tensor(language_tokens)
+        data["padding_mask"] = torch.tensor(padding_mask)
+
+    # def _get_image_text_example(self, index: int, data: dict):
+    #     item = self.items[index]
+    #     img_path = item["image_path"]
+    #     img = self._get_image(img_path)
+    #     data["image"] = img
+
+    #     text_segment = item["text_segment"]
+    #     language_tokens, padding_mask, _ = self._get_text_segment(text_segment)
+    #     data["language_tokens"] = language_tokens
+    #     data["padding_mask"] = padding_mask
 
     def __getitem__(self, index: int):
         data = dict()
@@ -137,7 +164,7 @@ class OKVQADataset(BaseDataset):
         if split == "train":
             return ("/root/datasets/okvqa/data/okvqa.train.jsonl", )
         elif split == "val":
-            return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
+            return ("/root/datasets/okvqa/data/okvqa.trainable_val.jsonl", "/root/datasets/okvqa/data/okvqa.rest_val.jsonl")
         # if split == "train":
         #     return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
         # elif split == "val":
@@ -174,183 +201,322 @@ class OKVQADataset(BaseDataset):
         else:
             return 1.0
 
-    @classmethod
-    def make_dataset_index(cls, data_path, tokenizer, annotation_data_path):
-        print("Working")
+class AOKVQADataset(BaseDataset):
+    def __init__(self, data_path, **kwargs):
+        super().__init__(data_path=data_path, **kwargs)
+        ans2label_file = os.path.join(data_path, "/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/answer2label.txt")
+        ans2label = {}
+        label2ans = []
+        with open(ans2label_file, mode="r", encoding="utf-8") as reader:
+            for i, line in enumerate(reader):
+                data = json.loads(line)
+                ans = data["answer"]
+                label = data["label"]
+                label = int(label)
+                assert label == i
+                ans2label[ans] = i
+                label2ans.append(ans)
         
-        print(f"annotation path: {annotation_data_path}")
-        print(f"data path: {data_path}")
+        self.ans2label = ans2label
+        self.label2ans = label2ans
+        self.answer = data
+        # self.ix_to_ans = json.load(open("/root/datasets/okvqa/data/answer2label.txt", 'r'))
+
+    @staticmethod
+    def get_index_files(split, task=None):
+        if split == "train":
+            return ("/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.train.jsonl", )
+        elif split == "val":
+            return ("/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.trainable_val.jsonl", "/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.rest_val.jsonl")
+        # if split == "train":
+        #     return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
+        # elif split == "val":
+        #     return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
+        # elif split == "test":
+        #     return ("vqa.test.jsonl", )
+        # elif split == "test-dev":
+        #     return ("vqa.test-dev.jsonl", )            
+        # else:
+        #     raise RuntimeError("split %s is not found!" % split)
+    
+
+    def __getitem__(self, index: int):
+        data = super().__getitem__(index)
+        # if "labels" in self.items[index] and len(self.items[index]["labels"]) > 0:
+        labels = [0.] * len(self.label2ans)
+        for l, s in zip(self.items[index]["labels"], self.items[index]["scores"]):
+            labels[l] = s
+        data["labels"] = torch.FloatTensor(labels)   #(16, 2910)
+        #else:
+        data["qid"] = self.items[index]["qid"]
+        return data
+
+    @staticmethod
+    def get_score(occurrences):
+        if occurrences == 0:
+            return 0.0
+        elif occurrences == 1:
+            return 0.3
+        elif occurrences == 2:
+            return 0.6
+        elif occurrences == 3:
+            return 0.9
+        else:
+            return 1.0
+
+class CombinedDataset(Dataset):
+    def __init__(self, datasetA, datasetB):
+        self.datasetA = datasetA
+        self.datasetB = datasetB
+        self.lengthA = len(datasetA)
+        self.lengthB = len(datasetB)
+        self.length = self.lengthA + self.lengthB
+
+    def __len__(self):
+        return self.length
+
+    def __getitem__(self, index):
+        if index < self.lengthA:
+            return self.datasetA[index]
+        else:
+            return self.datasetB[index - self.lengthA]
+
+# class CombinedDataset(Dataset):
+#     def __init__(self, datasetA, datasetB):
+#         self.datasetA = datasetA
+#         self.datasetB = datasetB
+#         self.items = self.datasetA.items + self.datasetB.items
+#         self.transform = self.datasetA.transform  # assuming both datasets have the same transform
+#         self.loader = self.datasetA.loader  # assuming both datasets use the same loader
+
+#     def __len__(self):
+#         return len(self.items)
+
+#     def __getitem__(self, index):
+#         item = self.items[index]
+#         data = dict()
+#         img_path = item["image_path"]
+#         img = self.loader(os.path.join(self.datasetA.data_path, img_path))
+#         img = self.transform(img)
+#         data["image"] = img
+
+#         text_segment = item["text_segment"]
+#         language_tokens, padding_mask, _ = self._get_text_segment(text_segment)
+#         data["language_tokens"] = language_tokens
+#         data["padding_mask"] = padding_mask
+
+#         labels = [0.] * len(self.datasetA.label2ans)  # assuming both datasets have the same label space
+#         for l, s in zip(item["labels"], item["scores"]):
+#             labels[l] = s
+#         data["labels"] = torch.FloatTensor(labels)
+#         data["qid"] = item["qid"]
+#         return data
+
+#     def _get_text_segment(self, text_segment, max_len=None):
+#         if isinstance(text_segment, str):
+#             tokens = self.datasetA.tokenizer.tokenize(text_segment)
+#         else:
+#             tokens = text_segment[:]
+#         if len(tokens) == 0:
+#             raise RuntimeError("The text segment should contains at least one tokens!")
+#         if max_len is None:
+#             max_len = self.datasetA.num_max_bpe_tokens
+
+#         if len(tokens) > max_len - 2:
+#             tokens = tokens[:max_len - 2]
+
+#         tokens = [self.datasetA.bos_token_id] + tokens[:] + [self.datasetA.eos_token_id]
+#         num_tokens = len(tokens)
+#         padding_mask = [0] * num_tokens + [1] * (max_len - num_tokens)
+#         return tokens + [self.datasetA.pad_token_id] * (max_len - num_tokens), padding_mask, num_tokens
+
+    # @classmethod
+    # def make_dataset_index(cls, data_path, tokenizer, annotation_data_path):
+    #     print("Working")
         
-        # Load questions
-        with open(os.path.join(annotation_data_path, "OpenEnded_mscoco_train2014_questions.json"), "r") as fp:
-            questions_train2014 = json.load(fp)["questions"]
-        with open(os.path.join(annotation_data_path, "OpenEnded_mscoco_val2014_questions.json"), "r") as fp:
-            questions_val2014 = json.load(fp)["questions"]
+    #     print(f"annotation path: {annotation_data_path}")
+    #     print(f"data path: {data_path}")
+        
+    #     # Load questions
+    #     with open(os.path.join(annotation_data_path, "aokvqa_v1p0_train.json"), "r") as fp:
+    #         # questions_train2017 = json.load(fp)["question"]
+    #         annotations_train2017 = json.load(fp)
+    #     with open(os.path.join(annotation_data_path, "aokvqa_v1p0_val.json"), "r") as fp:
+    #         # questions_val2017 = json.load(fp)["question"]
+    #         annotations_val2017 = json.load(fp)
+    #     # with open(os.path.join(annotation_data_path, "aokvqa_v1p0_test.json"), "r") as fp:
+    #         # questions_test2017 = json.load(fp)["question"]
+    #         # annotations_test2017 = json.load(fp)
 
-        print(f"Loaded {len(questions_train2014)} training questions.")
-        print(f"Loaded {len(questions_val2014)} validation questions.")
+    #     # print(f"Loaded {len(questions_train2017)} training questions.")
+    #     # print(f"Loaded {len(questions_val2017)} validation questions.")
+    #     # print(f"Loaded {len(questions_test2017)} validation questions.")
 
-        # Load annotations
-        with open(os.path.join(annotation_data_path, "mscoco_train2014_annotations.json"), "r") as fp:
-            annotations_train2014 = json.load(fp)["annotations"]
-        with open(os.path.join(annotation_data_path, "mscoco_val2014_annotations.json"), "r") as fp:
-            annotations_val2014 = json.load(fp)["annotations"]
+    #     # Load annotations
+    #     # with open(os.path.join(annotation_data_path, "mscoco_train2014_annotations.json"), "r") as fp:
+    #     #     annotations_train2014 = json.load(fp)["annotations"]
+    #     # with open(os.path.join(annotation_data_path, "mscoco_val2014_annotations.json"), "r") as fp:
+    #     #     annotations_val2014 = json.load(fp)["annotations"]
 
-        print(f"Loaded {len(annotations_train2014)} training annotations.")
-        print(f"Loaded {len(annotations_val2014)} validation annotations.")
+    #     print(f"Loaded {len(annotations_train2017)} training annotations.")
+    #     print(f"Loaded {len(annotations_val2017)} validation annotations.")
+    #     # print(f"Loaded {len(annotations_test2017)} validation annotations.")
+    #     annotations = dict()
 
-        annotations = dict()
+    #     # Process questions
+    #     for split, questions in zip(
+    #         ["train", "val"],
+    #         [annotations_train2017, annotations_val2017],
+    #     ):
+    #         _annot = defaultdict(dict)
+    #         for q in questions:
+    #             question_text = q["question"]
+    #             tokens = tokenizer.tokenize(question_text)
+    #             token_ids = tokenizer.convert_tokens_to_ids(tokens)
 
-        # Process questions
-        for split, questions in zip(
-            ["train", "val"],
-            [questions_train2014, questions_val2014],
-        ):
-            _annot = defaultdict(dict)
-            for q in questions:
-                question_text = q["question"]
-                tokens = tokenizer.tokenize(question_text)
-                token_ids = tokenizer.convert_tokens_to_ids(tokens)
+    #             # assert q["question_id"] not in _annot[q["image_id"]]
+    #             _annot[q["image_id"]][q["question_id"]] = {
+    #                 "question": question_text, 
+    #                 "token_ids": token_ids, 
+    #             }
 
-                # assert q["question_id"] not in _annot[q["image_id"]]
-                _annot[q["image_id"]][q["question_id"]] = {
-                    "question": question_text, 
-                    "token_ids": token_ids, 
-                }
+    #         annotations[split] = _annot
 
-            annotations[split] = _annot
+    #     all_major_answers = list()
 
-        all_major_answers = list()
+    #     # Process annotations
+    #     for split, annots in zip(
+    #         ["train", "val"],
+    #         [annotations_train2017, annotations_val2017],
+    #     ):
+    #         for q in annots:
+    #             for answer in q["direct_answers"]:
+    #                 # all_major_answers.append(answer["answer"])
+    #                 all_major_answers.append(answer)
 
-        # Process annotations
-        for split, annots in zip(
-            ["train", "val"], [annotations_train2014, annotations_val2014],
-        ):
-            for q in annots:
-                for answer in q["answers"]:
-                    all_major_answers.append(answer["answer"])
+    #     all_major_answers = [word.lower() for word in all_major_answers]
+    #     counter = {k: v for k, v in Counter(all_major_answers).items() if v >= 9}
+    #     ans2label = {k: i for i, k in enumerate(counter.keys())}
+    #     label2ans = list(counter.keys())
 
-        all_major_answers = [word.lower() for word in all_major_answers]
-        counter = {k: v for k, v in Counter(all_major_answers).items() if v >= 9}
-        ans2label = {k: i for i, k in enumerate(counter.keys())}
-        label2ans = list(counter.keys())
+    #     for split, annots in zip(
+    #         ["train", "val"],
+    #         [annotations_train2017, annotations_val2017],
+    #     ):
+    #         _annot = annotations[split]
+    #         for q in annots:
+    #             answers = q["direct_answers"]
+    #             answer_count = {}
+    #             for answer in answers:
+    #                 # answer_ = answer["answer"].lower()
+    #                 answer_ = answer.lower()
+    #                 answer_count[answer_] = answer_count.get(answer_, 0) + 1
 
-        for split, annots in zip(
-            ["train", "val"], [annotations_train2014, annotations_val2014],
-        ):
-            _annot = annotations[split]
-            for q in annots:
-                answers = q["answers"]
-                answer_count = {}
-                for answer in answers:
-                    answer_ = answer["answer"].lower()
-                    answer_count[answer_] = answer_count.get(answer_, 0) + 1
+    #             labels = []
+    #             scores = []
+    #             for answer in answer_count:
+    #                 if answer not in ans2label:
+    #                     continue
+    #                 labels.append(ans2label[answer])
+    #                 score = cls.get_score(answer_count[answer])
+    #                 scores.append(score)
 
-                labels = []
-                scores = []
-                for answer in answer_count:
-                    if answer not in ans2label:
-                        continue
-                    labels.append(ans2label[answer])
-                    score = cls.get_score(answer_count[answer])
-                    scores.append(score)
+    #             assert "labels" not in _annot[q["image_id"]][q["question_id"]]
+    #             assert "question" in _annot[q["image_id"]][q["question_id"]]
+    #             _annot[q["image_id"]][q["question_id"]]["labels"] = labels
+    #             _annot[q["image_id"]][q["question_id"]]["scores"] = scores
 
-                # assert "labels" not in _annot[q["image_id"]][q["question_id"]]
-                # assert "question" in _annot[q["image_id"]][q["question_id"]]
-                _annot[q["image_id"]][q["question_id"]]["labels"] = labels
-                _annot[q["image_id"]][q["question_id"]]["scores"] = scores
+    #     for split in ["train", "val"]:
+    #         filtered_annot = dict()
+    #         for ik, iv in annotations[split].items():
+    #             new_q = dict()
+    #             for qk, qv in iv.items():
+    #                 if len(qv["labels"]) != 0:
+    #                     new_q[qk] = qv
+    #             if len(new_q) != 0:
+    #                 filtered_annot[ik] = new_q
+    #         annotations[split] = filtered_annot
+    #     # print(annotations['train'])
+    #     # exit()
 
-        # for split in ["train", "val"]:
-        #     filtered_annot = dict()
-        #     for ik, iv in annotations[split].items():
-        #         new_q = dict()
-        #         for qk, qv in iv.items():
-        #             if len(qv["labels"]) != 0:
-        #                 new_q[qk] = qv
-        #         if len(new_q) != 0:
-        #             filtered_annot[ik] = new_q
-        #     annotations[split] = filtered_annot
-        # print(annotations['train'])
-        # exit()
+    #     split2items = {}
+    #     missing_ids = {"train": [], "val": []}
+    #     for split in ["train", "val"]:
+    #         annot = annotations[split]
+    #         split_name = {
+    #             "train": "train2017",
+    #             "val": "val2017",
+    #         }[split]
+    #         paths = list(glob.glob(f"{data_path}/{split_name}/*.jpg"))
+    #         print(f"Found {len(paths)} image paths in {split_name}.")
+    #         random.shuffle(paths)
+    #         annot_paths = [path for path in paths if int(os.path.basename(path).split("_")[-1].split(".")[0]) in annot]
 
-        split2items = {}
-        missing_ids = {"train": [], "val": []}
-        for split in ["train", "val"]:
-            annot = annotations[split]
-            split_name = {
-                "train": "train2014",
-                "val": "val2014",
-            }[split]
-            paths = list(glob.glob(f"{data_path}/{split_name}/*.jpg"))
-            print(f"Found {len(paths)} image paths in {split_name}.")
-            random.shuffle(paths)
-            annot_paths = [path for path in paths if int(os.path.basename(path).split("_")[-1].split(".")[0]) in annot]
-
-            print(f"Found {len(annot_paths)} matching image paths in {split_name} with annotations.")
+    #         print(f"Found {len(annot_paths)} matching image paths in {split_name} with annotations.")
             
-            items = []
-            missing_paths = []
-            for path in paths:
-                iid = int(os.path.basename(path).split("_")[-1].split(".")[0])
-                if iid not in annot:
-                    missing_ids[split].append(iid)
-                    missing_paths.append(path)
-                    continue
-                _annot = annotations[split][iid]
-                for qid in _annot:
-                    q = _annot[qid]
-                    labels = q["labels"]
-                    scores = q["scores"]
+    #         items = []
+    #         missing_paths = []
+    #         for path in paths:
+    #             iid = int(os.path.basename(path).split("_")[-1].split(".")[0])
+    #             if iid not in annot:
+    #                 missing_ids[split].append(iid)
+    #                 missing_paths.append(path)
+    #                 continue
+    #             _annot = annotations[split][iid]
+    #             for qid in _annot:
+    #                 q = _annot[qid]
+    #                 labels = q["labels"]
+    #                 scores = q["scores"]
 
-                    items.append({
-                        "image_path": os.path.join(split_name, os.path.basename(path)), 
-                        "text_segment": q["token_ids"], 
-                        "labels": labels, 
-                        "scores": scores, 
-                        "qid": qid, 
-                    })
-            if missing_paths:
-                print(f"Missing paths in {split_name}: {len(missing_paths)}")
-                for i, path in enumerate(missing_paths[:10]):
-                    iid = int(os.path.basename(path).split("_")[-1].split(".")[0])
-                    print(f"Missing path {i+1}: {path}, Image ID: {iid}")
-            split2items[split] = items
+    #                 items.append({
+    #                     "image_path": os.path.join(split_name, os.path.basename(path)), 
+    #                     "text_segment": q["token_ids"], 
+    #                     "labels": labels, 
+    #                     "scores": scores, 
+    #                     "qid": qid, 
+    #                 })
+    #         if missing_paths:
+    #             print(f"Missing paths in {split_name}: {len(missing_paths)}")
+    #             for i, path in enumerate(missing_paths[:10]):
+    #                 iid = int(os.path.basename(path).split("_")[-1].split(".")[0])
+    #                 print(f"Missing path {i+1}: {path}, Image ID: {iid}")
+    #         split2items[split] = items
 
-            _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, f"okvqa.{split}.jsonl"))
+    #         _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, f"aokvqa.{split}.jsonl"))
 
-        val_image2items = defaultdict(list)
-        for item in split2items["val"]:
-            val_image2items[item["image_path"]].append(item)
+    #     val_image2items = defaultdict(list)
+    #     for item in split2items["val"]:
+    #         val_image2items[item["image_path"]].append(item)
         
-        print("Contains %d images and %d pairs for val set!" % (len(val_image2items), len(split2items["val"])))
+    #     print("Contains %d images and %d pairs for val set!" % (len(val_image2items), len(split2items["val"])))
 
-        val_images = list(val_image2items.keys())
-        random.shuffle(val_images)
-        trainable_val = []
-        rest_val = []
-        for i, image_id in enumerate(val_images):
-            if i < 1000:
-                rest_val += val_image2items[image_id]
-            else:
-                trainable_val += val_image2items[image_id]
+    #     val_images = list(val_image2items.keys())
+    #     random.shuffle(val_images)
+    #     trainable_val = []
+    #     rest_val = []
+    #     for i, image_id in enumerate(val_images):
+    #         if i < 1000:
+    #             rest_val += val_image2items[image_id]
+    #         else:
+    #             trainable_val += val_image2items[image_id]
         
-        _write_data_into_jsonl(items=trainable_val, jsonl_file=os.path.join(data_path, "okvqa.trainable_val.jsonl"))
-        _write_data_into_jsonl(items=rest_val, jsonl_file=os.path.join(data_path, "okvqa.rest_val.jsonl"))
+    #     _write_data_into_jsonl(items=trainable_val, jsonl_file=os.path.join(data_path, "aokvqa.trainable_val.jsonl"))
+    #     _write_data_into_jsonl(items=rest_val, jsonl_file=os.path.join(data_path, "aokvqa.rest_val.jsonl"))
 
-        with open(os.path.join(data_path, "answer2label.txt"), mode="w", encoding="utf-8") as writer:
-            for ans in ans2label:
-                to_json = {
-                    "answer": ans, 
-                    "label": ans2label[ans]
-                }
-                writer.write("%s\n" % json.dumps(to_json))
+    #     with open(os.path.join(data_path, "answer2label.txt"), mode="w", encoding="utf-8") as writer:
+    #         for ans in ans2label:
+    #             to_json = {
+    #                 "answer": ans, 
+    #                 "label": ans2label[ans]
+    #             }
+    #             writer.write("%s\n" % json.dumps(to_json))
 
-        # Print missing IDs
-        for split, ids in missing_ids.items():
-            if ids:
-                print(f"Missing IDs in {split}: {len(ids)}")
-                for i, iid in enumerate(ids[:10]):
-                    print(f"Missing ID {i+1}: {iid}")
+    #     # Print missing IDs
+    #     for split, ids in missing_ids.items():
+    #         if ids:
+    #             print(f"Missing IDs in {split}: {len(ids)}")
+    #             for i, iid in enumerate(ids[:10]):
+    #                 print(f"Missing ID {i+1}: {iid}")
 
 def _write_data_into_jsonl(items, jsonl_file):
     with open(jsonl_file, mode="w", encoding="utf-8") as writer:
@@ -381,9 +547,27 @@ def create_dataloader(dataset, is_train, batch_size, num_workers, pin_mem, dist_
         num_workers=num_workers,
         pin_memory=pin_mem,
         drop_last=is_train,
-        collate_fn=utils.merge_batch_tensors_by_dict_key,
+        # collate_fn=utils.merge_batch_tensors_by_dict_key,
+        collate_fn=collate_fn
     )
 
+def collate_fn(batch):
+    max_language_tokens_length = max(len(data['language_tokens']) for data in batch)
+    max_labels_length = max(data['labels'].size(0) for data in batch)
+
+    for data in batch:
+        # language_tokens와 padding_mask의 패딩
+        language_tokens_padding_length = max_language_tokens_length - len(data['language_tokens'])
+        if language_tokens_padding_length > 0:
+            data['language_tokens'] = torch.cat([data['language_tokens'], torch.tensor([0] * language_tokens_padding_length)])
+            data['padding_mask'] = torch.cat([data['padding_mask'], torch.tensor([1] * language_tokens_padding_length)])
+
+        # labels의 패딩
+        labels_padding_length = max_labels_length - data['labels'].size(0)
+        if labels_padding_length > 0:
+            data['labels'] = torch.cat([data['labels'], torch.zeros(labels_padding_length)])
+
+    return utils.merge_batch_tensors_by_dict_key(batch)
 
 def build_transform(is_train):
     # if args.task in ["imagenet"]:
@@ -432,23 +616,35 @@ def create_dataset_by_split(split, is_train=True):
     # if args.task in ["coco_captioning", "nocaps"]:
     #     opt_kwargs["mask_prob"] = args.captioning_mask_prob
 
-    dataset = OKVQADataset(
+
+    okvqa_dataset = OKVQADataset(
         data_path='/root/datasets/okvqa/data', split=split, 
         transform=transform, tokenizer=tokenizer, 
         num_max_bpe_tokens=64, 
         task='okvqa', **opt_kwargs, 
     )
 
+    aokvqa_dataset = AOKVQADataset(
+        data_path='/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco', split=split, 
+        transform=transform, tokenizer=tokenizer, 
+        num_max_bpe_tokens=64, 
+        task='aokvqa', **opt_kwargs, 
+    )
+
+    # combined_dataset = CombinedDataset(okvqa_dataset, aokvqa_dataset)
+    combined_dataset = ConcatDataset([okvqa_dataset, aokvqa_dataset])
+    print(f'Length of okvqa dataset: {len(okvqa_dataset)}, aokvqa dataset: {len(aokvqa_dataset)}, combined dataset: {len(combined_dataset)}')
+
     if is_train:
-        batch_size = 16
+        batch_size = 64
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
         batch_size = args.eval_batch_size
     else:
         batch_size = int(args.batch_size * 1.5)
 
     return create_dataloader(
-        dataset, is_train=is_train, batch_size=batch_size, 
-        num_workers=4, pin_mem=True, dist_eval=False, 
+        combined_dataset, is_train=is_train, batch_size=batch_size, 
+        num_workers=16, pin_mem=True, dist_eval=False, 
     )
 
 
@@ -464,7 +660,7 @@ def create_downstream_dataset(is_eval=False):
 #   tokenizer = XLMRobertaTokenizer("/root/datasets/okvqa/data/beit3.spm")
 
 #   OKVQADataset.make_dataset_index(
-#       data_path="/root/datasets/okvqa/data",
+#       data_path="/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco",
 #       tokenizer=tokenizer,
-#       annotation_data_path="/root/datasets/okvqa/data/okvqa",
+#       annotation_data_path="/root/workspace/24s-VQA-MLLM/dataset/a-okvqa",
 #   )
