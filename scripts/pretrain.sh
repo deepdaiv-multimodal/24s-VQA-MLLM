@@ -23,6 +23,8 @@ TASK=${TASK:-ok} # task name, one of ['ok', 'aok_val', 'aok_test'], default 'ok'
 GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 VERSION=${VERSION:-pretraining_okvqa} # version name, default 'pretraining_for_$TASK'
 
+export CUDA_VISIBLE_DEVICES=$GPU
+
 # CUDA_VISIBLE_DEVICES=$GPU \
 python main.py \
     --task $TASK --run_mode pretrain\

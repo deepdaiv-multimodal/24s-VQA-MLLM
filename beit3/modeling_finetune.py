@@ -33,18 +33,15 @@ class Pooler(nn.Module):
         self.activation = nn.Tanh()
 
     def forward(self, x):
-        # x가 3차원이 아닌 경우 3차원으로 변환
         if x.dim() == 2:
             x = x.unsqueeze(1)
 
-        # x의 첫 번째 차원을 가져옴
         cls_rep = x[:, 0, :]
 
-        # cls_rep의 크기를 768로 맞춤
-        new_dim = (cls_rep.size(1) // 768) * 768
-        cls_rep = cls_rep[:, :new_dim]
+        # new_dim = (cls_rep.size(1) // 768) * 768 # cls_rep의 크기를 768로 맞춤
+        # cls_rep = cls_rep[:, :new_dim]
+        # cls_rep = cls_rep.view(cls_rep.size(0), -1, 768)
 
-        cls_rep = cls_rep.view(cls_rep.size(0), -1, 768)
         cls_rep = self.norm(cls_rep)
         pooled_output = self.dense(cls_rep)
         pooled_output = self.activation(pooled_output)

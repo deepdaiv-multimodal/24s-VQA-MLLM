@@ -496,6 +496,7 @@ def train_one_epoch(
     for data_iter_step, data in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
         step = data_iter_step // update_freq
         global_step = start_steps + step  # global training iteration
+
         # Update LR & WD for the first acc
         if lr_schedule_values is not None and data_iter_step % update_freq == 0:
             for i, param_group in enumerate(optimizer.param_groups):
