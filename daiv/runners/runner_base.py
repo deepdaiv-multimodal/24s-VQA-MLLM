@@ -384,27 +384,27 @@ class RunnerBase:
                 self.log_stats(split_name="train", stats=train_stats)
 
             # evaluation phase
-            if len(self.valid_splits) > 0:
-                for split_name in self.valid_splits:
-                    logging.info("Evaluating on {}.".format(split_name))
+            # if len(self.valid_splits) > 0:
+            #     for split_name in self.valid_splits:
+            #         logging.info("Evaluating on {}.".format(split_name))
 
-                    val_log = self.eval_epoch(
-                        split_name=split_name, cur_epoch=cur_epoch
-                    )
-                    if val_log is not None:
-                        if is_main_process():
-                            assert (
-                                "agg_metrics" in val_log
-                            ), "No agg_metrics found in validation log."
+            #         val_log = self.eval_epoch(
+            #             split_name=split_name, cur_epoch=cur_epoch
+            #         )
+            #         if val_log is not None:
+            #             if is_main_process():
+            #                 assert (
+            #                     "agg_metrics" in val_log
+            #                 ), "No agg_metrics found in validation log."
 
-                            agg_metrics = val_log["agg_metrics"]
-                            if agg_metrics > best_agg_metric and split_name == "val":
-                                best_epoch, best_agg_metric = cur_epoch, agg_metrics
+            #                 agg_metrics = val_log["agg_metrics"]
+            #                 if agg_metrics > best_agg_metric and split_name == "val":
+            #                     best_epoch, best_agg_metric = cur_epoch, agg_metrics
 
-                                self._save_checkpoint(cur_epoch, is_best=True)
+            #                     self._save_checkpoint(cur_epoch, is_best=True)
 
-                            val_log.update({"best_epoch": best_epoch})
-                            self.log_stats(val_log, split_name)
+            #                 val_log.update({"best_epoch": best_epoch})
+            #                 self.log_stats(val_log, split_name)
 
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
@@ -423,6 +423,17 @@ class RunnerBase:
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
         logging.info("Training time {}".format(total_time_str))
+
+    # def evaluate(self, cur_epoch="best", skip_reload=False):
+    #     test_logs = dict()
+
+    #     if len(self.test_splits) > 0:
+    #         for split_name in self.test_splits:
+    #             test_logs[split_name] = self.eval_epoch(
+    #                 split_name=split_name, cur_epoch=cur_epoch, skip_reload=skip_reload
+    #             )
+
+    #         return test_logs
 
     def evaluate(self, cur_epoch="best", skip_reload=False):
         test_logs = dict()
@@ -468,9 +479,14 @@ class RunnerBase:
 
         # TODO In validation, you need to compute loss as well as metrics
         # TODO consider moving to model.before_evaluation()
-        model = self.unwrap_dist_model(self.model)
-        if not skip_reload and cur_epoch == "best":
-            model = self._reload_best_model(model)
+        model = self._load_checkpoint(self.resume_ckpt_path)
+        # checkpoint = torch.load(url_or_filename, map_location=self.device)
+        # state_dict = checkpoint["model"]
+        # model = self.unwrap_dist_model(self.model)
+        # model.load_state_dict(state_dict)
+        # model = self.unwrap_dist_model(self.model)
+        # if not skip_reload and cur_epoch == "best":
+        #     model = self._reload_best_model(model)
         model.eval()
 
         self.task.before_evaluation(
@@ -485,6 +501,7 @@ class RunnerBase:
                 split_name=split_name,
                 epoch=cur_epoch,
             )
+
 
     def unwrap_dist_model(self, model):
         if self.use_distributed:
@@ -636,11 +653,13 @@ class RunnerBase:
             checkpoint = torch.load(cached_file, map_location=self.device)
         elif os.path.isfile(url_or_filename):
             checkpoint = torch.load(url_or_filename, map_location=self.device)
+            print('FINISH LOADING CKPT!')
         else:
             raise RuntimeError("checkpoint url or path is invalid")
 
         state_dict = checkpoint["model"]
-        self.unwrap_dist_model(self.model).load_state_dict(state_dict)
+        model = self.unwrap_dist_model(self.model)
+        model.load_state_dict(state_dict)
 
         self.optimizer.load_state_dict(checkpoint["optimizer"])
         if self.scaler and "scaler" in checkpoint:
@@ -648,6 +667,7 @@ class RunnerBase:
 
         self.start_epoch = checkpoint["epoch"] + 1
         logging.info("Resume checkpoint from {}".format(url_or_filename))
+        return model
 
     @main_process
     def log_stats(self, stats, split_name):

@@ -422,3 +422,6 @@ def get_file_size(filename):
     """
     size_in_mb = os.path.getsize(filename) / float(1024**2)
     return size_in_mb
+
+def is_convertible_to_int(value):
+    return bool(re.match(r'^-?\d+$', str(value)))

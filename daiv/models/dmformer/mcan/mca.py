@@ -31,6 +31,11 @@ class MHAtt(nn.Module):
     def forward(self, v, k, q, mask):
         n_batches = q.size(0)
 
+        v=v.float()
+        k=k.float()
+        q=q.float()
+
+
         v = self.linear_v(v).view(
             n_batches,
             -1,

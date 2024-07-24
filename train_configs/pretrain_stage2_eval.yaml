@@ -1,0 +1,81 @@
+ # Copyright (c) 2022, salesforce.com, inc.
+ # All rights reserved.
+ # SPDX-License-Identifier: BSD-3-Clause
+ # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+
+model:
+  arch: blip2_t5_instruct
+  model_type: flant5xl
+  # model_type: okvqa
+  load_pretrained: True
+  # intialize stage 2 pretraining from stage 1 pretrained model
+  # MCAN
+  pretrained: '/root/workspace/24s-VQA-MLLM/EunJuPark/mcan_stage1_checkpoint_9.pth'
+  # MCAN + DAT
+  # pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240718160/checkpoint_9.pth" #"/home/intern24/daiv/BLIVA/daiv/output/BLIP2/Pretrain_stage1/mcan_stage1_checkpoint_9.pth"
+  freeze_vit: True
+  add_dat: False
+
+
+datasets:
+  ok_vqa:
+    vis_processor:
+        # train:
+        #   name: 
+        #   image_size: 224
+        eval: 
+          name: "blip2_image_train"
+          image_size: 224
+    text_processor:
+        # train:
+        #   name: "blip_caption"
+        eval:
+          name: "blip_caption"
+    # build_info:
+    #     images:
+    #         storage: '/export/share/datasets/vision/coco/images/'          
+  #vg_caption: # name of the dataset builder
+  #  vis_processor:
+  #      train:
+  #        name: "blip_image_train"
+  #        image_size: 224
+  #  text_processor:
+  #      train:
+  #        name: "blip_caption"
+    # build_info:
+    #     images:
+    #         storage: '//export/share/datasets/vision/visual-genome/image/'
+
+run:
+  # task: image_text_pretrain
+  task: vqa
+  # optimizer
+  lr_sched: "linear_warmup_cosine_lr"
+  init_lr: 1e-4
+  min_lr: 1e-5
+  warmup_lr: 1e-6
+
+  weight_decay: 0.05
+  max_epoch: 10
+  batch_size_train: 8 #64
+  batch_size_eval: 8 #64
+  num_workers: 4
+  warmup_steps: 2000
+
+  seed: 42
+  output_dir: "output/BLIP2/Pretrain_stage2_eval"
+
+  amp: True
+  # MCAN
+  resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/EunJuPark/stage2/BLIVA/daiv/output/BLIP2/Pretrain_stage2/20240720153/checkpoint_9.pth'
+  # resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/EunJuPark/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2_eval/20240720153/checkpoint_9.pth'
+  # resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/BEiT3/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2/20240719160/checkpoint_9.pth'
+
+  evaluate: True 
+  # train_splits: ["train"]
+  test_splits: ["test"]
+
+  device: "cuda"
+  world_size: 1
+  dist_url: "env://"
+  distributed: False

@@ -25,6 +25,7 @@ class __DisplMixin:
             }
         )
 
+
 class TextCapsDataset(BasePromptDataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
         
@@ -88,7 +89,8 @@ class TextCapsDataset(BasePromptDataset):
         }        
         
 
-class CaptionDataset(BaseDataset):
+
+class CaptionDataset(BaseDataset, __DisplMixin):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
         """
         vis_root (string): Root directory of images (e.g. coco/images/)
@@ -96,80 +98,37 @@ class CaptionDataset(BaseDataset):
         """
         super().__init__(vis_processor, text_processor, vis_root, ann_paths)
 
-        # self.img_ids = {}
-        # n = 0
-        # for ann in self.annotation:
-        #     img_id = ann["image_id"]
-        #     if img_id not in self.img_ids.keys():
-        #         self.img_ids[img_id] = n
-        #         n += 1
-
-        self.prompts = [
-            "A short image caption:",
-            "A short image description:",
-            "A photo of",
-            "An image that shows",
-            "Write a short description for the image.",
-            "Write a description for the photo.",
-            "Provide a description of what is presented in the photo.",
-            "Briefly describe the content of the image.",
-            "Can you briefly explain what you see in the image?",
-            "Could you use a few words to describe what you perceive in the photo?",
-            "Please provide a short depiction of the picture.",
-            "Using language, provide a short account of the image.",
-            "Use a few words to illustrate what is happening in the picture."
-        ]
+        self.img_ids = {}
+        n = 0
+        for ann in self.annotation:
+            img_id = ann["image_id"]
+            if img_id not in self.img_ids.keys():
+                self.img_ids[img_id] = n
+                n += 1
 
     def __getitem__(self, index):
 
         # TODO this assumes image input, not general enough
         ann = self.annotation[index]
-
-        image_path = os.path.join(self.vis_root, ann["image"])
-        image = Image.open(image_path).convert("RGB")
+        #print('=coco=')
+        
+        image_path = os.path.join('/root/workspace/24s-VQA-MLLM/dataset/coco/images', ann["image"])
+        #print(image_path)
+        #ann[image] = val2014/coco_.....jpg
+        try:
+            image = Image.open(image_path).convert("RGB")
+        except:
+            return None 
 
         image = self.vis_processor(image)
-        
-        if 'caption' in ann.keys():
-            text_output  = self.text_processor(ann["caption"])
-        else:
-            text_output = 'evaluation has no text output'
+        caption = self.text_processor(ann["caption"])
 
-        choice = np.random.choice(len(self.prompts))
-
-        text_input = self.prompts[choice]
-
-        image_id = ann['image_id']
-        
         return {
             "image": image,
-            "text_input": text_input,
-            #"image_id": self.img_ids[ann["image_id"]],
-            'text_output': text_output,
-            'image_id': image_id,
+            "text_input": caption,
+            "image_id": ann["image_id"]
         }
-    
-    def collater(self, samples):
-        image_list, question_list, answer_list, image_id_list = [], [], [], []
 
-        for sample in samples:
-            image_list.append(sample["image"])
-           
-            question_list.append(sample["text_input"])
-
-            answers = sample["text_output"]
-
-            answer_list.append(answers)
-            
-            image_id_list.append(sample['image_id'])
-        
-
-        return {
-            "image": torch.stack(image_list, dim=0),
-            "text_input": question_list,
-            "text_output": answer_list,
-            'image_id': image_id_list,
-        }
 
 
 class CaptionEvalDataset(BaseDataset, __DisplMixin):

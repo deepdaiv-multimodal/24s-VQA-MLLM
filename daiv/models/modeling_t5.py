@@ -344,7 +344,19 @@ class T5LayerFF(nn.Module):
         forwarded_states = self.layer_norm(hidden_states)
         forwarded_states = self.DenseReluDense(forwarded_states)
         hidden_states = hidden_states + self.dropout(forwarded_states)
+
+        # 클램핑 추가
+        if torch.isinf(hidden_states).any() or torch.isnan(hidden_states).any():
+            clamp_value = torch.finfo(hidden_states.dtype).max - 1000
+            hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            hidden_states = torch.nan_to_num(hidden_states, nan=0.0)
+
+        if torch.isnan(hidden_states).any():
+            print("NaN detected in feed-forward hidden_states")
+
         return hidden_states
+
+
 
 
 class T5Attention(nn.Module):
@@ -619,7 +631,6 @@ class T5Attention(nn.Module):
             outputs = outputs + (attn_weights,)
         return outputs
 
-
 class T5LayerSelfAttention(nn.Module):
     def __init__(self, config, has_relative_attention_bias=False):
         super().__init__()
@@ -650,9 +661,17 @@ class T5LayerSelfAttention(nn.Module):
             output_attentions=output_attentions,
         )
         hidden_states = hidden_states + self.dropout(attention_output[0])
-        outputs = (hidden_states,) + attention_output[
-            1:
-        ]  # add attentions if we output them
+
+        # 클램핑 추가
+        if torch.isinf(hidden_states).any() or torch.isnan(hidden_states).any():
+            clamp_value = torch.finfo(hidden_states.dtype).max - 1000
+            hidden_states = torch.clamp(hidden_states, min=-clamp_value, max=clamp_value)
+            hidden_states = torch.nan_to_num(hidden_states, nan=0.0)
+
+        if torch.isnan(hidden_states).any():
+            print("NaN detected in self-attention hidden_states")
+
+        outputs = (hidden_states,) + attention_output[1:]
         return outputs
 
 
@@ -688,10 +707,20 @@ class T5LayerCrossAttention(nn.Module):
             output_attentions=output_attentions,
         )
         layer_output = hidden_states + self.dropout(attention_output[0])
-        outputs = (layer_output,) + attention_output[
-            1:
-        ]  # add attentions if we output them
+
+        # 클램핑 추가
+        if torch.isinf(layer_output).any() or torch.isnan(layer_output).any():
+            clamp_value = torch.finfo(layer_output.dtype).max - 1000
+            layer_output = torch.clamp(layer_output, min=-clamp_value, max=clamp_value)
+            layer_output = torch.nan_to_num(layer_output, nan=0.0)
+
+        if torch.isnan(layer_output).any():
+            print("NaN detected in cross-attention layer_output")
+
+        outputs = (layer_output,) + attention_output[1:]
         return outputs
+
+
 
 
 class T5Block(nn.Module):

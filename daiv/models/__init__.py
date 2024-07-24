@@ -14,6 +14,7 @@ from daiv.models.base_model import BaseModel
 
 from daiv.models.blip2 import Blip2Base
 from daiv.models.blip2_vicuna_instruct import Blip2VicunaInstruct
+from daiv.models.blip2_t5_instruct import Blip2T5Instruct
 from daiv.models.bliva_flant5xxl import BLIVAFlanT5
 from daiv.models.bliva_vicuna7b import BLIVAVicuna
 from daiv.models.pretrain_bliva_vicuna7b import PretrainBLIVAVicuna
@@ -37,6 +38,7 @@ __all__ = [
     "PretrainBlivaT5",
     "BlivaVicunaLoRA",
      "Blip2Qformer",
+     "Blip2T5Instruct"
 ]
 
 

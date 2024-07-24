@@ -12,12 +12,31 @@ from daiv.datasets.datasets.coco_caption_datasets import (
     NoCapsEvalDataset,
 )
 
+from daiv.datasets.datasets.image_text_pair_datasets import ImageTextPairDataset #, ImageTextPairInstructDataset
+
 from daiv.datasets.datasets.caption_datasets import TextCapsDataset, CaptionDataset, LLaVAPretrainDataset
 
 from daiv.common.registry import registry
 import os
 import logging
 import warnings
+
+@registry.register_builder("vg_caption")
+class VGCaptionBuilder(BaseDatasetBuilder):
+    train_dataset_cls = ImageTextPairDataset
+
+    DATASET_CONFIG_DICT = {"default": "configs/datasets/vg/defaults_caption.yaml"}
+
+
+@registry.register_builder("coco_caption")
+class COCOCapBuilder(BaseDatasetBuilder):
+    train_dataset_cls = COCOCapDataset
+    #eval_dataset_cls = COCOCapEvalDataset
+
+    DATASET_CONFIG_DICT = {
+        "default": "configs/datasets/coco/defaults_cap.yaml",
+    }
+
 
 @registry.register_builder("llava_pretrain")
 class LLaVAPretrainBuilder(BaseDatasetBuilder):
@@ -87,39 +106,6 @@ class TextCapsBuilder(BaseDatasetBuilder):
 
         return datasets
 
-@registry.register_builder("coco_caption")
-class COCOCapBuilder(BaseDatasetBuilder):
-    train_dataset_cls = COCOCapDataset
-    #eval_dataset_cls = COCOCapEvalDataset
-
-    DATASET_CONFIG_DICT = {
-        "default": "configs/datasets/coco/defaults_cap.yaml",
-    }
-
-    def build_datasets(self):
-        # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
-        logging.info("Building datasets...")
-        self.build_processors()
-
-        build_info = self.config.build_info
-        storage_path = build_info.storage
-        vis_root = build_info.vis_root
-
-        datasets = dict()
-
-        if not os.path.exists(storage_path):
-            warnings.warn("storage path {} does not exist.".format(storage_path))
-
-        # create datasets
-        dataset_cls = self.train_dataset_cls
-        datasets['train'] = dataset_cls(
-            vis_processor=self.vis_processors["train"],
-            text_processor=self.text_processors["train"],
-            ann_paths=[os.path.join(storage_path, 'coco_karpathy_train.json')], 
-            vis_root=vis_root,
-        )
-
-        return datasets
     
 @registry.register_builder("nocaps")
 class NoCapBuilder(BaseDatasetBuilder):
@@ -186,4 +172,3 @@ class Flickr30kBuilder(BaseDatasetBuilder):
         )
 
         return datasets
-

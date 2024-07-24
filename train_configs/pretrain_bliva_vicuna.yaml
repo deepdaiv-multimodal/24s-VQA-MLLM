@@ -5,7 +5,7 @@ model:
   load_finetuned: False
   load_pretrained: True
 
-  pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/InstructBLIP/instruct_blip_vicuna7b_trimmed.pth"
+  pretrained: '/root/workspace/24s-VQA-MLLM/EunJuPark/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240718133/checkpoint_9.pth'
   finetuned: ""
 
   # vit encoder
@@ -45,11 +45,11 @@ run:
   warmup_lr: 1e-8
 
   weight_decay: 0.05
-  max_epoch: 3 
+  max_epoch:  3
   accum_grad_iters: 1
 
   batch_size_train: 8 
-  batch_size_eval: 1 
+  batch_size_eval: 4 
   num_workers: 8 
   warmup_steps: 1000
 

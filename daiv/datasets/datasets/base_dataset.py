@@ -1,16 +1,3 @@
-"""
- Copyright (c) 2022, salesforce.com, inc.
- All rights reserved.
- SPDX-License-Identifier: BSD-3-Clause
- For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
-"""
-
-import json
-from typing import Iterable
-
-from torch.utils.data import Dataset, ConcatDataset
-from torch.utils.data.dataloader import default_collate
-
 
 """
  Copyright (c) 2022, salesforce.com, inc.
@@ -38,12 +25,20 @@ class BaseDataset(Dataset):
         for ann_path in ann_paths:
             with open(ann_path, "r") as f:
                 data = json.load(f)
-                self.annotation.extend(data['annotations'])  # 'annotations' 키의 값을 가져옴
-
+                self.annotation.extend(data)#['annotations'])  # 'annotations' 키의 값을 가져옴
+                
         #print(self.annotation)
+        ''' 
+        vg
+        {image: , caption : , image_id : }
+        coco
+        {image : , caption ; , image_id :}
+        
+         '''
         #print(ann_path)
         self.vis_processor = vis_processor
         self.text_processor = text_processor
+        #print(self.vis_processor)
 
         self._add_instance_ids()
 
@@ -82,7 +77,7 @@ class BasePromptDataset(Dataset):
         self._add_instance_ids()
 
     def __len__(self):
-        return len(self.annotation['data'])
+        return len(self.annotation)
 
     def collater(self, samples):
         return default_collate(samples)

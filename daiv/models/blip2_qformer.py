@@ -12,6 +12,7 @@ from daiv.models.blip_outputs import BlipOutput, BlipOutputFeatures
 
 from daiv.models.dmformer.mcan.net import Net  # Importing the Net class from net.py
 from daiv.models.dmformer.mcan.net_utils import LayerNorm  # Importing LayerNorm
+from daiv.models.dmformer.dat.deformable_attention_1d import DeformableAttention1D
 
 @registry.register_model("blip2")
 @registry.register_model("blip2_feature_extractor")
@@ -88,6 +89,15 @@ class Blip2Qformer(Blip2Base):
 
         self.max_txt_len = max_txt_len
 
+        ##DAT ATTN
+        self.dat = DeformableAttention1D(
+                            dim = 257,
+                            downsample_factor = 4,
+                            offset_scale = 2,
+                            offset_kernel_size = 6,
+                            offset_groups = 1
+                        )
+
     def forward(self, samples):
         print('MCAN training....')
         image = samples["image"]
@@ -125,6 +135,9 @@ class Blip2Qformer(Blip2Base):
         img_feat_mask = self.MCAN.make_mask(image_embeds)
         #print(f'lang_feat_mask size: {lang_feat_mask.size()}')
         #print(f'img_feat_mask size: {img_feat_mask.size()}')
+
+        ##dat
+        image_embeds = self.dat(image_embeds)
 
         # Using MCAN
 
@@ -255,13 +268,28 @@ class Blip2Qformer(Blip2Base):
             image_atts_all_mask
         )
 
+        output_text = self.MCAN.attflat_lang(
+            output_text,
+            text_atts_all_mask
+        )
+
+        output_image = self.MCAN.attflat_img(
+            output_image,
+            image_atts_all_mask
+        )
+
+        proj_feat = output_text + output_image
+        proj_feat = self.MCAN.proj_norm(proj_feat)
+        vl_embeddings = torch.sigmoid(self.MCAN.proj(proj_feat))
+
         # Process the output from MCA_ED
-        vl_embeddings_text = output_text[:, :self.max_txt_len, :]
-        vl_embeddings_image = output_image[:, :image_embeds_all.size(1), :]
+        #vl_embeddings_text = output_text[:, :self.max_txt_len, :]
+        #vl_embeddings_image = output_image[:, :image_embeds_all.size(1), :]
 
         # Assuming further processing is needed with only one of the outputs
-        vl_output = self.itm_head(vl_embeddings_text)
-        logits = vl_output.mean(dim=1)
+        vl_output = self.itm_head(vl_embeddings)
+        logits = vl_output
+        #logits = vl_output.mean(dim=1)
 
         itm_labels = torch.cat(
             [torch.ones(bs, dtype=torch.long), torch.zeros(2 * bs, dtype=torch.long)],

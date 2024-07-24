@@ -8,7 +8,7 @@
 from daiv.common.registry import registry
 from daiv.tasks.base_task import BaseTask
 from daiv.tasks.image_text_pretrain import ImageTextPretrainTask
-
+from daiv.tasks.vqa import VQATask
 
 
 def setup_task(cfg):
@@ -24,4 +24,5 @@ def setup_task(cfg):
 __all__ = [
     "BaseTask",
     "ImageTextPretrainTask",
+    "VQATask",
 ]

@@ -53,19 +53,14 @@ class COCOVQADataset(VQADataset):
 
     def __getitem__(self, index):
         ann = self.annotation[index]
-        #print('## coco_vqa_dataset ann ##')
-        #print(ann)
 
-        #임의로 지정
-        #self.vis_root = '/content/drive/MyDrive/24s_deepdaiv_VQA/prophet/datasets/coco2014/train2014'
-        # 이미지 경로가 포함되어 있지 않다면, 이미지 경로를 생성해야 합니다.
-        image_filename = f"COCO_train2014_{ann['image_id']:012d}.jpg"
+        image_filename = f"train2014/COCO_train2014_{ann['image_id']:012d}.jpg"
         image_path = os.path.join(self.vis_root, image_filename)
 
-        if not os.path.exists(image_path):
-        #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
-        #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
-            return self.__getitem__((index + 1) % len(self))
+        # if not os.path.exists(image_path):
+        # #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
+        # #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
+        #     return self.__getitem__((index + 1) % len(self))
 
         image = Image.open(image_path).convert("RGB")
         image = self.vis_processor(image)
@@ -82,7 +77,6 @@ class COCOVQADataset(VQADataset):
 
         best_answer = max(answer_weight, key=answer_weight.get)
 
-        #print(answer_weight)
         return {
             "image": image,
             "text_input": text_input,
@@ -160,7 +154,7 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
 
         with open(ann_paths[0], "r") as f:
             data = json.load(f)
-            self.annotation = data['annotations']  # 'annotations' 키의 값을 가져옴
+            self.annotation = data['annotations']  
 
         answer_list_path = ann_paths[1]
         if os.path.exists(answer_list_path):
@@ -186,7 +180,12 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
     def __getitem__(self, index):
         ann = self.annotation[index]
 
-        image_path = os.path.join(self.vis_root, ann["image"])
+        image_filename = f"val2014/COCO_val2014_{ann['image_id']:012d}.jpg"
+        image_path = os.path.join(self.vis_root, image_filename)
+        # if not os.path.exists(image_path):
+        # #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
+        # #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
+        #     return self.__getitem__((index + 1) % len(self))
         image = Image.open(image_path).convert("RGB")
 
         image = self.vis_processor(image)
