@@ -90,7 +90,7 @@ def main():
     init_distributed_mode(cfg.run_cfg)
     
     if get_rank() == 0:
-        wandb.init(project="bliva")
+        wandb.init(project="stage1")
     
     setup_seeds(cfg)
 
