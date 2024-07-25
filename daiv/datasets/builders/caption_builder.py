@@ -8,11 +8,12 @@
 from daiv.datasets.builders.base_dataset_builder import BaseDatasetBuilder
 from daiv.datasets.datasets.coco_caption_datasets import (
     COCOCapDataset,
+    COCOCapInstructDataset,
     COCOCapEvalDataset,
     NoCapsEvalDataset,
 )
 
-from daiv.datasets.datasets.image_text_pair_datasets import ImageTextPairDataset #, ImageTextPairInstructDataset
+from daiv.datasets.datasets.image_text_pair_datasets import ImageTextPairDataset, ImageTextPairInstructDataset
 
 from daiv.datasets.datasets.caption_datasets import TextCapsDataset, CaptionDataset, LLaVAPretrainDataset
 
@@ -172,3 +173,20 @@ class Flickr30kBuilder(BaseDatasetBuilder):
         )
 
         return datasets
+
+
+# Instruct dataset
+@registry.register_builder("coco_caption_instruct")
+class COCOCapInstructBuilder(BaseDatasetBuilder):
+    train_dataset_cls = COCOCapInstructDataset
+    eval_dataset_cls = COCOCapEvalDataset
+
+    DATASET_CONFIG_DICT = {
+        "default": "configs/datasets/coco/defaults_cap_instruct.yaml",
+    }
+
+@registry.register_builder("vg_caption_instruct")
+class VGCaptionInstructBuilder(BaseDatasetBuilder):
+    train_dataset_cls = ImageTextPairInstructDataset
+
+    DATASET_CONFIG_DICT = {"default": "configs/datasets/vg/defaults_caption_instruct.yaml"}

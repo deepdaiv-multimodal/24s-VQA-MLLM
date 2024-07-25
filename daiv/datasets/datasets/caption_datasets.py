@@ -199,3 +199,11 @@ class LLaVAPretrainDataset(BaseDataset):
             "text_input": question_list,
             "text_output": answer_list,
         }
+
+class CaptionInstructDataset(CaptionDataset):
+    def __getitem__(self, index):
+        data = super().__getitem__(index)
+        if data != None:
+            data['text_output'] = data["text_input"]
+            data['text_input'] = self.text_processor("Your task is to answer a knowledge-based question. Question: What caption best describes this image? Short answer:")
+        return data

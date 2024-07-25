@@ -64,6 +64,7 @@ class BaseTask:
         return datasets
 
     def train_step(self, model, samples):
+        # print('samples:', samples)
         output = model(samples)
         loss_dict = {}
         for k,v in output.items():

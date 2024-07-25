@@ -109,10 +109,11 @@ class Blip2T5Instruct(Blip2Base):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
-            image_features = image_features[:, 1:]  # Remove CLS token
-            image_embeds_llm = self.vision_proj(image_features)  # Project to LLM dimension
-            image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+            # # image linear projection 
+            # image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
+            # image_features = image_features[:, 1:]  # Remove CLS token
+            # image_embeds_llm = self.vision_proj(image_features)  # Project to LLM dimension
+            # image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
             # Generate image_embeds_mcan as in stage1
             image_embeds_mcan = self.ln_vision(self.visual_encoder(image))
@@ -129,13 +130,17 @@ class Blip2T5Instruct(Blip2Base):
         text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
         text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
 
-        txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
-
-        img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan)
+        txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan) # torch.Size([4, 257, 512])
+        img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan) # torch.Size([4, 512])
         txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
 
-        inputs_t5 = self.t5_proj(img_mcan_output)
-        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device)
+        inputs_t5 = self.t5_proj(img_mcan_output) # torch.Size([4, 2048])
+        inputs_t5 = inputs_t5.unsqueeze(1) # torch.Size([4, 1, 2048])
+        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device) # torch.Size([4, 1])
+
+        # fs_embeds, fs_atts = None, None
+        # if self.few_shot_prob > 0 and "few_shot_samples" in samples.keys():
+        #     fs_embeds, fs_atts = self.prepare_few_shot_embeds(samples['few_shot_samples'])
 
         with self.maybe_autocast(dtype=torch.bfloat16):
             input_tokens = self.t5_tokenizer(
@@ -144,7 +149,7 @@ class Blip2T5Instruct(Blip2Base):
                 padding="longest",
                 truncation=True,
                 max_length=self.max_txt_len,
-            ).to(image.device)
+            ).to(image.device) # torch.Size([4, 22])
 
             output_tokens = self.t5_output_tokenizer(
                 samples["text_output"],
@@ -152,16 +157,16 @@ class Blip2T5Instruct(Blip2Base):
                 truncation=True,
                 max_length=self.max_output_txt_len,
                 return_tensors="pt",
-            ).to(image.device)
+            ).to(image.device) # torch.Size([4, 20])
 
-            encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1)
+            encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1) # torch.Size([4, 23])
 
             targets = output_tokens.input_ids.masked_fill(
                 output_tokens.input_ids == self.t5_tokenizer.pad_token_id, -100
-            )
+            ) # torch.Size([4, 20])
 
-            inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
-            inputs_embeds = torch.cat([inputs_t5, inputs_embeds], dim=1)
+            inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids) # torch.Size([4, 22, 2048])
+            inputs_embeds = torch.cat([inputs_t5, inputs_embeds], dim=1) # torch.Size([4, 23, 2048])
 
             # if fs_embeds is not None:
             #     inputs_embeds = torch.cat([fs_embeds, inputs_embeds], dim=1)

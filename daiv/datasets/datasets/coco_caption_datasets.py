@@ -13,10 +13,10 @@ from PIL import ImageFile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-from daiv.datasets.datasets.caption_datasets import CaptionDataset, CaptionEvalDataset
+from daiv.datasets.datasets.caption_datasets import CaptionDataset, CaptionEvalDataset, CaptionInstructDataset
 
 COCOCapDataset = CaptionDataset
-
+COCOCapInstructDataset = CaptionInstructDataset
 
 class COCOCapEvalDataset(CaptionEvalDataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):

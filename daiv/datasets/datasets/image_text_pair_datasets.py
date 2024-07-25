@@ -61,5 +61,5 @@ class ImageTextPairInstructDataset(ImageTextPairDataset):
         data = super().__getitem__(index)
         if data != None:
             data['text_output'] = data["text_input"]
-            data['text_input'] = self.text_processor("")
+            data['text_input'] = self.text_processor("Your task is to answer a knowledge-based question. Question: What caption best describes this image? Short answer:")
         return data
