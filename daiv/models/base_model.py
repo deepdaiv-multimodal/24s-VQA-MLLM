@@ -210,10 +210,10 @@ def all_gather_with_grad(tensors):
     Graph remains connected for backward grad computation.
     """
     # Queue the gathered tensors
-    world_size = 1 #torch.distributed.get_world_size()
+    world_size = torch.distributed.get_world_size()
     # There is no need for reduction in the single-proc case
     if world_size == 1:
-        return tensors
+        return tensors.contiguous()
 
     # tensor_all = GatherLayer.apply(tensors)
     tensor_all = GatherLayer.apply(tensors)
@@ -234,6 +234,7 @@ def concat_all_gather(tensor):
     tensors_gather = [
         torch.ones_like(tensor) for _ in range(torch.distributed.get_world_size())
     ]
+    tensor = tensor.contiguous()
     torch.distributed.all_gather(tensors_gather, tensor, async_op=False)
 
     output = torch.cat(tensors_gather, dim=0)
