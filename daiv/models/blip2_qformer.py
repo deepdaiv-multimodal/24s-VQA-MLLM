@@ -176,7 +176,7 @@ class Blip2Qformer(Blip2Base):
         #print(f'sim_t2i size :{sim_t2i.size()}')
 
         ##이건 분산학습
-        rank = 0 # dist.get_rank()
+        rank = 0 #dist.get_rank()
 
         bs = image.size(0) #batchsize
         
@@ -268,19 +268,20 @@ class Blip2Qformer(Blip2Base):
             image_atts_all_mask
         )
 
-        output_text = self.MCAN.attflat_lang(
-            output_text,
-            text_atts_all_mask
-        )
+        # output_text = self.MCAN.attflat_lang(
+        #     output_text,
+        #     text_atts_all_mask
+        # )
 
         output_image = self.MCAN.attflat_img(
             output_image,
             image_atts_all_mask
         )
 
-        proj_feat = output_text + output_image
-        proj_feat = self.MCAN.proj_norm(proj_feat)
-        vl_embeddings = torch.sigmoid(self.MCAN.proj(proj_feat))
+        # # proj_feat = output_text + output_image
+        # # proj_feat = self.MCAN.proj_norm(proj_feat)
+        # vl_embeddings = torch.sigmoid(self.MCAN.proj(proj_feat))
+        vl_embeddings = output_image
 
         # Process the output from MCA_ED
         #vl_embeddings_text = output_text[:, :self.max_txt_len, :]
@@ -310,20 +311,23 @@ class Blip2Qformer(Blip2Base):
         labels = decoder_input_ids.masked_fill(
             decoder_input_ids == self.tokenizer.pad_token_id, -100
         )
-        #print(f'labels size: {labels.size()}, dtype: {labels.dtype}')
-        #print(f'labels: {labels}')
 
-        # Use previously generated masks from ITM
-        #print(f'text_atts_all_mask size: {lang_feat_mask.size()}, dtype: {lang_feat_mask.dtype}')
-        #print(f'image_atts_all_mask size: {img_feat_mask.size()}, dtype: {img_feat_mask.dtype}')
 
+        # Embed decoder input ids
+        decoder_input_embeds = self.MCAN.embedding(decoder_input_ids)
+        decoder_input_embeds, _ = self.MCAN.lstm(decoder_input_embeds)
+
+        #print(f'decoder_input_embeds size: {decoder_input_embeds.size()}, dtype: {decoder_input_embeds.dtype}')
+
+        
         # Use MCA_ED for IC
         output_text, _ = self.MCAN.backbone(
-            text_embeds,
+            decoder_input_embeds,
             image_embeds,
             lang_feat_mask,
             img_feat_mask
         )
+
         #print(f'output_text size: {output_text.size()}, dtype: {output_text.dtype}')
 
 
@@ -341,7 +345,7 @@ class Blip2Qformer(Blip2Base):
         
         # Calculate the language modeling loss
         loss_lm = F.cross_entropy(logits.view(-1, logits.size(-1)), labels.view(-1), ignore_index=-100)
-        print(f'loss_lm: {loss_lm.item()}')
+        print(f'IC LOSS: {loss_lm.item()}')
 
         # Combine losses
         total_loss = loss_itc + loss_itm + loss_lm
