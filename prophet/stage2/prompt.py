@@ -25,6 +25,7 @@ from configs.task_cfgs import Cfgs
 
 from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
 from PIL import Image 
+from itertools import islice
 
 class Runner:
     def __init__(self, __C, evaluater):
@@ -35,8 +36,8 @@ class Runner:
         # instructBLIP loading 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
-        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-flan-t5-xl")
-        self.model = InstructBlipForConditionalGeneration.from_pretrained("Salesforce/instructblip-flan-t5-xl", load_in_4bit=False).to(self.device)
+        self.processor = InstructBlipProcessor.from_pretrained("Salesforce/instructblip-vicuna-7b")
+        self.model = InstructBlipForConditionalGeneration.from_pretrained("Salesforce/instructblip-vicuna-7b", load_in_4bit=False).to(self.device)
 
     def instructblip_infer(self, image_path, prompt_text, max_retries=3):
         retry_count = 0
@@ -48,20 +49,34 @@ class Runner:
                 
                 image = Image.open(image_path).convert('RGB')
                 inputs = self.processor(images=image, text=prompt_text, return_tensors="pt", truncation=True, max_length=512).to(self.device)
-                outputs = self.model.generate(**inputs, max_length=512, return_dict_in_generate=True, output_scores=True)
+                # outputs = self.model.generate(**inputs, max_length=512, return_dict_in_generate=True, output_scores=True)
+                outputs = self.model.generate(**inputs, num_beams=5, max_new_tokens=256, min_length=1, top_p=0.9, repetition_penalty=1.5, length_penalty=1.0, temperature=1,)
+                # response_txt = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0].strip()
+                response_txt = self.processor.batch_decode(outputs, skip_special_tokens=True)[0].strip()
 
-                response_txt = self.processor.batch_decode(outputs.sequences, skip_special_tokens=True)[0].strip()
+                # logprobs = []
+                # for score in outputs.scores:
+                #     logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
+                # total_logprob = torch.sum(torch.stack(logprobs))
+                # prob = math.exp(total_logprob.item())
 
                 logprobs = []
-                for score in outputs.scores:
-                    logprobs.append(score.log_softmax(dim=-1).max(dim=-1).values)
-                total_logprob = torch.sum(torch.stack(logprobs))
-                prob = math.exp(total_logprob.item())
+                for logit in outputs:
+                    logprob = torch.nn.functional.log_softmax(logit, dim=0)
+                    if isinstance(logprob, torch.Tensor):
+                        logprobs.append(logprob.item())
+                    else:
+                        logprobs.append(logprob)
 
-                print('image_path:',image_path)
-                print('prompt_text:',prompt_text)
-                print('response_txt:',response_txt)
-                print('prob:', prob)
+                # Calculate total log probability
+                # print(logprobs)
+                total_logprob = torch.sum(torch.tensor(logprobs)).item()
+                prob = math.exp(total_logprob)
+
+                # print('image_path:',image_path)
+                # print('prompt_text:',prompt_text)
+                # print('response_txt:',response_txt)
+                # print('prob:', prob)
 
                 return response_txt, prob
 
@@ -72,48 +87,6 @@ class Runner:
                     raise e
                 time.sleep(2 ** retry_count)  # Exponential backoff
 
-    
-    def gpt3_infer(self, prompt_text, _retry=0):
-        # print(prompt_text)
-        # exponential backoff
-        if _retry > 0:
-            print('retrying...')
-            st = 2 ** _retry
-            time.sleep(st)
-        
-        if self.__C.DEBUG:
-            # print(prompt_text)
-            time.sleep(0.05)
-            return 0, 0
-
-        try:
-            # print('calling gpt3...')
-            response = openai.Completion.create(
-                engine=self.__C.MODEL,
-                prompt=prompt_text,
-                temperature=self.__C.TEMPERATURE,
-                max_tokens=self.__C.MAX_TOKENS,
-                logprobs=1,
-                stop=["\n", "<|endoftext|>"],
-                # timeout=20,
-            )
-            # print('gpt3 called.')
-        except Exception as e:
-            print(type(e), e)
-            if str(e) == 'You exceeded your current quota, please check your plan and billing details.':
-                exit(1)
-            return self.gpt3_infer(prompt_text, _retry + 1)
-
-        response_txt = response.choices[0].text.strip()
-        # print(response_txt)
-        plist = []
-        for ii in range(len(response['choices'][0]['logprobs']['tokens'])):
-            if response['choices'][0]['logprobs']['tokens'][ii] in ["\n", "<|endoftext|>"]:
-                break
-            plist.append(response['choices'][0]['logprobs']['token_logprobs'][ii])
-        prob = math.exp(sum(plist))
-        
-        return response_txt, prob
     
     def sample_make(self, ques, capt, tag, cands, image_path, ans=None):
         line_prefix = self.__C.LINE_PREFIX
@@ -137,6 +110,7 @@ class Runner:
         for key in example_qids:
             iid = int(str(key)[:-1])
             iid_path = os.path.join(self.__C.IMAGE_DIR['train2014'], f'COCO_train2014_{iid:012d}.jpg')
+            key = str(key)
             ques = self.trainset.get_question(key)
             caption = self.trainset.get_caption(key)
             tag = self.trainset.get_tags(key)
@@ -190,13 +164,14 @@ class Runner:
 
         infer_times = self.__C.T_INFER
         N_inctx = self.__C.N_EXAMPLES
-        
-        print()
 
+        # test_set = dict(islice(self.valset.qid_to_data.items(), 5))
         for qid in progress.track(self.valset.qid_to_data, description="Working...  "):
             if qid in self.cache:
                 continue
 
+            qid = str(qid)
+            
             ques = self.valset.get_question(qid)
             caption = self.valset.get_caption(qid)
             cands = self.valset.get_topk_candidates(qid, self.__C.K_CANDIDATES)
@@ -216,7 +191,7 @@ class Runner:
                 # print(f'Infer {t}...')
                 prompt_in_ctx = self.get_context(example_qids[(N_inctx * t):(N_inctx * t + N_inctx)])
                 prompt_text = prompt_in_ctx + prompt_query
-                gen_text, gen_prob = self.gpt3_infer(prompt_text)
+                gen_text, gen_prob = self.instructblip_infer(image_path, prompt_text)
 
                 ans = self.evaluater.prep_ans(gen_text)
                 if ans != '':
@@ -249,8 +224,11 @@ class Runner:
                 if ll > 21 and ll % 10 == 0:
                     rt_accuracy = self.valset.rt_evaluate(self.cache.values())
                     info_column.info = f'Acc: {rt_accuracy}'
+                if ll % 100 == 0:
+                    print(rt_accuracy)
 
         self.evaluater.save(self.__C.RESULT_PATH)
+
         if self.__C.EVAL_NOW:
             with open(self.__C.LOG_PATH, 'a+') as logfile:
                 self.evaluater.evaluate(logfile)
@@ -264,7 +242,7 @@ def prompt_login_args(parser):
     parser.add_argument('--examples_path', dest='EXAMPLES_PATH', help='answer-aware example file path, default: "assets/answer_aware_examples_for_ok.json"', type=str, default=None)
     parser.add_argument('--candidates_path', dest='CANDIDATES_PATH', help='candidates file path, default: "assets/candidates_for_ok.json"', type=str, default=None)
     parser.add_argument('--captions_path', dest='CAPTIONS_PATH', help='captions file path, default: "assets/captions_for_ok.json"', type=str, default=None)
-    parser.add_argument('--openai_key', dest='OPENAI_KEY', help='openai api key', type=str, default=None)
+    # parser.add_argument('--openai_key', dest='OPENAI_KEY', help='openai api key', type=str, default=None)
 
 
 if __name__ == '__main__':

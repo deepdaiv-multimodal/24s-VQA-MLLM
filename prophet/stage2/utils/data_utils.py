@@ -7,6 +7,7 @@ import json
 from typing import Dict
 import pickle
 from collections import Counter
+import os
 
 # following two score is rough, and only for print accuracies during inferring.
 def ok_score(gt_answers):
@@ -108,6 +109,7 @@ class Qid2Data(Dict):
                 'question_id': qid,
                 'image_id': iid,
                 'question': q_item['question'],
+                'image_path': image_path,
                 # 'most_answer': most_answer,
                 # 'gt_scores': ans2score,
                 'topk_candidates': t_item,
@@ -164,7 +166,9 @@ class Qid2Data(Dict):
 
     def get_tags(self, qid):
         return self[qid]['tag']
-    
+
+    def get_image_path(self, qid):
+        return self[qid]['image_path']
     
     def get_gt_answers(self, qid):
         if not self.annotated:

@@ -2,7 +2,7 @@ import argparse
 import yaml
 import torch
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+# os.environ["CUDA_VISIBLE_DEVICES"]="7"
 
 from evaluation.okvqa_evaluate import OKEvaluater
 from evaluation.aokvqa_evaluate import AOKEvaluater

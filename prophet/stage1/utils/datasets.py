@@ -833,7 +833,7 @@ def create_dataset_by_split(split, is_train=True):
         task='vqav2', **opt_kwargs, 
     )
     if is_train:
-        batch_size = 16
+        batch_size = 64
     # elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
     #     batch_size = args.eval_batch_size
     # else:
