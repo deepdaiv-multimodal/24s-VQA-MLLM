@@ -645,23 +645,6 @@ def merge_batch_tensors_by_dict_key(batch):
             batch_tensors[tensor_key] = torch.tensor([d[tensor_key] for d in batch], dtype=torch.long)
     return batch_tensors
 
-# def merge_batch_tensors_by_dict_key(batch):
-#     batch_tensors = {}
-#     for tensor_key in batch[0]:
-#         if isinstance(batch[0][tensor_key], torch.Tensor):
-#             try:
-#                 batch_tensors[tensor_key] = torch.stack([d[tensor_key] for d in batch])
-#             except Exception as e:
-#                 raise ValueError(f"Error in stacking tensors for key '{tensor_key}': {e}")
-#         elif isinstance(batch[0][tensor_key], (int, float)):
-#             batch_tensors[tensor_key] = torch.tensor([d[tensor_key] for d in batch], dtype=torch.long)
-#         elif isinstance(batch[0][tensor_key], str):
-#             batch_tensors[tensor_key] = [d[tensor_key] for d in batch]  # 문자열 리스트로 유지
-#         else:
-#             raise TypeError(f"Unsupported data type for key '{tensor_key}': {type(batch[0][tensor_key])}")
-#     return batch_tensors
-
-
 
 def get_loss_scale_for_deepspeed(model):
     optimizer = model.optimizer

@@ -27,7 +27,12 @@ GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
 VERSION=${VERSION:-finetuning_okvqa} # version name, default 'finetuning_for_$TASK'
 
 # Set the environment variable for CUDA
-export CUDA_VISIBLE_DEVICES=$GPU
+# export CUDA_VISIBLE_DEVICES=$GPU
+# CUDA_VISIBLE_DEVICES=7
+
+export CUDA_VISIBLE_DEVICES=7
+
+echo "Using GPU: $GPU"
 
 # run python script
 python main.py \

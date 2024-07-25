@@ -65,7 +65,7 @@ class Args:
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 8
+        self.batch_size = 4
         self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1

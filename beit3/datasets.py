@@ -15,6 +15,8 @@ import utils
 from .glossary import normalize_word
 from .randaug import RandomAugment
 
+from torch.utils.data import ConcatDataset
+
 input_size=480
 
 class BaseDataset(torch.utils.data.Dataset):
@@ -112,9 +114,9 @@ class BaseDataset(torch.utils.data.Dataset):
 
 
 class OKVQADataset(BaseDataset):
-    def __init__(self, data_path, **kwargs):
+    def __init__(self, data_path, answer2label_path, **kwargs):
         super().__init__(data_path=data_path, **kwargs)
-        ans2label_file = os.path.join(data_path, "/root/datasets/okvqa/data/answer2label.txt")
+        ans2label_file = os.path.join(data_path, answer2label_path)
         ans2label = {}
         label2ans = []
         with open(ans2label_file, mode="r", encoding="utf-8") as reader:
@@ -138,16 +140,6 @@ class OKVQADataset(BaseDataset):
             return ("/root/datasets/okvqa/data/okvqa.train.jsonl", )
         elif split == "val":
             return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
-        # if split == "train":
-        #     return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
-        # elif split == "val":
-        #     return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
-        # elif split == "test":
-        #     return ("vqa.test.jsonl", )
-        # elif split == "test-dev":
-        #     return ("vqa.test-dev.jsonl", )            
-        # else:
-        #     raise RuntimeError("split %s is not found!" % split)
     
 
     def __getitem__(self, index: int):
@@ -174,7 +166,7 @@ class OKVQADataset(BaseDataset):
         else:
             return 1.0
 
-    @classmethod
+    @classmethod  
     def make_dataset_index(cls, data_path, tokenizer, annotation_data_path):
         print("Working")
         
@@ -182,29 +174,35 @@ class OKVQADataset(BaseDataset):
         print(f"data path: {data_path}")
         
         # Load questions
-        with open(os.path.join(annotation_data_path, "OpenEnded_mscoco_train2014_questions.json"), "r") as fp:
-            questions_train2014 = json.load(fp)["questions"]
-        with open(os.path.join(annotation_data_path, "OpenEnded_mscoco_val2014_questions.json"), "r") as fp:
-            questions_val2014 = json.load(fp)["questions"]
+        with open(os.path.join(annotation_data_path, "aokvqa_v1p0_train_encoded.json"), "r") as fp:
+            # questions_train2017 = json.load(fp)["question"]
+            annotations_train2017 = json.load(fp)
+        with open(os.path.join(annotation_data_path, "aokvqa_v1p0_val_encoded.json"), "r") as fp:
+            # questions_val2017 = json.load(fp)["question"]
+            annotations_val2017 = json.load(fp)
+        # with open(os.path.join(annotation_data_path, "aokvqa_v1p0_test.json"), "r") as fp:
+            # questions_test2017 = json.load(fp)["question"]
+            # annotations_test2017 = json.load(fp)
 
-        print(f"Loaded {len(questions_train2014)} training questions.")
-        print(f"Loaded {len(questions_val2014)} validation questions.")
+        # print(f"Loaded {len(questions_train2017)} training questions.")
+        # print(f"Loaded {len(questions_val2017)} validation questions.")
+        # print(f"Loaded {len(questions_test2017)} validation questions.")
 
         # Load annotations
-        with open(os.path.join(annotation_data_path, "mscoco_train2014_annotations.json"), "r") as fp:
-            annotations_train2014 = json.load(fp)["annotations"]
-        with open(os.path.join(annotation_data_path, "mscoco_val2014_annotations.json"), "r") as fp:
-            annotations_val2014 = json.load(fp)["annotations"]
+        # with open(os.path.join(annotation_data_path, "mscoco_train2014_annotations.json"), "r") as fp:
+        #     annotations_train2014 = json.load(fp)["annotations"]
+        # with open(os.path.join(annotation_data_path, "mscoco_val2014_annotations.json"), "r") as fp:
+        #     annotations_val2014 = json.load(fp)["annotations"]
 
-        print(f"Loaded {len(annotations_train2014)} training annotations.")
-        print(f"Loaded {len(annotations_val2014)} validation annotations.")
-
+        print(f"Loaded {len(annotations_train2017)} training annotations.")
+        print(f"Loaded {len(annotations_val2017)} validation annotations.")
+        # print(f"Loaded {len(annotations_test2017)} validation annotations.")
         annotations = dict()
 
         # Process questions
         for split, questions in zip(
             ["train", "val"],
-            [questions_train2014, questions_val2014],
+            [annotations_train2017, annotations_val2017],
         ):
             _annot = defaultdict(dict)
             for q in questions:
@@ -213,7 +211,7 @@ class OKVQADataset(BaseDataset):
                 token_ids = tokenizer.convert_tokens_to_ids(tokens)
 
                 # assert q["question_id"] not in _annot[q["image_id"]]
-                _annot[q["image_id"]][q["question_id"]] = {
+                _annot[q["image_id"]][q["encoded_question_id"]] = {
                     "question": question_text, 
                     "token_ids": token_ids, 
                 }
@@ -224,11 +222,13 @@ class OKVQADataset(BaseDataset):
 
         # Process annotations
         for split, annots in zip(
-            ["train", "val"], [annotations_train2014, annotations_val2014],
+            ["train", "val"],
+            [annotations_train2017, annotations_val2017],
         ):
             for q in annots:
-                for answer in q["answers"]:
-                    all_major_answers.append(answer["answer"])
+                for answer in q["direct_answers"]:
+                    # all_major_answers.append(answer["answer"])
+                    all_major_answers.append(answer)
 
         all_major_answers = [word.lower() for word in all_major_answers]
         counter = {k: v for k, v in Counter(all_major_answers).items() if v >= 9}
@@ -236,14 +236,16 @@ class OKVQADataset(BaseDataset):
         label2ans = list(counter.keys())
 
         for split, annots in zip(
-            ["train", "val"], [annotations_train2014, annotations_val2014],
+            ["train", "val"],
+            [annotations_train2017, annotations_val2017],
         ):
             _annot = annotations[split]
             for q in annots:
-                answers = q["answers"]
+                answers = q["direct_answers"]
                 answer_count = {}
                 for answer in answers:
-                    answer_ = answer["answer"].lower()
+                    # answer_ = answer["answer"].lower()
+                    answer_ = answer.lower()
                     answer_count[answer_] = answer_count.get(answer_, 0) + 1
 
                 labels = []
@@ -255,21 +257,21 @@ class OKVQADataset(BaseDataset):
                     score = cls.get_score(answer_count[answer])
                     scores.append(score)
 
-                # assert "labels" not in _annot[q["image_id"]][q["question_id"]]
-                # assert "question" in _annot[q["image_id"]][q["question_id"]]
-                _annot[q["image_id"]][q["question_id"]]["labels"] = labels
-                _annot[q["image_id"]][q["question_id"]]["scores"] = scores
+                assert "labels" not in _annot[q["image_id"]][q["encoded_question_id"]]
+                assert "question" in _annot[q["image_id"]][q["encoded_question_id"]]
+                _annot[q["image_id"]][q["encoded_question_id"]]["labels"] = labels
+                _annot[q["image_id"]][q["encoded_question_id"]]["scores"] = scores
 
-        # for split in ["train", "val"]:
-        #     filtered_annot = dict()
-        #     for ik, iv in annotations[split].items():
-        #         new_q = dict()
-        #         for qk, qv in iv.items():
-        #             if len(qv["labels"]) != 0:
-        #                 new_q[qk] = qv
-        #         if len(new_q) != 0:
-        #             filtered_annot[ik] = new_q
-        #     annotations[split] = filtered_annot
+        for split in ["train", "val"]:
+            filtered_annot = dict()
+            for ik, iv in annotations[split].items():
+                new_q = dict()
+                for qk, qv in iv.items():
+                    if len(qv["labels"]) != 0:
+                        new_q[qk] = qv
+                if len(new_q) != 0:
+                    filtered_annot[ik] = new_q
+            annotations[split] = filtered_annot
         # print(annotations['train'])
         # exit()
 
@@ -278,8 +280,8 @@ class OKVQADataset(BaseDataset):
         for split in ["train", "val"]:
             annot = annotations[split]
             split_name = {
-                "train": "train2014",
-                "val": "val2014",
+                "train": "train2017",
+                "val": "val2017",
             }[split]
             paths = list(glob.glob(f"{data_path}/{split_name}/*.jpg"))
             print(f"Found {len(paths)} image paths in {split_name}.")
@@ -316,7 +318,7 @@ class OKVQADataset(BaseDataset):
                     print(f"Missing path {i+1}: {path}, Image ID: {iid}")
             split2items[split] = items
 
-            _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, f"okvqa.{split}.jsonl"))
+            _write_data_into_jsonl(items=items, jsonl_file=os.path.join(data_path, f"aokvqa.{split}.jsonl"))
 
         val_image2items = defaultdict(list)
         for item in split2items["val"]:
@@ -334,8 +336,8 @@ class OKVQADataset(BaseDataset):
             else:
                 trainable_val += val_image2items[image_id]
         
-        _write_data_into_jsonl(items=trainable_val, jsonl_file=os.path.join(data_path, "okvqa.trainable_val.jsonl"))
-        _write_data_into_jsonl(items=rest_val, jsonl_file=os.path.join(data_path, "okvqa.rest_val.jsonl"))
+        _write_data_into_jsonl(items=trainable_val, jsonl_file=os.path.join(data_path, "aokvqa.trainable_val.jsonl"))
+        _write_data_into_jsonl(items=rest_val, jsonl_file=os.path.join(data_path, "aokvqa.rest_val.jsonl"))
 
         with open(os.path.join(data_path, "answer2label.txt"), mode="w", encoding="utf-8") as writer:
             for ans in ans2label:
@@ -353,9 +355,9 @@ class OKVQADataset(BaseDataset):
                     print(f"Missing ID {i+1}: {iid}")
 
 class AOKVQADataset(BaseDataset):
-    def __init__(self, data_path, **kwargs):
+    def __init__(self, data_path, answer2label_path, **kwargs):
         super().__init__(data_path=data_path, **kwargs)
-        ans2label_file = os.path.join(data_path, "/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/answer2label.txt")
+        ans2label_file = os.path.join(data_path, answer2label_path)
         ans2label = {}
         label2ans = []
         with open(ans2label_file, mode="r", encoding="utf-8") as reader:
@@ -379,17 +381,6 @@ class AOKVQADataset(BaseDataset):
             return ("/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.train.jsonl", )
         elif split == "val":
             return ("/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.trainable_val.jsonl", "/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/aokvqa.rest_val.jsonl")
-        # if split == "train":
-        #     return ("/root/datasets/okvqa/data/okvqa.train.jsonl", "/root/datasets/okvqa/data/okvqa.trainable_val.jsonl")
-        # elif split == "val":
-        #     return ("/root/datasets/okvqa/data/okvqa.rest_val.jsonl", )
-        # elif split == "test":
-        #     return ("vqa.test.jsonl", )
-        # elif split == "test-dev":
-        #     return ("vqa.test-dev.jsonl", )            
-        # else:
-        #     raise RuntimeError("split %s is not found!" % split)
-    
 
     def __getitem__(self, index: int):
         data = super().__getitem__(index)
@@ -400,6 +391,7 @@ class AOKVQADataset(BaseDataset):
         data["labels"] = torch.FloatTensor(labels)   #(16, 2910)
         #else:
         data["qid"] = self.items[index]["qid"]
+        # print('data:', data)
         return data
 
     @staticmethod
@@ -415,6 +407,10 @@ class AOKVQADataset(BaseDataset):
         else:
             return 1.0
 
+task2dataset = {
+    "okvqa": OKVQADataset, 
+    "aokvqa": AOKVQADataset, 
+}
 
 def _write_data_into_jsonl(items, jsonl_file):
     with open(jsonl_file, mode="w", encoding="utf-8") as writer:
@@ -490,36 +486,44 @@ def create_dataset_by_split(split, is_train=True):
     transform = build_transform(is_train=is_train)
     # dataset_class = task2dataset["vqav2"]
     # dataset_class = OKVQADataset()
+    # dataset_class = task2dataset[args.task]
     tokenizer = get_sentencepiece_model_for_beit3()
 
     opt_kwargs = {}
     # if args.task in ["coco_captioning", "nocaps"]:
     #     opt_kwargs["mask_prob"] = args.captioning_mask_prob
 
-    # okvqa_dataset = OKVQADataset(
-    #     data_path='/root/datasets/okvqa/data', split=split, 
-    #     transform=transform, tokenizer=tokenizer, 
-    #     num_max_bpe_tokens=64, 
-    #     task='okvqa', **opt_kwargs, 
-    # )
+    okvqa_dataset = OKVQADataset(
+        data_path='/root/datasets/okvqa/data', split=split, 
+        # answer2label_path = "/root/datasets/okvqa/data/answer2label.txt",
+        answer2label_path = '/root/workspace/24s-VQA-MLLM/dataset/answer2label_concat.txt',
+        transform=transform, tokenizer=tokenizer, 
+        num_max_bpe_tokens=64, 
+        task='okvqa', **opt_kwargs, 
+    )
 
     aokvqa_dataset = AOKVQADataset(
         data_path='/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco', split=split, 
+        # answer2label_path = "/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco/answer2label.txt",
+        answer2label_path = '/root/workspace/24s-VQA-MLLM/dataset/answer2label_concat.txt',
         transform=transform, tokenizer=tokenizer, 
         num_max_bpe_tokens=64, 
         task='aokvqa', **opt_kwargs, 
     )
 
+    combined_dataset = ConcatDataset([okvqa_dataset, aokvqa_dataset])
+    print(f'Length of okvqa dataset: {len(okvqa_dataset)}, aokvqa dataset: {len(aokvqa_dataset)}, combined dataset: {len(combined_dataset)}')
+
     if is_train:
-        batch_size = 8
+        batch_size = 4
     elif hasattr(args, "eval_batch_size") and args.eval_batch_size is not None:
         batch_size = args.eval_batch_size
     else:
         batch_size = int(args.batch_size * 1.5)
 
     return create_dataloader(
-        aokvqa_dataset, is_train=is_train, batch_size=batch_size, 
-        num_workers=4, pin_mem=True, dist_eval=False, 
+        combined_dataset, is_train=is_train, batch_size=batch_size, 
+        num_workers=16, pin_mem=True, dist_eval=False, 
     )
 
 
@@ -535,7 +539,7 @@ def create_downstream_dataset(is_eval=False):
 #   tokenizer = XLMRobertaTokenizer("/root/datasets/okvqa/data/beit3.spm")
 
 #   OKVQADataset.make_dataset_index(
-#       data_path="/root/datasets/okvqa/data",
+#       data_path="/root/workspace/24s-VQA-MLLM/dataset/a-okvqa/coco",
 #       tokenizer=tokenizer,
-#       annotation_data_path="/root/datasets/okvqa/data/okvqa",
+#       annotation_data_path="/root/workspace/24s-VQA-MLLM/dataset/a-okvqa",
 #   )
