@@ -32,7 +32,7 @@ datasets:
               # - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/okvqa/OpenEnded_mscoco_val2014_questions.json
               # - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/okvqa/mscoco_val2014_annotations.json
           storage:
-              - /root/workspace/24s-VQA-MLLM/BEiT3/stage2-t5/VQA-MLLM-stage2/daiv/data/okvqa/okvqa_val.json # 보라
+              - /root/workspace/24s-VQA-MLLM/BEiT3/stage2-t5/VQA-MLLM-stage2/daiv/data/okvqa/okvqa_val.json
               - /root/workspace/24s-VQA-MLLM/BEiT3/stage2-t5/VQA-MLLM-stage2/daiv/data/okvqa/okvqa_train.json #heuristic prompt
               - /root/datasets/okvqa/data/assets/captions_okvqa.json #question caption
               - /root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-base-okvqa/candidates.json

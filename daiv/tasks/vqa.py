@@ -49,8 +49,11 @@ class VQATask(BaseTask):
 
         self.answer_list = None
 
-        self.ques_files = ques_files
-        self.anno_files = anno_files
+        # 최종 때만... 그냥 내가 수정함... 나중에 수정해라
+        # self.ques_files = ques_files
+        # self.anno_files = anno_files
+        self.ques_files = {'test': '/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_val2014_questions.json'}
+        self.anno_files = {'test': '/root/datasets/okvqa/data/okvqa/mscoco_val2014_annotations.json'}
 
         # generalize to non coco data
         self.sample_id_key = sample_id_key
@@ -150,7 +153,7 @@ class VQATask(BaseTask):
             if ques_id != int and is_convertible_to_int(ques_id):
                 ques_id = int(ques_id)
             pred_qa_pairs.append({"question_id": ques_id, "answer": answer})
-            print(f'question: {que} / answer : {answer}')
+            # print(f'question: {que} / answer : {answer}')
 
         return pred_qa_pairs
 
