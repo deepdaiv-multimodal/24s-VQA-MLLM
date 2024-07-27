@@ -25,7 +25,7 @@ class BaseDataset(Dataset):
         for ann_path in ann_paths:
             with open(ann_path, "r") as f:
                 data = json.load(f)
-                self.annotation.extend(data)#['annotations'])  # 'annotations' 키의 값을 가져옴
+                self.annotation.extend(data['annotations'])#)  # 'annotations' 키의 값을 가져옴
                 
         #print(self.annotation)
         ''' 

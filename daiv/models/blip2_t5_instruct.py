@@ -132,7 +132,7 @@ class Blip2T5Instruct(Blip2Base):
 
         txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan) # torch.Size([4, 257, 512])
         img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan) # torch.Size([4, 512])
-        txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
+        # txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
 
         inputs_t5 = self.t5_proj(img_mcan_output) # torch.Size([4, 2048])
         inputs_t5 = inputs_t5.unsqueeze(1) # torch.Size([4, 1, 2048])
@@ -197,12 +197,13 @@ class Blip2T5Instruct(Blip2Base):
         num_captions=1,
         temperature=1,
     ):
+
         image = samples["image"]
         with self.maybe_autocast():
-            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
-            image_features = image_features[:, 1:]  # Remove CLS token
-            image_embeds_llm = self.vision_proj(image_features)  # Project to LLM dimension
-            image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+            # image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
+            # image_features = image_features[:, 1:]  # Remove CLS token
+            # image_embeds_llm = self.vision_proj(image_features)  # Project to LLM dimension
+            # image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
             # Generate image_embeds_mcan as in stage1
             image_embeds_mcan = self.ln_vision(self.visual_encoder(image))
@@ -210,7 +211,6 @@ class Blip2T5Instruct(Blip2Base):
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
 
         text_input_mcan = samples["text_input"]
-        text_input_llm = samples["text_input"]
 
         # Process text for MCAN
         text_tokens_mcan = self.tokenizer(
@@ -223,28 +223,31 @@ class Blip2T5Instruct(Blip2Base):
         txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
 
         img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan)
-        txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
+        # txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
         
-        mcan_output = img_mcan_output + txt_mcan_output
-        mcan_output = self.MCAN.proj_norm(mcan_output)
-        mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
+        # mcan_output = img_mcan_output + txt_mcan_output
+        # mcan_output = self.MCAN.proj_norm(mcan_output)
+        # mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
 
-        combined_features_mcan = mcan_output.unsqueeze(1)
+        # combined_features_mcan = mcan_output.unsqueeze(1)
 
         # combined_features_mcan = torch.cat([img_mcan_output, txt_mcan_output], dim=1)
 
-        text_embeds_llm_mcan = self.text_proj(combined_features_mcan)
-        atts_llm_mcan = torch.ones(text_embeds_llm_mcan.size()[:-1], dtype=torch.long).to(image.device)
+        # text_embeds_llm_mcan = self.text_proj(combined_features_mcan)
+        # atts_llm_mcan = torch.ones(text_embeds_llm_mcan.size()[:-1], dtype=torch.long).to(image.device)
+        inputs_t5 = self.t5_proj(img_mcan_output) # torch.Size([4, 2048])
+        inputs_t5 = inputs_t5.unsqueeze(1) # torch.Size([4, 1, 2048])
+        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device) # torch.Size([4, 1])
 
         # Process text for LLM
-        text_tokens_llm = self.tokenizer(
-            text_input_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        ).input_ids.to(image.device)
-        text_embeds_llm = self.text_embed_proj(self.MCAN.embedding(text_tokens_llm))
-        atts_llm_text = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
+        # text_tokens_llm = self.tokenizer(
+        #     text_input_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+        # ).input_ids.to(image.device)
+        # text_embeds_llm = self.text_embed_proj(self.MCAN.embedding(text_tokens_llm))
+        # atts_llm_text = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
-        inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan, text_embeds_llm], dim=1)
-        atts_llm = torch.cat([image_atts_llm, atts_llm_mcan, atts_llm_text], dim=1)
+        # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan, text_embeds_llm], dim=1)
+        # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan, atts_llm_text], dim=1)
         # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan], dim=1)
         # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan], dim=1)
 
@@ -260,34 +263,36 @@ class Blip2T5Instruct(Blip2Base):
         else:
             assert len(prompt) == image.size(0), "The number of prompts must be equal to the batch size."
 
-        t5_tokens = self.t5_tokenizer(
+        input_tokens = self.t5_tokenizer(
             prompt,
             return_tensors="pt",
             padding="longest",
             truncation=True,
             max_length=self.max_txt_len,
         ).to(image.device)
-        attention_mask = torch.cat([atts_llm, t5_tokens.attention_mask], dim=1)
 
-        inputs_embeds = self.t5_model.encoder.embed_tokens(t5_tokens.input_ids)
-        inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
+        encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1) 
 
-        outputs = self.t5_model.generate(
-            inputs_embeds=inputs_embeds,
-            attention_mask=attention_mask,
-            do_sample=use_nucleus_sampling,
-            top_p=top_p,
-            temperature=temperature,
-            num_beams=num_beams,
-            max_length=max_length,
-            min_length=min_length,
-            repetition_penalty=repetition_penalty,
-            length_penalty=length_penalty,
-            num_return_sequences=num_captions,
-        )
-        output_text = self.t5_tokenizer.batch_decode(
-            outputs, skip_special_tokens=True
-        )
+        with self.maybe_autocast():
+            inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
+            inputs_embeds = torch.cat([inputs_t5, inputs_embeds], dim=1)
+
+            outputs = self.t5_model.generate(
+                inputs_embeds=inputs_embeds,
+                attention_mask=encoder_atts,
+                do_sample=use_nucleus_sampling,
+                top_p=top_p,
+                temperature=temperature,
+                num_beams=num_beams,
+                max_length=max_length,
+                min_length=min_length,
+                repetition_penalty=repetition_penalty,
+                length_penalty=length_penalty,
+                num_return_sequences=num_captions,
+            )
+            output_text = self.t5_tokenizer.batch_decode(
+                outputs, skip_special_tokens=True
+            )
 
         return output_text
 
@@ -304,8 +309,6 @@ class Blip2T5Instruct(Blip2Base):
         length_penalty=-1,
         **kwargs
     ):
-        if isinstance(samples["text_input"], str):
-            samples["text_input"] = [samples["text_input"]]
         if isinstance(samples["text_input"], str):
             samples["text_input"] = [samples["text_input"]]
 
@@ -328,6 +331,7 @@ class Blip2T5Instruct(Blip2Base):
             output_text = self._lemmatize(output_text)
 
         return output_text
+        
 
     def _lemmatize(self, answers):
         def apply(answer):

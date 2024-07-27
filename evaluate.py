@@ -1,93 +1,92 @@
+"""
+ Copyright (c) 2022, salesforce.com, inc.
+ All rights reserved.
+ SPDX-License-Identifier: BSD-3-Clause
+ For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+"""
+
 import argparse
+import random
+
 import numpy as np
-import argparse
-from PIL import Image
-from daiv.models import load_model_and_preprocess
+import torch
+import torch.backends.cudnn as cudnn
 
-def disable_torch_init():
-        """
-        Disable the redundant torch default initialization to accelerate model creation.
-        """
-        import torch
-        setattr(torch.nn.Linear, "reset_parameters", lambda self: None)
-        setattr(torch.nn.LayerNorm, "reset_parameters", lambda self: None)
-        
+import daiv.tasks as tasks
+from daiv.common.config import Config
+from daiv.common.dist_utils import get_rank, init_distributed_mode
+from daiv.common.logger import setup_logger
+from daiv.common.optims import (
+    LinearWarmupCosineLRScheduler,
+    LinearWarmupStepLRScheduler,
+)
+from daiv.common.utils import now
+
+# imports modules for registration
+from daiv.datasets.builders import *
+from daiv.models import *
+from daiv.processors import *
+from daiv.runners.runner_base import RunnerBase
+from daiv.tasks import *
+
+
 def parse_args():
-    """
-    Parse arguments from command line.
-    """
-    parser = argparse.ArgumentParser(description="Arguments for Evaluation")
-    parser.add_argument(
-        "--answer_mc",
-        action="store_true",
-        default=False,
-        help="Whether to evaluate multiple choice question with candidates."
-    )
-    parser.add_argument(    
-        "--answer_qs",
-        action="store_true",
-        default=False,
-        help="Whether to evaluate only one question image."
-    )
+    parser = argparse.ArgumentParser(description="Training")
 
-    parser.add_argument("--model_name", type=str, default="bliva_vicuna")
-    parser.add_argument("--device", type=str, default="cuda:0", help="Specify which gpu device to use.")
-    parser.add_argument("--img_path", type=str, required=True, help="the path to the image")
-    parser.add_argument("--question", type=str, required=True,  help="the question to ask")
-    parser.add_argument("--candidates", type=str,  help="list of choices for mulitple choice question")
+    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
+    parser.add_argument(
+        "--options",
+        nargs="+",
+        help="override some settings in the used config, the key-value pair "
+        "in xxx=yyy format will be merged into config file (deprecate), "
+        "change to --cfg-options instead.",
+    )
 
     args = parser.parse_args()
+    # if 'LOCAL_RANK' not in os.environ:
+    #     os.environ['LOCAL_RANK'] = str(args.local_rank)
+
     return args
 
-def eval_one(image, question, model):
-    """
-    Evaluate one question
-    """
-    outputs = model.generate({"image": image, "prompt": question})
-    print("=====================================")
-    print("Question:", question[0])
-    print("-------------------------------------")
-    print("Outputs: ", outputs[0])
+
+def setup_seeds(config):
+    seed = config.run_cfg.seed + get_rank()
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    cudnn.benchmark = False
+    cudnn.deterministic = True
 
 
-def eval_candidates(image, question, candidates, model):
-    """
-    Evaluate with candidates
-    """
-    outputs = model.predict_class({"image": image, "prompt": question}, candidates)
-    print("=====================================")
-    print("Question:", question[0])
-    print("-------------------------------------")
-    print("Candidates:", candidates)
-    print("-------------------------------------")
-    print("Outputs: ", candidates[outputs[0][0]])
+def main():
+    # allow auto-dl completes on main process without timeout when using NCCL backend.
+    # os.environ["NCCL_BLOCKING_WAIT"] = "1"
 
+    # set before init_distributed_mode() to ensure the same job_id shared across all ranks.
+    job_id = now()
 
+    cfg = Config(parse_args())
 
-def main(args):
-    np.random.seed(0)
-         
-    disable_torch_init()
-    
-    if args.model_name == "bliva_vicuna":
-        model, vis_processors, _ = load_model_and_preprocess(name=args.model_name, model_type="vicuna7b", is_eval=True, device=args.device)
-    if args.model_name == "bliva_flant5":
-        model, vis_processors, _ = load_model_and_preprocess(name=args.model_name, model_type="flant5xxl", is_eval=True, device=args.device)
-    vis_processor = vis_processors["eval"]
-    
-    image = Image.open(args.img_path).convert('RGB')
+    init_distributed_mode(cfg.run_cfg)
 
-    question = [args.question]
-    
-    image = vis_processor(image).unsqueeze(0).to(args.device)
-   
-    if args.answer_qs:
-        eval_one(image, question, model)
-    elif args.answer_mc:
-        candidates = [candidate.strip() for candidate in args.candidates.split(",")]
-        eval_candidates(image, question, candidates, model)
+    setup_seeds(cfg)
+
+    # set after init_distributed_mode() to only log on master.
+    setup_logger()
+
+    cfg.pretty_print()
+
+    task = tasks.setup_task(cfg)
+    datasets = task.build_datasets(cfg)
+    model = task.build_model(cfg)
+
+    runner = RunnerBase(
+        cfg=cfg, job_id=job_id, task=task, model=model, datasets=datasets
+    )
+    runner.evaluate(skip_reload=True)
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(args)
+    main()
