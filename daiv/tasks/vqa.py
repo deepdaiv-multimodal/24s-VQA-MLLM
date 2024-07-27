@@ -153,7 +153,7 @@ class VQATask(BaseTask):
             if ques_id != int and is_convertible_to_int(ques_id):
                 ques_id = int(ques_id)
             pred_qa_pairs.append({"question_id": ques_id, "answer": answer})
-            # print(f'question: {que} / answer : {answer}')
+            print(f'question: {que} / answer : {answer}')
 
         return pred_qa_pairs
 

@@ -228,7 +228,8 @@ class HEURISTICEvalCDataset(BaseDataset_H):
 
             # heuristic prompt 생성
             similar_examples = self.qid_to_ex_id[qid]
-            prompt_text = self.get_context(similar_examples)
+            prompt_text = self.get_context(similar_examples[:20])
+            print()
 
             qid_to_data[qid] = {
                 'question_id': qid,

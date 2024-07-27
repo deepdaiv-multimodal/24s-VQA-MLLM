@@ -4,8 +4,8 @@
  # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 
 model:
-  arch: blip2_t5_instruct
-  model_type: flant5xl
+  arch: blip2_vicuna_t5
+  model_type: flant5
   load_pretrained: True
   # intialize stage 2 pretraining from stage 1 pretrained model
   pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/Training/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240725044/checkpoint_9.pth"
