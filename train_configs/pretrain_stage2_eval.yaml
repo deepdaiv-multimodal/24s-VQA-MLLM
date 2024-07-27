@@ -9,10 +9,7 @@ model:
   # model_type: okvqa
   load_pretrained: True
   # intialize stage 2 pretraining from stage 1 pretrained model
-  # MCAN
   pretrained: '/root/workspace/24s-VQA-MLLM/EunJuPark/Training/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240725044/checkpoint_9.pth'
-  # MCAN + DAT
-  # pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240718160/checkpoint_9.pth" #"/home/intern24/daiv/BLIVA/daiv/output/BLIP2/Pretrain_stage1/mcan_stage1_checkpoint_9.pth"
   freeze_vit: True
   add_dat: False
 

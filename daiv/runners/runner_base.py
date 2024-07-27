@@ -424,17 +424,6 @@ class RunnerBase:
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
         logging.info("Training time {}".format(total_time_str))
 
-    # def evaluate(self, cur_epoch="best", skip_reload=False):
-    #     test_logs = dict()
-
-    #     if len(self.test_splits) > 0:
-    #         for split_name in self.test_splits:
-    #             test_logs[split_name] = self.eval_epoch(
-    #                 split_name=split_name, cur_epoch=cur_epoch, skip_reload=skip_reload
-    #             )
-
-    #         return test_logs
-
     def evaluate(self, cur_epoch="best", skip_reload=False):
         test_logs = dict()
 
@@ -477,16 +466,7 @@ class RunnerBase:
         data_loader = self.dataloaders.get(split_name, None)
         assert data_loader, "data_loader for split {} is None.".format(split_name)
 
-        # TODO In validation, you need to compute loss as well as metrics
-        # TODO consider moving to model.before_evaluation()
         model = self.eval_load_checkpoint(self.resume_ckpt_path)
-        # checkpoint = torch.load(url_or_filename, map_location=self.device)
-        # state_dict = checkpoint["model"]
-        # model = self.unwrap_dist_model(self.model)
-        # model.load_state_dict(state_dict)
-        # model = self.unwrap_dist_model(self.model)
-        # if not skip_reload and cur_epoch == "best":
-        #     model = self._reload_best_model(model)
         model.eval()
 
         self.task.before_evaluation(

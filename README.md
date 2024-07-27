@@ -24,6 +24,7 @@ if packaging error, then
 pip install setuptools==69.5.1
 ```
 
+# Training
 1. pretraining of Dm-Former
 ```Shell
 python train.py --cfg-path train_configs/pretrain_stage1.yaml
@@ -41,6 +42,15 @@ python train.py --cfg-path train_configs/pretrain_stage2.yaml
 3. Instruction Finetuning 
 
 ```Shell
-python 
+python train.py --cfg-path train_configs/finetune_stage2.yaml
 ```
 
+# Evaluation
+Evaluation of Stage2 
+```
+python evaluate.py --cfg-path train_configs/pretrain_stage2_eval.yaml
+```
+
+```
+python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
+```

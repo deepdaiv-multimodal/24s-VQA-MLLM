@@ -199,6 +199,9 @@ class Blip2T5Instruct(Blip2Base):
     ):
 
         image = samples["image"]
+        # print('text_input', samples["text_input"])
+        # print('text_output', samples["text_output"])
+
         with self.maybe_autocast():
             # image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # Get image features from the second to last layer
             # image_features = image_features[:, 1:]  # Remove CLS token
@@ -223,33 +226,10 @@ class Blip2T5Instruct(Blip2Base):
         txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
 
         img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan)
-        # txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
-        
-        # mcan_output = img_mcan_output + txt_mcan_output
-        # mcan_output = self.MCAN.proj_norm(mcan_output)
-        # mcan_output = torch.sigmoid(self.MCAN.proj(mcan_output))
 
-        # combined_features_mcan = mcan_output.unsqueeze(1)
-
-        # combined_features_mcan = torch.cat([img_mcan_output, txt_mcan_output], dim=1)
-
-        # text_embeds_llm_mcan = self.text_proj(combined_features_mcan)
-        # atts_llm_mcan = torch.ones(text_embeds_llm_mcan.size()[:-1], dtype=torch.long).to(image.device)
         inputs_t5 = self.t5_proj(img_mcan_output) # torch.Size([4, 2048])
         inputs_t5 = inputs_t5.unsqueeze(1) # torch.Size([4, 1, 2048])
         atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device) # torch.Size([4, 1])
-
-        # Process text for LLM
-        # text_tokens_llm = self.tokenizer(
-        #     text_input_llm, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
-        # ).input_ids.to(image.device)
-        # text_embeds_llm = self.text_embed_proj(self.MCAN.embedding(text_tokens_llm))
-        # atts_llm_text = torch.ones(text_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
-
-        # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan, text_embeds_llm], dim=1)
-        # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan, atts_llm_text], dim=1)
-        # inputs_llm = torch.cat([image_embeds_llm, text_embeds_llm_mcan], dim=1)
-        # atts_llm = torch.cat([image_atts_llm, atts_llm_mcan], dim=1)
 
         if "prompt" in samples.keys():
             prompt = samples["prompt"]
