@@ -271,11 +271,15 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         # text_output
         text_output = data['most_answer']
 
+        # question_id
+        question_id = data['question_id']
+
         return {
             "image": image,
             "text_input": text_input,
             "text_output": text_output,
             # 'weights':answer_weight
+            "question_id": question_id
         }
     
     def sample_make(self, ques, capt, cands, ans=None):
