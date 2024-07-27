@@ -44,8 +44,8 @@ class BaseDatasetBuilder:
         # download, split, etc...
         # only called on 1 GPU/TPU in distributed
 
-        if is_main_process():
-            self._download_data()
+        # if is_main_process():
+        #     self._download_data()
 
         if is_dist_avail_and_initialized():
             dist.barrier()
@@ -53,7 +53,6 @@ class BaseDatasetBuilder:
         # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
         logging.info("Building datasets...")
         datasets = self.build()  # dataset['train'/'val'/'test']
-
         return datasets
 
     def build_processors(self):
@@ -219,6 +218,7 @@ class BaseDatasetBuilder:
 
             # create datasets
             dataset_cls = self.train_dataset_cls if is_train else self.eval_dataset_cls
+
             datasets[split] = dataset_cls(
                 vis_processor=vis_processor,
                 text_processor=text_processor,

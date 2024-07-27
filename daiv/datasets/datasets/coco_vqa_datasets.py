@@ -30,8 +30,6 @@ class __DisplMixin:
             }
         )
 
-
-
 class COCOVQADataset(VQADataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
         super().__init__(vis_processor, text_processor, vis_root, ann_paths)
@@ -84,7 +82,94 @@ class COCOVQADataset(VQADataset):
             'weights':answer_weight
         }
 
+class HEURISTICDataset(VQADataset):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_path=[]):
+        super().__init__(vis_processor, text_processor, vis_root, ann_paths)
 
+    def __len__(self):
+        return len(self.annotation)
+
+    def __getitem__(self, index):
+        ann = self.annotation[index]
+
+        image_filename = f"train2014/COCO_train2014_{ann['image_id']:012d}.jpg"
+        image_path = os.path.join(self.vis_root, image_filename)
+
+        image = Image.open(image_path).convert("RGB")
+        image = self.vis_processor(image)
+        question = self.text_processor(ann["question"])
+        choice = np.random.choice(len(self.prompts))
+
+        text_input = self.prompts[choice].format(question)
+        answer_weight = {}
+        for answer in ann["answers"]:
+            if answer["answer"] in answer_weight.keys():
+                answer_weight[answer["answer"]] += 1 / len(ann["answers"])
+            else:
+                answer_weight[answer["answer"]] = 1 / len(ann["answers"])
+
+        best_answer = max(answer_weight, key=answer_weight.get)
+
+        return {
+            "image": image,
+            "text_input": text_input,
+            "text_output": best_answer,
+            'weights':answer_weight
+        }
+
+class HEURISTICEvalCDataset(VQAEvalDataset, __DisplMixin):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): Directory to store the annotation file
+        """
+        self.vis_root = vis_root
+
+        with open(ann_paths[0], "r") as f:
+            data = json.load(f)
+            self.annotation = data['annotations']
+
+        answer_list_path = ann_paths[1]
+        if os.path.exists(answer_list_path):
+            self.answer_list = json.load(open(answer_list_path))
+        else:
+            self.answer_list = None
+
+        try:
+            self.coco_fmt_qust_file = ann_paths[2]
+            self.coco_fmt_anno_file = ann_paths[3]
+        except IndexError:
+            self.coco_fmt_qust_file = None
+            self.coco_fmt_anno_file = None
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids()
+
+    def __len__(self):
+        return len(self.annotation)
+
+    def __getitem__(self, index):
+        ann = self.annotation[index]
+
+        image_filename = f"val2014/COCO_val2014_{ann['image_id']:012d}.jpg"
+        image_path = os.path.join(self.vis_root, image_filename)
+        # if not os.path.exists(image_path):
+        # #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
+        # #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
+        #     return self.__getitem__((index + 1) % len(self))
+        image = Image.open(image_path).convert("RGB")
+
+        image = self.vis_processor(image)
+        question = self.text_processor(ann["question"])
+
+        return {
+            "image": image,
+            "text_input": question,
+            "question_id": ann["question_id"],
+            "instance_id": ann["instance_id"],
+        }
 
 class VQGCOCOVQADataset(VQADataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):

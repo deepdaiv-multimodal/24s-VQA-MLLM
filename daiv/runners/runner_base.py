@@ -479,7 +479,7 @@ class RunnerBase:
 
         # TODO In validation, you need to compute loss as well as metrics
         # TODO consider moving to model.before_evaluation()
-        model = self._load_checkpoint(self.resume_ckpt_path)
+        model = self.eval_load_checkpoint(self.resume_ckpt_path)
         # checkpoint = torch.load(url_or_filename, map_location=self.device)
         # state_dict = checkpoint["model"]
         # model = self.unwrap_dist_model(self.model)
@@ -643,6 +643,30 @@ class RunnerBase:
         return model
 
     def _load_checkpoint(self, url_or_filename):
+        """
+        Resume from a checkpoint.
+        """
+        if is_url(url_or_filename):
+            cached_file = download_cached_file(
+                url_or_filename, check_hash=False, progress=True
+            )
+            checkpoint = torch.load(cached_file, map_location=self.device)
+        elif os.path.isfile(url_or_filename):
+            checkpoint = torch.load(url_or_filename, map_location=self.device)
+        else:
+            raise RuntimeError("checkpoint url or path is invalid")
+
+        state_dict = checkpoint["model"]
+        self.unwrap_dist_model(self.model).load_state_dict(state_dict)
+
+        self.optimizer.load_state_dict(checkpoint["optimizer"])
+        if self.scaler and "scaler" in checkpoint:
+            self.scaler.load_state_dict(checkpoint["scaler"])
+
+        # self.start_iters = checkpoint["iters"] + 1
+        logging.info("Resume checkpoint from {}".format(url_or_filename))
+
+    def eval_load_checkpoint(self, url_or_filename):
         """
         Resume from a checkpoint.
         """

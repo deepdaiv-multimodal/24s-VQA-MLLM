@@ -25,7 +25,7 @@ class BaseDataset(Dataset):
         for ann_path in ann_paths:
             with open(ann_path, "r") as f:
                 data = json.load(f)
-                self.annotation.extend(data['annotations'])#)  # 'annotations' 키의 값을 가져옴
+                self.annotation.extend(data)#['annotations'])  # 'annotations' 키의 값을 가져옴
                 
         #print(self.annotation)
         ''' 
@@ -56,7 +56,47 @@ class BaseDataset(Dataset):
         for idx, ann in enumerate(self.annotation):
             ann[key] = str(idx)
 
+class BaseDataset_H(Dataset):
+    def __init__(self, vis_processor=None, text_processor=None, vis_root=None, ann_paths=[]):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): Directory to store the annotation file
+        """
+        self.vis_root = vis_root
+        self.annotation = []
 
+        with open(ann_paths[0], "r") as f:
+            data = json.load(f)
+            self.annotation = data['annotations']
+                
+        #print(self.annotation)
+        ''' 
+        vg
+        {image: , caption : , image_id : }
+        coco
+        {image : , caption ; , image_id :}
+        
+         '''
+        #print(ann_path)
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+        #print(self.vis_processor)
+
+        # self._add_instance_ids()
+
+    def __len__(self):
+        return len(self.annotation)
+
+    def collater(self, samples):
+        return default_collate(samples)
+
+    def set_processors(self, vis_processor, text_processor):
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+    # def _add_instance_ids(self, key="instance_id"):
+    #     for idx, ann in enumerate(self.annotation):
+    #         ann[key] = str(idx)
 
 
 class BasePromptDataset(Dataset):
