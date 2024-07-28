@@ -24,6 +24,7 @@ from daiv.models.dmformer.mcan.net_utils import LayerNorm  # Importing LayerNorm
 
 from daiv.common.registry import registry
 from daiv.models.blip2 import Blip2Base, disabled_train
+from daiv.models.dmformer.dat.deformable_attention_1d import DeformableAttention1D
 
 @registry.register_model("blip2_vicuna_instruct")
 class Blip2VicunaInstruct(Blip2Base):
@@ -144,6 +145,15 @@ class Blip2VicunaInstruct(Blip2Base):
         self._lemmatizer = None
 
         self.qformer_text_input = qformer_text_input
+                
+        ##DAT ATTN
+        self.dat = DeformableAttention1D(
+                            dim = 257,
+                            downsample_factor = 4,
+                            offset_scale = 2,
+                            offset_kernel_size = 6,
+                            offset_groups = 1
+                        )
 
     def concat_text_input_output(self, input_ids, input_atts, output_ids, output_atts):
         input_part_targets_len = []
@@ -169,6 +179,7 @@ class Blip2VicunaInstruct(Blip2Base):
         llm_tokens['attention_mask'] = torch.stack(llm_tokens['attention_mask'])
         return llm_tokens, input_part_targets_len
 
+
     def forward(self, samples):
         # print('-----------------')
         # print(samples["text_input"])
@@ -193,6 +204,9 @@ class Blip2VicunaInstruct(Blip2Base):
         text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
         text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
         text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
+
+        ##dat
+        image_embeds_mcan = self.dat(image_embeds_mcan)
 
         txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
         
@@ -280,6 +294,7 @@ class Blip2VicunaInstruct(Blip2Base):
             prompt = samples["prompt"]
         else:
             prompt = self.prompt
+        # print('prompt: ', prompt)
 
         image = samples["image"]
 
@@ -291,80 +306,38 @@ class Blip2VicunaInstruct(Blip2Base):
             assert len(prompt) == bs, "The number of prompts must be equal to the batch size."
 
         # For TextCaps
-        if "ocr_tokens" in samples.keys() and "{}" in prompt[0]:
-            prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
+        # if "ocr_tokens" in samples.keys() and "{}" in prompt[0]:
+        #     prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
 
         query_tokens = self.query_tokens.expand(bs, -1, -1)
-        if self.qformer_text_input:
-            # remove ocr tokens in q_former (for eval textvqa)
-            # qformer_prompt = prompt
-            # qformer_prompt = ['Question: ' + qp.split(' Question: ')[1] for qp in qformer_prompt]
 
-            text_Qformer = self.tokenizer(
-                prompt,
-                padding='longest',
-                truncation=True,
-                max_length=self.max_txt_len,
-                return_tensors="pt",
-            ).to(image.device)
-            query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
-            Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask], dim=1)
+        with self.maybe_autocast():
+            image_embeds = self.ln_vision(self.visual_encoder(image))
+        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
-        # For video data
-        if image.dim() == 5:
-            inputs_llm, atts_llm = [], []
-            for j in range(image.size(2)):
-                this_frame = image[:,:,j,:,:]
-                with self.maybe_autocast():
-                    frame_embeds = self.ln_vision(self.visual_encoder(this_frame))
-                frame_atts = torch.ones(frame_embeds.size()[:-1], dtype=torch.long).to(image.device)
+        # MCAN process
+        image_embeds_mcan = self.MCAN.img_feat_linear(image_embeds)  
+        image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
 
-                if self.qformer_text_input:
-                    frame_query_output = self.Qformer.bert(
-                        text_Qformer.input_ids,
-                        attention_mask=Qformer_atts,
-                        query_embeds=query_tokens,
-                        encoder_hidden_states=frame_embeds,
-                        encoder_attention_mask=frame_atts,
-                        return_dict=True,
-                    )
-                else:
-                    frame_query_output = self.Qformer.bert(
-                        query_embeds=query_tokens,
-                        encoder_hidden_states=frame_embeds,
-                        encoder_attention_mask=frame_atts,
-                        return_dict=True,
-                    )
-                frame_inputs_llm = self.llm_proj(frame_query_output.last_hidden_state[:,:query_tokens.size(1),:])
-                frame_atts_llm = torch.ones(frame_inputs_llm.size()[:-1], dtype=torch.long).to(image.device)
-                inputs_llm.append(frame_inputs_llm)
-                atts_llm.append(frame_atts_llm)
-            inputs_llm = torch.cat(inputs_llm, dim=1)
-            atts_llm = torch.cat(atts_llm, dim=1)
-        else:
-            with self.maybe_autocast():
-                image_embeds = self.ln_vision(self.visual_encoder(image))
-            image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
+        text_for_mcan = samples["text_input"]
+        text_tokens_mcan = self.tokenizer(
+            text_for_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
+        ).input_ids.to(image.device)
+        text_embeds_mcan = self.MCAN.embedding(text_tokens_mcan)
+        text_embeds_mcan, _ = self.MCAN.lstm(text_embeds_mcan)
+        text_atts_mcan = self.MCAN.make_mask(text_tokens_mcan.unsqueeze(2))
+        
+        # DAT process
+        image_embeds_mcan = self.dat(image_embeds_mcan)
 
-            if self.qformer_text_input:
-                query_output = self.Qformer.bert(
-                    text_Qformer.input_ids,
-                    attention_mask=Qformer_atts,
-                    query_embeds=query_tokens,
-                    encoder_hidden_states=image_embeds,
-                    encoder_attention_mask=image_atts,
-                    return_dict=True,
-                )
-            else:
-                query_output = self.Qformer.bert(
-                    query_embeds=query_tokens,
-                    encoder_hidden_states=image_embeds,
-                    encoder_attention_mask=image_atts,
-                    return_dict=True,
-                )
+        txt_mcan_output, img_mcan_output = self.MCAN.backbone(text_embeds_mcan, image_embeds_mcan, text_atts_mcan, image_atts_mcan)
+        
+        img_mcan_output = self.MCAN.attflat_img(img_mcan_output, image_atts_mcan)
+        # txt_mcan_output = self.MCAN.attflat_lang(txt_mcan_output, text_atts_mcan)
 
-            inputs_llm = self.llm_proj(query_output.last_hidden_state[:,:query_tokens.size(1),:])
-            atts_llm = torch.ones(inputs_llm.size()[:-1], dtype=torch.long).to(image.device)
+        inputs_llm = self.llm_proj(img_mcan_output)
+        inputs_llm = inputs_llm.unsqueeze(1)
+        atts_llm = torch.ones(inputs_llm.size()[:-1], dtype=torch.long).to(image.device)
 
         llm_tokens = self.llm_tokenizer(
             prompt,
@@ -393,10 +366,32 @@ class Blip2VicunaInstruct(Blip2Base):
             )
 
         outputs[outputs == 0] = 2 # convert output id 0 to 2 (eos_token_id)
+        # valid_outputs = [output[output >= 0] for output in outputs]
+        # outputs[outputs == -1] = 1 # convert improper tokens to '' # https://github.com/salesforce/LAVIS/issues/457
         output_text = self.llm_tokenizer.batch_decode(outputs, skip_special_tokens=True)
         output_text = [text.strip() for text in output_text]
 
         return output_text
+        
+        # try:
+        #     outputs[outputs == 0] = 2 # convert output id 0 to 2 (eos_token_id)
+        #     output_text = self.llm_tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        #     output_text = [text.strip() for text in output_text]
+        #     print("Generated text after decoding:")
+        #     print(output_text)
+
+        # except Exception as e:
+        #     print(f"Error during decoding: {e}")
+        #     for output in outputs:
+        #         print(f"Token IDs: {output}")
+        #         for token_id in output:
+        #             try:
+        #                 token = self.llm_tokenizer._convert_id_to_token(token_id.item())
+        #                 print(f"Token ID {token_id} -> {token}")
+        #             except Exception as inner_e:
+        #                 print(f"Error converting token ID {token_id}: {inner_e}")
+
+        # return output_text
 
     def predict_answers(
         self,

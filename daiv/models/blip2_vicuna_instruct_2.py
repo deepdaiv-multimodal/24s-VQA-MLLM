@@ -15,7 +15,7 @@ from daiv.models.dmformer.mcan.net_utils import LayerNorm  # Importing LayerNorm
 from daiv.common.registry import registry
 from daiv.models.blip2 import Blip2Base, disabled_train
 
-@registry.register_model("blip2_vicuna_instruct")
+# @registry.register_model("blip2_vicuna_instruct")
 class Blip2VicunaInstruct(Blip2Base):
     """
     BLIP2 Vicuna model.

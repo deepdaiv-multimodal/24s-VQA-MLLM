@@ -25,7 +25,10 @@ class BaseDataset(Dataset):
         for ann_path in ann_paths:
             with open(ann_path, "r") as f:
                 data = json.load(f)
-                self.annotation.extend(data)#['annotations'])  # 'annotations' 키의 값을 가져옴
+                if 'okvqa' in self.vis_root:
+                    self.annotation.extend(data['annotations'])
+                else:
+                    self.annotation.extend(data)
                 
         #print(self.annotation)
         ''' 
@@ -55,6 +58,8 @@ class BaseDataset(Dataset):
     def _add_instance_ids(self, key="instance_id"):
         for idx, ann in enumerate(self.annotation):
             ann[key] = str(idx)
+
+            
 
 class BaseDataset_H(Dataset):
     def __init__(self, vis_processor=None, text_processor=None, vis_root=None, ann_paths=[]):
