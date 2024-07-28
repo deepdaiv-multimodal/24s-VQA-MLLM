@@ -30,7 +30,7 @@ done
 
 TASK=${TASK:-ok} # task name, one of ['ok', 'aok_val', 'aok_test'], default 'ok'
 GPU=${GPU:-0} # GPU id(s) you want to use, default '0'
-CKPT_PATH=${CKPT_PATH:-"ckpts/mcan_ft_okvqa.pkl"} # path to the pretrained model, default is the result from our experiments
+CKPT_PATH=${CKPT_PATH:-"/root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM"} # path to the pretrained model, default is the result from our experiments
 CANDIDATE_NUM=${CANDIDATE_NUM:-10} # number of candidates to be generated
 EXAMPLE_NUM=${EXAMPLE_NUM:-100} # number of examples to be generated
 VERSION=${VERSION:-"heuristics_okvqa"} # version name, default 'heuristics1_for_$TASK'

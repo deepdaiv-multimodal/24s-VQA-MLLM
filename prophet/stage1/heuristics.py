@@ -20,7 +20,7 @@ from tqdm import tqdm
 
 from configs.task_cfgs import Cfgs
 from .utils.load_data import CommonData, DataSet
-from .model.beit3 import BEiT3ForVisualQuestionAnswering
+from beit3.modeling_finetune import BEiT3ForVisualQuestionAnswering
 from .utils.optim import get_optim_for_finetune as get_optim
 from timm.models import create_model
 
@@ -28,7 +28,7 @@ from beit3.optim_factory import create_optimizer, get_parameter_groups, LayerDec
 from .utils.optim import get_optim_for_finetune as get_optim
 from beit3.utils import NativeScalerWithGradNormCount as NativeScaler
 from beit3.engine_for_finetuning import train_one_epoch, evaluate, VQAHandler
-from beit3.datasets import create_downstream_dataset
+from beit3.datasets_okvqa import create_downstream_dataset
 import beit3.modeling_finetune
 import beit3.utils as utils
 from beit3.utils import save_on_master
@@ -44,26 +44,10 @@ class Runner(object):
     @torch.no_grad()
     def eval(self, data_loader):
         # data_size = dataset.data_size
-
-        # if self.net is None:
-        #     # Load parameters
-        #     path = self.__C.CKPT_PATH
-        #     print('Loading ckpt {}'.format(path))
-        #     net = BEiT3ForVisualQuestionAnswering(self.__C, num_classes=dataset.ans_size)
-        #     ckpt = torch.load(path, map_location='cpu')
-        #     net.load_state_dict(ckpt, strict=False)
-        #     net.half()  # Model parameters to half precision
-        #     net.cuda()
-        #     if self.__C.N_GPU > 1:
-        #         net = nn.DataParallel(net, device_ids=self.__C.GPU_IDS)
-        #     print('Finish!')
-        #     self.net = net
-        # else:
-        #     net = self.net
-
         # Load BEiT3
         model = create_model(
-            'beit3_base_patch16_224_okvqa',
+            'beit3_base_patch16_okvqa',
+            # 'beit3_base_patch16_concat',
             pretrained=False,
             drop_path_rate=0.1,
             #   vocab_size=4477,
@@ -208,15 +192,15 @@ class Runner(object):
         test_topk_results, test_latent_results = self.eval(data_loader_val)
 
         # save topk candidates
-        # topk_results = {**train_topk_results, **test_topk_results}
+        topk_results = {**train_topk_results, **test_topk_results}
 
-        # json.dump(
-        #     topk_results,
-        #     open(self.__C.CANDIDATE_FILE_PATH, 'w'),
-        #     indent=4
-        # )
+        json.dump(
+            topk_results,
+            open(self.__C.CANDIDATE_FILE_PATH, 'w'),
+            indent=4
+        )
 
-        # print(f"Total topk results saved: {len(topk_results)}")
+        print(f"Total topk results saved: {len(topk_results)}")
         print(f"Total topk results saved: {len(test_topk_results)}")
 
 

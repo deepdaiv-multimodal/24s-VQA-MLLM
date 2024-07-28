@@ -1,6 +1,5 @@
 import os
 import sys
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from datetime import datetime
 import pickle
 import random

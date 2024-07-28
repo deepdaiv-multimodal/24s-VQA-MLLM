@@ -27,7 +27,7 @@ from beit3.optim_factory import create_optimizer, get_parameter_groups, LayerDec
 from prophet.stage1.utils.optim import get_optim_for_finetune as get_optim
 from beit3.utils import NativeScalerWithGradNormCount as NativeScaler
 from beit3.engine_for_finetuning import train_one_epoch, evaluate, VQAHandler
-from beit3.datasets import create_downstream_dataset
+from beit3.datasets_okvqa import create_downstream_dataset
 import beit3.modeling_finetune
 import beit3.utils as utils
 from beit3.utils import save_on_master
@@ -40,7 +40,7 @@ def eval(args):
 
     # Load BEiT3
     model = create_model(
-        'beit3_base_patch16_224_okvqa',
+        'beit3_large_patch16_okvqa',
         pretrained=False,
         drop_path_rate=0.15,
         #   vocab_size=4477,
@@ -80,7 +80,7 @@ def eval(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task_cache_path', type=str, default='', help='')
+    # parser.add_argument('--task_cache_path', type=str, default='', help='')
     parser.add_argument('--task', type=str, default='okvqa', help='')
     parser.add_argument('--output_dir', type=str, default='', help='')
     parser.add_argument('--ckpt_path', type=str, default='', help='')

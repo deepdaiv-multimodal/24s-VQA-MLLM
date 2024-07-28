@@ -8,7 +8,6 @@ from .utils.load_data import CommonData, DataSet
 import utils
 import os, sys
 from timm.optim.lookahead import Lookahead
-# os.environ['TORCH_USE_CUDA_DSA'] = '0'
 # sys.path.append(os.getcwd())
 from timm.models import create_model
 from datetime import datetime
@@ -27,7 +26,7 @@ from beit3.optim_factory import create_optimizer, get_parameter_groups, LayerDec
 from .utils.optim import get_optim_for_finetune as get_optim
 from beit3.utils import NativeScalerWithGradNormCount as NativeScaler
 from beit3.engine_for_finetuning import train_one_epoch, evaluate, VQAHandler
-from beit3.datasets import create_downstream_dataset
+from beit3.datasets_okvqa import create_downstream_dataset
 import beit3.modeling_finetune
 import beit3.utils as utils
 from beit3.utils import save_on_master
@@ -42,8 +41,8 @@ class Args:
     def __init__(self):
         self.task = 'vqav2'
         self.input_size = 480
-        # self.drop_path = 0.15
-        self.drop_path = 0.1
+        self.drop_path = 0.15
+        # self.drop_path = 0.1
         self.checkpoint_activations = False
         self.sentencepiece_model = '/root/datasets/okvqa/data/beit3.spm'
         self.vocab_size = 64010
@@ -57,30 +56,30 @@ class Args:
         # self.clip_grad = Nonelr
         self.momentum = 0.9
         self.weight_decay = 0.01
-        # self.lr = 2e-5
-        self.lr = 3e-5
+        self.lr = 2e-5
+        # self.lr = 3e-5
         self.layer_decay = 1.0
         self.task_head_lr_weight = 20
         self.warmup_lr = 1e-6
         self.min_lr = 1e-6
         self.warmup_epochs = 1
         self.warmup_steps = -1
-        self.batch_size = 4
+        self.batch_size = 64
         self.eval_batch_size = 1
         self.epochs = 100
         self.update_freq = 1
-        self.save_ckpt_freq = 5
+        self.save_ckpt_freq = 10
         self.randaug = True
         self.train_interpolation = 'bicubic'
         self.finetune = ''
         self.model_key = 'model|module'
         self.model_prefix = ''
         self.data_path = '/root/datasets/okvqa/data'
-        self.output_dir = '/root/workspace/BEiT3/24s-VQA-MLLM/outputs/results/beit3-base'
+        self.output_dir = '/root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa-3'
         self.log_dir = None
         self.device = 'cuda'
         self.seed = 0
-        self.resume = ''
+        self.resume = '/root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa-100/checkpoint-30.pth'
         self.auto_resume = True
         self.save_ckpt = True
         self.start_epoch = 0
@@ -92,7 +91,7 @@ class Args:
         self.local_rank = -1
         self.dist_on_itp = False
         self.dist_url = 'env://'
-        self.task_cache_path = '/root/workspace/BEiT3/24s-VQA-MLLM/outputs/results/beit3-base'
+        self.task_cache_path = '/root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa-3'
         self.nb_classes = 1000
         self.mixup = 0
         self.cutmix = 0
@@ -172,7 +171,8 @@ class Runner:
     def __init__(self, __C, evaluator):
         self.__C = __C
         self.evaluator = evaluator
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = args.device
 
     # def train(self, train_set, eval_set=None):
     def train(self):
@@ -181,15 +181,16 @@ class Runner:
         print(f'Length of train data loader: {len(data_loader_train)}, valid data loader: {len(data_loader_val)}')
 
         model = create_model(
-                  'beit3_base_patch16_224_okvqa',
+                  'beit3_large_patch16_okvqa',
                   pretrained=False,
                   drop_path_rate=args.drop_path,
                 #   vocab_size=4477,
                   checkpoint_activations='store_true',
               )
               
-        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
-        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
+        # utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_base_patch16_224.pth', model, 'model|module', '')
+        utils.load_model_and_may_interpolate('/root/datasets/okvqa/data/beit3_large_patch16_224.pth', model, 'model|module', '')
+        # utils.load_model_and_may_interpolate('/root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa-100/checkpoint-30.pth', model, 'model|module', '')
 
         model.to(self.device)
 

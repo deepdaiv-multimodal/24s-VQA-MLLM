@@ -17,7 +17,7 @@ import torch.nn.functional as F
 from timm.utils import ModelEma
 from timm.utils import accuracy, ModelEma
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
-from .datasets import get_sentencepiece_model_for_beit3
+from .datasets_okvqa import get_sentencepiece_model_for_beit3
 
 import utils
 import logging
@@ -208,7 +208,7 @@ class VQAHandler(TaskHandler):
         # self.logger = logging.getLogger()
 
     def train_batch(self, model, image, language_tokens, padding_mask, labels, epoch):
-        logits, _ = model(
+        logits, _, _ = model(
             image=image, question=language_tokens, 
             padding_mask=padding_mask)
         # print('logits:', logits[0])

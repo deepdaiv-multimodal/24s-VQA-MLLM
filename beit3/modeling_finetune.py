@@ -33,20 +33,16 @@ class Pooler(nn.Module):
         self.activation = nn.Tanh()
 
     def forward(self, x):
-        if x.dim() == 2:
-            x = x.unsqueeze(1)
-
-        cls_rep = x[:, 0, :]
+        cls_rep = x[:, 0, :] # torch.Size([64, 1024])
 
         # new_dim = (cls_rep.size(1) // 768) * 768 # cls_rep의 크기를 768로 맞춤
-        # cls_rep = cls_rep[:, :new_dim]
+        # cls_rep = cls_rep[:, :new_dim] # torch.Size([64, 768])
         # cls_rep = cls_rep.view(cls_rep.size(0), -1, 768)
 
         cls_rep = self.norm(cls_rep)
         pooled_output = self.dense(cls_rep)
         pooled_output = self.activation(pooled_output)
         return pooled_output
-
 
 
 class BEiT3ForVisualReasoning(BEiT3Wrapper):
@@ -175,7 +171,7 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
             **kwargs
     ):
         super(BEiT3ForVisualQuestionAnswering, self).__init__(args=args)
-        embed_dim = 768
+        embed_dim = args.encoder_embed_dim
         self.pooler = Pooler(
             input_features=embed_dim, 
             output_features=embed_dim, 
@@ -199,12 +195,9 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
             visual_tokens=image, 
             text_padding_position=padding_mask, 
         )
-        x = outputs["encoder_out"]
-        #bs = x.shape[0]
-        #x = x.view(bs, -1)
-        cls_rep = self.pooler(x)
-        proj_feat = self.head(cls_rep)
-
+        x = outputs["encoder_out"] # torch.Size([64, 965, 1024])
+        cls_rep = self.pooler(x) # torch.Size([64, 1024])
+        proj_feat = self.head(cls_rep) # torch.Size([64, 2910])
         #bs = x.shape[0]
         #x_re = x.view(bs, -1)
         # print(x_re.shape)
@@ -213,8 +206,57 @@ class BEiT3ForVisualQuestionAnswering(BEiT3Wrapper):
         #proj_feat = self.proj(proj_feat)
         # print('proj_feat:', proj_feat.shape, 'x:', x.shape)
         # exit()
-        return proj_feat, x
+        return proj_feat, cls_rep, x
 
+class BEiT3ForVisualQuestionAnsweringForFinetune(BEiT3ForVisualQuestionAnswering):
+    def __init__(
+            self, 
+            args, 
+            num_classes, 
+            norm_layer=nn.LayerNorm, 
+            **kwargs
+    ):
+        super(BEiT3ForVisualQuestionAnswering, self).__init__(args=args)
+        embed_dim = args.encoder_embed_dim
+        self.pooler = Pooler(
+            input_features=embed_dim, 
+            output_features=embed_dim, 
+            norm_layer=norm_layer, 
+        )
+        self.pooler.apply(self._init_weights)
+        self.head = nn.Sequential(
+            nn.Linear(embed_dim, embed_dim * 2), 
+            norm_layer(embed_dim * 2), 
+            nn.GELU(), 
+            nn.Linear(embed_dim * 2, num_classes), 
+        )
+        self.head.apply(self._init_weights)
+
+        self.proj_norm = nn.LayerNorm(267264)
+        self.proj = nn.Linear(267264, num_classes)
+
+        self.proj1 = nn.Linear(embed_dim, 4477 - num_classes)
+
+    def forward(self, image, question, padding_mask, **kwargs):
+        outputs = self.beit3(
+            textual_tokens=question, 
+            visual_tokens=image, 
+            text_padding_position=padding_mask, 
+        )
+        # x = outputs["encoder_out"] # torch.Size([64, 965, 1024])
+        # cls_rep = self.pooler(x) # torch.Size([64, 1024])
+        # proj_feat = self.head(cls_rep) # torch.Size([64, 2910])
+        proj_feat, x = super().forward(image, question, padding_mask, **kwargs)
+        cls_rep = self.pooler(x)
+        #bs = x.shape[0]
+        #x_re = x.view(bs, -1)
+        # print(x_re.shape)
+        # exit()
+        #proj_feat = self.proj_norm(x_re)
+        #proj_feat = self.proj(proj_feat)
+        # print('proj_feat:', proj_feat.shape, 'x:', x.shape)
+        # exit()
+        return proj_feat, cls_rep, 
 
 class BEiT3ForRetrieval(BEiT3Wrapper):
     def __init__(self, args, **kwargs):
@@ -375,8 +417,30 @@ def beit3_large_patch16_384_retrieval(pretrained=False, **kwargs):
     return model
 
 @register_model
-def beit3_base_patch16_224_okvqa(pretrained=False, **kwargs):
+def beit3_base_patch16_okvqa(pretrained=False, **kwargs):
+    args = _get_base_config(img_size=480, **kwargs)
+    args.normalize_output = False
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
+    return model
+
+@register_model
+def beit3_large_patch16_okvqa(pretrained=False, **kwargs):
+    args = _get_large_config(img_size=480, **kwargs)
+    args.normalize_output = False
+    model = BEiT3ForVisualQuestionAnswering(args, num_classes=2910, **kwargs)
+    return model
+
+@register_model
+def beit3_base_patch16_concat(pretrained=False, **kwargs):
     args = _get_base_config(img_size=480, **kwargs)
     args.normalize_output = False
     model = BEiT3ForVisualQuestionAnswering(args, num_classes=4558, **kwargs)
+    return model
+
+# for finetune  
+@register_model
+def beit3_large_patch16_okvqa_finetune(pretrained=False, **kwargs):
+    args = _get_large_config(img_size=480, **kwargs)
+    args.normalize_output = False
+    model = BEiT3ForVisualQuestionAnsweringForFinetune(args, num_classes=2910, **kwargs)
     return model

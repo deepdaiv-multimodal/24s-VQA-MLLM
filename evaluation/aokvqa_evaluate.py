@@ -45,7 +45,7 @@ class AOKEvaluater:
         self.result_path = result_path
         if not self.multiple_choice and self.map_to_mc:
             predictions = {qid: item['direct_answer'] for qid, item in self.result_file.items()}
-            predictions = map_to_choices(self.dataset, predictions, 'cuda:0')
+            predictions = map_to_choices(self.dataset, predictions, 'cuda')
             for qid, answer in predictions.items():
                 self.result_file[qid]['multiple_choice'] = answer
         json.dump(self.result_file, open(self.result_path, 'w'))
