@@ -35,15 +35,15 @@ class COCOVQADataset(VQADataset):
         super().__init__(vis_processor, text_processor, vis_root, ann_paths)
     
         self.prompts = [
-            "{}","Question: {}", 
-            "{} A short answer to the question is",
-            "Q: {} A:",
+            "{}",
             "Question: {} Short answer:",
-            "Given the image, answer the following question with no more than three words. {}",
-            "Based on the image, respond to this question with a short answer: {}. Answer:",
-            "Use the provided image to answer the question: {} Provide your answer as short as possible:",
-            "What is the answer to the following question?{}",
-            "The question {} can be answered using the image. A short answer is"
+            "Your task is to answer a knowledge-based question. Question: {} Short answer:",
+            "Using your knowledge, answer the following question: {}",
+            "Given the image and your knowledge, answer the following question with no more than three words. {}",
+            "Based on the image and your knowledge, respond to this question with a short answer: {}. Answer:",
+            "Use the provided image and your knowledge to answer the question: {} Provide your answer as short as possible:",
+            "What is the knowledge-based answer to the following question? {}",
+            "The question {} can be answered using the image and your knowledge. A short answer is",
         ]
 
     def __len__(self):

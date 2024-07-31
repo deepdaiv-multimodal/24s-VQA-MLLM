@@ -33,6 +33,13 @@ class BaseTask:
         model_cls = registry.get_model_class(model_config.arch)
         #print(model_cls)
         return model_cls.from_config(model_config)
+    
+    def build_pretrained_model(self, cfg):
+        model_config = cfg.model_cfg
+        #print(model_config)
+        model_cls = registry.get_model_class(model_config.arch)
+        #print(model_cls)
+        return model_cls.from_pretrained(model_cls, model_config)
 
     def build_datasets(self, cfg):
         """

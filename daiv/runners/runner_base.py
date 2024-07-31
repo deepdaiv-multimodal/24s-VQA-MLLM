@@ -253,6 +253,8 @@ class RunnerBase:
                 for split in split_names
             ]
 
+            print('batch_sizes: ', batch_sizes)
+
             collate_fns = []
             for dataset in datasets:
                 if isinstance(dataset, tuple) or isinstance(dataset, list):

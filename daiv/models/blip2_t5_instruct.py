@@ -121,7 +121,7 @@ class Blip2T5Instruct(Blip2Base):
             image_atts_mcan = self.MCAN.make_mask(image_embeds_mcan).to(image.device)
 
         text_input_mcan = samples["text_input"]
-
+        
         # Process text for MCAN
         text_tokens_mcan = self.tokenizer(
             text_input_mcan, return_tensors="pt", padding="longest", truncation=True, max_length=self.max_txt_len
