@@ -4,18 +4,17 @@
  # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 
 model:
-  arch: blip2_vicuna_instruct
-  model_type: vicuna7b
+  arch: blip2_t5_instruct
+  model_type: flant5xl
   # model_type: okvqa
   load_pretrained: True
-  # intialize stage 2 pretraining from stage 1 pretrained model
-  pretrained: '/root/workspace/24s-VQA-MLLM/EunJuPark/Training/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240725044/checkpoint_9.pth'
+  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731075/checkpoint_9.pth'
   freeze_vit: True
   add_dat: False
 
 
 datasets:
-  ok_vqa:
+  heuristic_vqa:
     vis_processor:
         # train:
         #   name: 
@@ -55,7 +54,7 @@ run:
   weight_decay: 0.05
   max_epoch: 10
   batch_size_train: 8 #64
-  batch_size_eval: 1 #64
+  batch_size_eval: 8 #64
   num_workers: 8
   warmup_steps: 2000
 
@@ -64,7 +63,7 @@ run:
 
   amp: True
   # MCAN
-  resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/EunJuPark/FINAL/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2/20240727193/checkpoint_1.pth'
+  # resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/EunJuPark/FINAL/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2/20240727193/checkpoint_1.pth'
 
   evaluate: True 
   # train_splits: ["train"]

@@ -33,8 +33,8 @@ class Blip2T5Instruct(Blip2Base):
     """
 
     PRETRAINED_MODEL_CONFIG_DICT = {
-        "flant5xl": "configs/models/blip2/blip2_instruct_flant5xl.yaml",
-        "flant5xxl": "configs/models/blip2/blip2_instruct_flant5xxl.yaml",
+        "flant5xl": "configs/models/blip2_instruct_flant5xl_ori.yaml",
+        # "flant5xxl": "configs/models/blip2_instruct_flant5xxl.yaml",
     }
 
     def __init__(

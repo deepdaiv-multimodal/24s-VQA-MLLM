@@ -35,10 +35,10 @@ datasets:
               - /root/workspace/24s-VQA-MLLM/BEiT3/stage2-t5/VQA-MLLM-stage2/daiv/data/okvqa/okvqa_val.json
               - /root/workspace/24s-VQA-MLLM/BEiT3/stage2-t5/VQA-MLLM-stage2/daiv/data/okvqa/okvqa_train.json #heuristic prompt
               - /root/datasets/okvqa/data/assets/captions_okvqa.json #question caption
-              - /root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa/candidates.json
-              - /root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa/examples.json
-              # - /root/workspace/24s-VQA-MLLM/BEiT3/assets/candidates_okvqa.json
-              # - /root/workspace/24s-VQA-MLLM/BEiT3/assets/answer_aware_examples_okvqa.json
+              # - /root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa/candidates.json
+              # - /root/workspace/24s-VQA-MLLM/BEiT3/24s-VQA-MLLM/outputs/results/beit3-large-okvqa/examples.json
+              - /root/workspace/24s-VQA-MLLM/BEiT3/assets/candidates_okvqa.json
+              - /root/workspace/24s-VQA-MLLM/BEiT3/assets/answer_aware_examples_okvqa.json
               # - /root/datasets/okvqa/data/assets/answer_dict_okvqa.json
       images:
           storage: /root/datasets/okvqa/data

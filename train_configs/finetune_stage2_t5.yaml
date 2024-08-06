@@ -7,8 +7,7 @@ model:
   arch: blip2_t5_instruct
   model_type: flant5xl
   load_pretrained: True
-  # intialize stage 2 pretraining from stage 1 pretrained model
-  pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/Training/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240725044/checkpoint_9.pth"
+  pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731025/checkpoint_9.pth"
   # pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/mcan_stage1_checkpoint_9.pth" #"/home/intern24/daiv/BLIVA/daiv/output/BLIP2/Pretrain_stage1/mcan_stage1_checkpoint_9.pth"
   freeze_vit: True
 
@@ -44,7 +43,7 @@ run:
   output_dir: "output/BLIP2/Finetune_stage2"
 
   amp: True
-  resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2/20240729170/checkpoint_9.pth'
+  # resume_ckpt_path: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Pretrain_stage2/20240729170/checkpoint_9.pth'
 
   evaluate: False 
   train_splits: ["train"]

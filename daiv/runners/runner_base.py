@@ -468,13 +468,15 @@ class RunnerBase:
         data_loader = self.dataloaders.get(split_name, None)
         assert data_loader, "data_loader for split {} is None.".format(split_name)
 
-        model = self.eval_load_checkpoint(self.resume_ckpt_path)
+        # model = self.eval_load_checkpoint(self.resume_ckpt_path)
+        model = self.model
         model.eval()
 
         self.task.before_evaluation(
             model=model,
             dataset=self.datasets[split_name],
         )
+        
         results = self.task.evaluation(model, data_loader)
 
         if results is not None:
