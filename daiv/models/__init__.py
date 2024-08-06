@@ -23,6 +23,7 @@ from daiv.models.blip2_t5_instruct import Blip2T5Instruct
 from daiv.models.vit import VisionTransformerEncoder
 from daiv.models.blip2_qformer import Blip2Qformer
 from daiv.models.blip2_t5_instruct_ori import Blip2T5Instruct
+from daiv.models.blip2_vicuna_instruct_ori import Blip2VicunaInstruct
 
 from daiv.processors.base_processor import BaseProcessor
 
