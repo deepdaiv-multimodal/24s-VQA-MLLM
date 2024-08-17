@@ -92,31 +92,37 @@ class COCOVQABuilder(BaseDatasetBuilder):
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/coco/defaults_vqa.yaml",
-        "eval": "configs/datasets/coco/eval_vqa.yaml",
+        # "eval": "configs/datasets/coco/eval_vqa.yaml",
     }
 
+    # def build_datasets(self):
+    #     # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
+    #     logging.info("Building datasets... {}".format( self.__class__.__name__))
+    #     self.build_processors()
+
+    #     build_info = self.config.build_info
+    #     storage_path = build_info.storage
+    #     vis_root = build_info.vis_root
+
+    #     datasets = dict()
+
+    #     if not os.path.exists(storage_path):
+    #         warnings.warn("storage path {} does not exist.".format(storage_path))
+
+    #     # create datasets
+    #     dataset_cls = self.train_dataset_cls
+    #     datasets['train'] = dataset_cls(
+    #         vis_processor=self.vis_processors["train"],
+    #         text_processor=self.text_processors["train"],
+    #         ann_paths=[os.path.join(storage_path, 'vqa_train.json')], 
+    #         vis_root=vis_root,
+    #     )
+
+    #     return datasets
     def build_datasets(self):
-        # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
+
         logging.info("Building datasets... {}".format( self.__class__.__name__))
-        self.build_processors()
-
-        build_info = self.config.build_info
-        storage_path = build_info.storage
-        vis_root = build_info.vis_root
-
-        datasets = dict()
-
-        if not os.path.exists(storage_path):
-            warnings.warn("storage path {} does not exist.".format(storage_path))
-
-        # create datasets
-        dataset_cls = self.train_dataset_cls
-        datasets['train'] = dataset_cls(
-            vis_processor=self.vis_processors["train"],
-            text_processor=self.text_processors["train"],
-            ann_paths=[os.path.join(storage_path, 'vqa_train.json')], 
-            vis_root=vis_root,
-        )
+        datasets = self.build()  # dataset['train'/'val'/'test']
 
         return datasets
 
@@ -222,28 +228,35 @@ class AOKVQABuilder(BaseDatasetBuilder):
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/aokvqa/defaults.yaml"}
     
+    # def build_datasets(self):
+    #     # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
+    #     logging.info("Building datasets... {}".format( self.__class__.__name__))
+    #     self.build_processors()
+
+    #     build_info = self.config.build_info
+    #     storage_path = build_info.storage
+    #     vis_root = build_info.vis_root
+
+    #     datasets = dict()
+
+    #     if not os.path.exists(storage_path):
+    #         warnings.warn("storage path {} does not exist.".format(storage_path))
+
+    #     # create datasets
+    #     dataset_cls = self.train_dataset_cls
+    #     datasets['train'] = dataset_cls(
+    #         vis_processor=self.vis_processors["train"],
+    #         text_processor=self.text_processors["train"],
+    #         ann_paths=[os.path.join(storage_path, 'aokvqa_v1p0_train.json')], 
+    #         vis_root=vis_root,
+    #     )
+
+    #     return datasets
+
     def build_datasets(self):
-        # at this point, all the annotations and image/videos should be all downloaded to the specified locations.
+
         logging.info("Building datasets... {}".format( self.__class__.__name__))
-        self.build_processors()
-
-        build_info = self.config.build_info
-        storage_path = build_info.storage
-        vis_root = build_info.vis_root
-
-        datasets = dict()
-
-        if not os.path.exists(storage_path):
-            warnings.warn("storage path {} does not exist.".format(storage_path))
-
-        # create datasets
-        dataset_cls = self.train_dataset_cls
-        datasets['train'] = dataset_cls(
-            vis_processor=self.vis_processors["train"],
-            text_processor=self.text_processors["train"],
-            ann_paths=[os.path.join(storage_path, 'aokvqa_v1p0_train.json')], 
-            vis_root=vis_root,
-        )
+        datasets = self.build()  # dataset['train'/'val'/'test']
 
         return datasets
 

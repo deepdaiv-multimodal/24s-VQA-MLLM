@@ -52,16 +52,15 @@ class COCOVQADataset(VQADataset):
     def __getitem__(self, index):
         ann = self.annotation[index]
 
-        image_filename = f"train2014/COCO_train2014_{ann['image_id']:012d}.jpg"
-        image_path = os.path.join(self.vis_root, image_filename)
+        # image_filename = f"train2014/COCO_train2014_{ann['image_id']:012d}.jpg"
+        # image_path = os.path.join(self.vis_root, image_filename)
 
-        # if not os.path.exists(image_path):
-        # #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
-        # #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
-        #     return self.__getitem__((index + 1) % len(self))
+        # image = Image.open(image_path).convert("RGB")
+        # image = self.vis_processor(image)
+        feat_filename = f"train2014/{ann['image_id']}.npz"
+        feat_path = os.path.join(self.vis_root, feat_filename)
+        feat = np.load(feat_path)
 
-        image = Image.open(image_path).convert("RGB")
-        image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
         choice = np.random.choice(len(self.prompts))
 
@@ -76,7 +75,8 @@ class COCOVQADataset(VQADataset):
         best_answer = max(answer_weight, key=answer_weight.get)
 
         return {
-            "image": image,
+            # "image": image,
+            "feat": feat,
             "text_input": text_input,
             "text_output": best_answer,
             'weights':answer_weight
@@ -176,19 +176,24 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
     def __getitem__(self, index):
         ann = self.annotation[index]
 
-        image_filename = f"val2014/COCO_val2014_{ann['image_id']:012d}.jpg"
-        image_path = os.path.join(self.vis_root, image_filename)
+        # image_filename = f"val2014/COCO_val2014_{ann['image_id']:012d}.jpg"
+        # image_path = os.path.join(self.vis_root, image_filename)
         # if not os.path.exists(image_path):
         # #    # 이미지가 없으면 다음 항목으로 넘어갑니다.
         # #    print(f"Warning: File {image_path} does not exist in . Skipping this item.")
         #     return self.__getitem__((index + 1) % len(self))
-        image = Image.open(image_path).convert("RGB")
+        # image = Image.open(image_path).convert("RGB")
 
-        image = self.vis_processor(image)
+        feat_filename = f"val2014/{ann['image_id']}.npz"
+        feat_path = os.path.join(self.vis_root, feat_filename)
+        feat = np.load(feat_path)
+
+        # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
 
         return {
-            "image": image,
+            # "image": image,
+            "feat": feat,
             "text_input": question,
             "question_id": ann["question_id"],
             "instance_id": ann["instance_id"],

@@ -31,14 +31,14 @@ class VQADataset(BaseDataset):
         '''
 
         for sample in samples:
-            image_list.append(sample["image"])
+            image_list.append(sample["feat"])
             question_list.append(sample["text_input"])
             weight_list.append(sample["weights"][sample['text_output']])
             answer_list.append(sample['text_output'])
             num_answers.append(len(list(sample["weights"].values())))
 
         return {
-            "image": torch.stack(image_list, dim=0),
+            "feat": torch.stack(image_list, dim=0),
             "text_input": question_list,
             "text_output": answer_list,
             "weight": torch.Tensor(weight_list),

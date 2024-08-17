@@ -20,7 +20,7 @@ from daiv.models.modeling_t5 import T5Config, T5ForConditionalGeneration
 from transformers.modeling_outputs import BaseModelOutput
 
 
-@registry.register_model("blip2_t5_instruct_ori")
+@registry.register_model("blip2_t5_instruct_mcan")
 class Blip2T5Instruct(Blip2Base):
     """
     BLIP2 T5 model.

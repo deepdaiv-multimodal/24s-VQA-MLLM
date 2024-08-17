@@ -48,10 +48,14 @@ class AOKVQADataset(VQADataset):
     def __getitem__(self, index):
         ann = self.annotation[index]
 
-        image_path = os.path.join(self.vis_root, ann["image"])
-        image = Image.open(image_path).convert("RGB")
+        # image_path = os.path.join(self.vis_root, ann["image"])
+        # image = Image.open(image_path).convert("RGB")
 
-        image = self.vis_processor(image)
+        feat_filename = f"train2017/{ann['image_id']}.npz"
+        feat_path = os.path.join(self.vis_root, feat_filename)
+        feat = np.load(feat_path)
+
+        # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
 
         answer_key = "direct_answers"
@@ -70,7 +74,8 @@ class AOKVQADataset(VQADataset):
         best_answer = max(answer_weight, key=answer_weight.get)
         
         return {
-            "image": image,
+            # "image": image,
+            "feat": feat,
             "text_input": text_input,
             "text_output": best_answer,
         }
@@ -217,10 +222,13 @@ class AOKVQAEvalDataset(VQAEvalDataset, __DisplMixin):
     def __getitem__(self, index):
         ann = self.annotation[index]
 
-        image_path = os.path.join(self.vis_root, ann["image"])
-        image = Image.open(image_path).convert("RGB")
+        # image_path = os.path.join(self.vis_root, ann["image"])
+        # image = Image.open(image_path).convert("RGB")
+        feat_filename = f"val2017/{ann['image_id']}.npz"
+        feat_path = os.path.join(self.vis_root, feat_filename)
+        feat = np.load(feat_path)
 
-        image = self.vis_processor(image)
+        # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
 
         choices = ann["choices"]
@@ -235,7 +243,8 @@ class AOKVQAEvalDataset(VQAEvalDataset, __DisplMixin):
             direct_answers = None
 
         return {
-            "image": image,
+            # "image": image,
+            "feat": feat,
             "text_input": question,
             "question_id": ann["question_id"],
             "instance_id": ann["instance_id"],

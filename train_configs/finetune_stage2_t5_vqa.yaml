@@ -4,7 +4,7 @@
  # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 
 model:
-  arch: blip2_t5_instruct
+  arch: blip2_t5_instruct_mcan
   model_type: flant5xl
   load_pretrained: True
   # pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731025/checkpoint_9.pth"
