@@ -7,12 +7,11 @@ model:
   arch: blip2_t5_instruct
   model_type: flant5xl
   load_pretrained: True
-  pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731025/checkpoint_9.pth"
-  # pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/mcan_stage1_checkpoint_9.pth" #"/home/intern24/daiv/BLIVA/daiv/output/BLIP2/Pretrain_stage1/mcan_stage1_checkpoint_9.pth"
+  # pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731025/checkpoint_9.pth"
   freeze_vit: True
 
 datasets:
-  heuristic_vqa:
+  coco_vqa: 
     vis_processor:
         train:
           name: "blip2_image_train"
@@ -20,9 +19,24 @@ datasets:
     text_processor:
         train:
           name: "blip_caption"
-    # build_info:
-        # images:
-        #     storage: '/export/share/datasets/vision/coco/images/'         
+
+  ok_vqa:
+    vis_processor:
+        train:
+          name: "blip2_image_train"
+          image_size: 224
+    text_processor:
+        train:
+          name: "blip_caption"
+
+  aok_vqa:
+    vis_processor:
+        train:
+          name: "blip2_image_train"
+          image_size: 224
+    text_processor:
+        train:
+          name: "blip_caption"
 
 run:
   task: image_text_pretrain

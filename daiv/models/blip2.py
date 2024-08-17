@@ -69,6 +69,7 @@ class Blip2Base(BaseModel):
             "clip_L",
             'cpe_eva_clip_g'
         ], "vit model must be eva_clip_g, eva2_clip_L or clip_L or cpe_eva_clip_g"
+        
         if model_name == "eva_clip_g":
             visual_encoder = create_eva_vit_g(
                 img_size, drop_path_rate, use_grad_checkpoint, precision

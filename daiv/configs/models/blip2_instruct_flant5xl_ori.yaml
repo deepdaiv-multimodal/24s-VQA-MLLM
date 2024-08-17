@@ -27,7 +27,6 @@ model:
   # generation configs
   prompt: ""
 
-
 preprocess:
     vis_processor:
         train:

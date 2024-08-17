@@ -9,7 +9,7 @@ model:
   load_pretrained: True
   # intialize stage 2 pretraining from stage 1 pretrained model
   pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/Training/BLIVA/daiv/output/BLIP2/Pretrain_stage1/20240725044/checkpoint_9.pth"
-  # pretrained: "/root/workspace/24s-VQA-MLLM/EunJuPark/mcan_stage1_checkpoint_9.pth" #"/home/intern24/daiv/BLIVA/daiv/output/BLIP2/Pretrain_stage1/mcan_stage1_checkpoint_9.pth"
+  # pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained.pth"
   freeze_vit: True
 
 datasets:
@@ -21,9 +21,7 @@ datasets:
     text_processor:
         train:
           name: "blip_caption"
-    # build_info:
-    #     images:
-    #         storage: '/export/share/datasets/vision/coco/images/'          
+
   vg_caption_instruct: # name of the dataset builder
     vis_processor:
         train:
@@ -32,9 +30,6 @@ datasets:
     text_processor:
         train:
           name: "blip_caption"
-    # build_info:
-    #     images:
-    #         storage: '//export/share/datasets/vision/visual-genome/image/'
   
   #   ok_vqa:
   #     vis_processor:

@@ -8,11 +8,11 @@ model:
   model_type: instruct_vicuna7b
   load_pretrained: True
   # intialize stage 2 pretraining from stage 1 pretrained model
-  # pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731082/checkpoint_9.pth"
+  pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240806053/checkpoint_9.pth"
   freeze_vit: True
 
 datasets:
-  heuristic_vqa:
+  ok_vqa:
     vis_processor:
         # train:
         #   name: "blip2_image_train"
@@ -39,8 +39,8 @@ run:
 
   weight_decay: 0.05
   max_epoch: 10
-  batch_size_train: 16
-  batch_size_eval: 16
+  batch_size_train: 1
+  batch_size_eval: 1
   num_workers: 16
   warmup_steps: 2000
 
@@ -57,4 +57,4 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: True
+  distributed: False
