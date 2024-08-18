@@ -54,3 +54,9 @@ python evaluate.py --cfg-path train_configs/pretrain_stage2_eval.yaml
 ```
 python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
 ```
+
+# Training w/ mcan output
+vqav2, okvqa, aokvqa
+```
+python train.py --cfg-path train_configs/finetune_stage2_t5_vqa.yaml
+```

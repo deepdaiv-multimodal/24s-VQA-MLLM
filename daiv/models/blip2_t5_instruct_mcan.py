@@ -8,6 +8,7 @@ import logging
 import string
 import random
 import copy
+import yaml
 
 import torch
 import torch.nn as nn
@@ -19,6 +20,8 @@ from daiv.models.blip2 import Blip2Base, disabled_train
 from daiv.models.modeling_t5 import T5Config, T5ForConditionalGeneration
 from transformers.modeling_outputs import BaseModelOutput
 
+from daiv.models.dmformer.mcan.net import Net
+from daiv.models.dmformer.mcan.cfgs.base_cfgs import Cfgs
 
 @registry.register_model("blip2_t5_instruct_mcan")
 class Blip2T5Instruct(Blip2Base):
@@ -53,7 +56,7 @@ class Blip2T5Instruct(Blip2Base):
         apply_lemmatizer=False,
         num_few_shot_examples=0,
         few_shot_prob=0,
-        qformer_text_input=True,
+        qformer_text_input=True
     ):
         """
         apply_lemmatizer: when set to True, postprocess predict_answers() result with lemmas.
@@ -115,17 +118,63 @@ class Blip2T5Instruct(Blip2Base):
 
         self.qformer_text_input = qformer_text_input
 
+        # MCAN 
+        self.net = None 
+        self.prev_pretrained_emb = None
+    
+    def init_mcan(self, pretrained_emb):
+        # Load preatrained MCAN
+        mcan_cfg = "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/models/dmformer/mcan/cfgs/large_model.yml"
+        mcan_weight = "/root/workspace/24s-VQA-MLLM/hankyeol/mcan-vqa/ckpts/ckpt_95115802/epoch13.pkl"
+
+        __C = Cfgs() 
+        with open(mcan_cfg, 'r') as f:
+            yaml_dict = yaml.load(f, Loader=yaml.FullLoader)
+        __C.add_args({**yaml_dict})
+        __C.proc()
+
+        # print('pretrained_emb:', pretrained_emb.shape)
+
+        self.net = Net(
+            __C,
+            pretrained_emb=pretrained_emb,
+            token_size=pretrained_emb.shape[0],
+            answer_size=4931
+        )
+
+        for param in self.net.parameters():
+            param.requires_grad = False
+
+        print('Loading MCAN ckpt {}'.format(mcan_weight))
+        ckpt = torch.load(mcan_weight, map_location='cpu')
+        self.net.load_state_dict(ckpt['state_dict'])
+
     def forward(self, samples):
         # print('-----------------')
         # print(samples["text_input"])
         # print(samples["text_output"])
         # print('-----------------')
 
-        # 이미지 임베딩 MCAN과 동일하게 다시 만들고, 이미지와 question pretrained MCAN에 태워서 output을 pretrained q-former encoder_hidden_states에 넣기! 
-        image = samples["image"]
-        with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.visual_encoder(image))
-        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
+        # 첫 번째 forward 시점에서만 MCAN을 초기화
+        # pretrained_emb = samples['pretrained_emb']
+        # if self.net is None or not torch.equal(pretrained_emb, self.prev_pretrained_emb):
+        #     self.init_mcan(pretrained_emb)
+        #     self.prev_pretrained_emb = pretrained_emb.clone()  
+
+        if self.net is None:
+            self.init_mcan(samples['pretrained_emb'])
+
+        # MCAN input
+        feats = samples['feats'] #(bs, 1024)
+        ques = samples['question'] #(bs, 14)
+
+        # MCAN output
+        # print('feats:', feats.shape)
+        print('ques:', ques.shape)
+
+        image_embeds = self.net(feats, ques)
+        print('image_embeds:', image_embeds.shape)
+        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
 
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
 
@@ -136,8 +185,8 @@ class Blip2T5Instruct(Blip2Base):
                 truncation=True,
                 max_length=self.max_txt_len,
                 return_tensors="pt",
-            ).to(image.device)
-            query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
+            ).to(feats.device)
+            query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(feats.device)
             Qformer_atts = torch.cat([query_atts,text_Qformer.attention_mask],dim=1)
 
             query_output = self.Qformer.bert(
@@ -157,7 +206,7 @@ class Blip2T5Instruct(Blip2Base):
             )
 
         inputs_t5 = self.t5_proj(query_output.last_hidden_state[:,:query_tokens.size(1),:])
-        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(image.device)
+        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(feats.device)
 
         fs_embeds, fs_atts = None, None
         if self.few_shot_prob > 0 and "few_shot_samples" in samples.keys():
@@ -170,14 +219,14 @@ class Blip2T5Instruct(Blip2Base):
                 truncation=True,
                 max_length=self.max_txt_len,
                 return_tensors="pt",
-            ).to(image.device)
+            ).to(feats.device)
             output_tokens = self.t5_output_tokenizer(
                 samples["text_output"],
                 padding="longest",
                 truncation=True,
                 max_length=self.max_output_txt_len,
                 return_tensors="pt",
-            ).to(image.device)
+            ).to(feats.device)
 
             encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1)
 

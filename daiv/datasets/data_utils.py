@@ -21,6 +21,7 @@ from decord import VideoReader
 from daiv.common.registry import registry
 from daiv.datasets.datasets.base_dataset import ConcatDataset
 from tqdm import tqdm
+import en_vectors_web_lg, random, re, json
 
 decord.bridge.set_bridge("torch")
 MAX_INT = registry.get("MAX_INT")
@@ -282,3 +283,59 @@ def save_frames_grid(img_array, out_path):
     img = Image.fromarray(ndarr)
 
     img.save(out_path)
+
+
+# ----------------------------------  MCAN data utils ------------------------------------------
+
+def tokenize(stat_ques_list, use_glove):
+    token_to_ix = {
+        'PAD': 0,
+        'UNK': 1,
+    }
+
+    spacy_tool = None
+    pretrained_emb = []
+    if use_glove:
+        spacy_tool = en_vectors_web_lg.load()
+        pretrained_emb.append(spacy_tool('PAD').vector)
+        pretrained_emb.append(spacy_tool('UNK').vector)
+
+    for ques in stat_ques_list:
+        # print(ques)
+        words = re.sub(
+            r"([.,'!?\"()*#:;])",
+            '',
+            ques['question'].lower()
+            # ques.lower()
+        ).replace('-', ' ').replace('/', ' ').split()
+
+        for word in words:
+            if word not in token_to_ix:
+                token_to_ix[word] = len(token_to_ix)
+                if use_glove:
+                    pretrained_emb.append(spacy_tool(word).vector)
+
+    pretrained_emb = np.array(pretrained_emb)
+
+    return token_to_ix, pretrained_emb
+
+def proc_ques(ques, token_to_ix, max_token):
+    ques_ix = np.zeros(max_token, np.int64)
+
+    words = re.sub(
+        r"([.,'!?\"()*#:;])",
+        '',
+        # ques['question'].lower()
+        ques.lower()
+    ).replace('-', ' ').replace('/', ' ').split()
+
+    for ix, word in enumerate(words):
+        if word in token_to_ix:
+            ques_ix[ix] = token_to_ix[word]
+        else:
+            ques_ix[ix] = token_to_ix['UNK']
+
+        if ix + 1 == max_token:
+            break
+
+    return ques_ix

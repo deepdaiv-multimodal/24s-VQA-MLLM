@@ -14,6 +14,7 @@ from PIL import Image
 
 from daiv.datasets.datasets.vqa_datasets import VQADataset, VQAEvalDataset
 import numpy as np  
+from daiv.datasets.data_utils import tokenize, proc_ques
 
 class __DisplMixin:
     def displ_item(self, index):
@@ -45,6 +46,21 @@ class AOKVQADataset(VQADataset):
             "What is the answer to the following question?{}",
             "The question {} can be answered using the image. A short answer is"]
         
+        # Tokenize
+        self.stat_ques_list = []
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/workspace/24s-VQA-MLLM/dataset/vqav2/v2_OpenEnded_mscoco_test2015_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_train.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_val.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_test.json', 'r'))
+
+        self.token_to_ix, self.pretrained_emb = tokenize(self.stat_ques_list, use_glove=True)
+        self.token_size = self.token_to_ix.__len__()
+        print('== Question token vocab size:', self.token_size)
+        
     def __getitem__(self, index):
         ann = self.annotation[index]
 
@@ -53,10 +69,12 @@ class AOKVQADataset(VQADataset):
 
         feat_filename = f"train2017/{ann['image_id']}.npz"
         feat_path = os.path.join(self.vis_root, feat_filename)
-        feat = np.load(feat_path)
+        feats = np.load(feat_path)
+        feats = feats['x']#.transpose((1,0))
 
         # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
+        ques_ix_iter = proc_ques(question, self.token_to_ix, max_token=14)
 
         answer_key = "direct_answers"
         choice = np.random.choice(len(self.prompts))
@@ -75,29 +93,31 @@ class AOKVQADataset(VQADataset):
         
         return {
             # "image": image,
-            "feat": feat,
+            "feats": feats,
+            "question": ques_ix_iter,
             "text_input": text_input,
             "text_output": best_answer,
+            'pretrained_emb': self.pretrained_emb
         }
     
-    def collater(self, samples):
-        image_list, question_list, answer_list = [], [], [],
+    # def collater(self, samples):
+    #     image_list, question_list, answer_list = [], [], [],
 
-        for sample in samples:
-            image_list.append(sample["image"])
+    #     for sample in samples:
+    #         image_list.append(sample["image"])
            
-            question_list.append(sample["text_input"])
+    #         question_list.append(sample["text_input"])
 
-            answers = sample["text_output"]
+    #         answers = sample["text_output"]
 
-            answer_list.append(answers)
+    #         answer_list.append(answers)
         
 
-        return {
-            "image": torch.stack(image_list, dim=0),
-            "text_input": question_list,
-            "text_output": answer_list,
-        }
+    #     return {
+    #         "image": torch.stack(image_list, dim=0),
+    #         "text_input": question_list,
+    #         "text_output": answer_list,
+    #     }
 
 class VQGAOKVQADataset(VQADataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
@@ -226,7 +246,8 @@ class AOKVQAEvalDataset(VQAEvalDataset, __DisplMixin):
         # image = Image.open(image_path).convert("RGB")
         feat_filename = f"val2017/{ann['image_id']}.npz"
         feat_path = os.path.join(self.vis_root, feat_filename)
-        feat = np.load(feat_path)
+        feats = np.load(feat_path)
+        feats = feats['x']
 
         # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
@@ -244,7 +265,7 @@ class AOKVQAEvalDataset(VQAEvalDataset, __DisplMixin):
 
         return {
             # "image": image,
-            "feat": feat,
+            "feats": feats,
             "text_input": question,
             "question_id": ann["question_id"],
             "instance_id": ann["instance_id"],

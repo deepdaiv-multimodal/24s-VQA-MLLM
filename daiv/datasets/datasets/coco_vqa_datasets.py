@@ -16,6 +16,8 @@ from collections import OrderedDict
 import torch
 import numpy as np
 
+from daiv.datasets.data_utils import tokenize, proc_ques
+
 class __DisplMixin:
     def displ_item(self, index):
         sample, ann = self.__getitem__(index), self.annotation[index]
@@ -46,6 +48,21 @@ class COCOVQADataset(VQADataset):
             "The question {} can be answered using the image and your knowledge. A short answer is",
         ]
 
+        # Tokenize
+        self.stat_ques_list = []
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/workspace/24s-VQA-MLLM/dataset/vqav2/v2_OpenEnded_mscoco_test2015_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_train.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_val.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_test.json', 'r'))
+        
+        self.token_to_ix, self.pretrained_emb = tokenize(self.stat_ques_list, use_glove=True)
+        self.token_size = self.token_to_ix.__len__()
+        print('== Question token vocab size:', self.token_size)
+
     def __len__(self):
         return len(self.annotation)
 
@@ -59,12 +76,15 @@ class COCOVQADataset(VQADataset):
         # image = self.vis_processor(image)
         feat_filename = f"train2014/{ann['image_id']}.npz"
         feat_path = os.path.join(self.vis_root, feat_filename)
-        feat = np.load(feat_path)
+        feats = np.load(feat_path)
+        feats = feats['x']#.transpose((1,0))
 
         question = self.text_processor(ann["question"])
-        choice = np.random.choice(len(self.prompts))
+        ques_ix_iter = proc_ques(question, self.token_to_ix, max_token=14)
 
+        choice = np.random.choice(len(self.prompts))
         text_input = self.prompts[choice].format(question)
+
         answer_weight = {}
         for answer in ann["answers"]:
             if answer["answer"] in answer_weight.keys():
@@ -76,10 +96,12 @@ class COCOVQADataset(VQADataset):
 
         return {
             # "image": image,
-            "feat": feat,
+            "feats": feats,
+            "question": ques_ix_iter,
             "text_input": text_input,
             "text_output": best_answer,
-            'weights':answer_weight
+            'weights': answer_weight,
+            'pretrained_emb': self.pretrained_emb
         }
 
 class VQGCOCOVQADataset(VQADataset):
@@ -170,6 +192,21 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
 
         self._add_instance_ids()
 
+        # Tokenize
+        self.stat_ques_list = []
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/vqav2/v2_OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/workspace/24s-VQA-MLLM/dataset/vqav2/v2_OpenEnded_mscoco_test2015_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_train2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/okvqa/OpenEnded_mscoco_val2014_questions.json', 'r'))['questions']
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_train.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_val.json', 'r'))
+        self.stat_ques_list += json.load(open('/root/datasets/okvqa/data/aokvqa/aokvqa_v1p0_test.json', 'r'))
+
+        self.token_to_ix, self.pretrained_emb = tokenize(self.stat_ques_list, use_glove=True)
+        self.token_size = self.token_to_ix.__len__()
+        print('== Question token vocab size:', self.token_size)
+
     def __len__(self):
         return len(self.annotation)
 
@@ -186,14 +223,16 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
 
         feat_filename = f"val2014/{ann['image_id']}.npz"
         feat_path = os.path.join(self.vis_root, feat_filename)
-        feat = np.load(feat_path)
+        feats = np.load(feat_path)
+        feats = feats['x']
 
         # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
+        ques_ix_iter = proc_ques(question, self.token_to_ix, max_token=14)
 
         return {
             # "image": image,
-            "feat": feat,
+            "feats": feats,
             "text_input": question,
             "question_id": ann["question_id"],
             "instance_id": ann["instance_id"],
