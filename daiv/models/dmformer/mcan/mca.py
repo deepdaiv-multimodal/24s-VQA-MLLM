@@ -69,8 +69,11 @@ class MHAtt(nn.Module):
             query, key.transpose(-2, -1)
         ) / math.sqrt(d_k)
 
+        # print('scores:', scores.shape)
+        # print('mask:', mask.shape)
+
         if mask is not None:
-            scores = scores.masked_fill(mask, -1e9)
+            scores = scores.masked_fill(mask, -1e4) #-1e9
 
         att_map = F.softmax(scores, dim=-1)
         att_map = self.dropout(att_map)
@@ -175,7 +178,7 @@ class MCA_ED(nn.Module):
         self.enc_list = nn.ModuleList([SA(__C) for _ in range(__C.LAYER)])
         self.dec_list = nn.ModuleList([SGA(__C) for _ in range(__C.LAYER)])
 
-    def forward(self, x, y, x_mask, y_mask):
+    def forward(self, x, y, x_mask, y_mask): # x:lang, y:img
         # Get hidden vector
         for enc in self.enc_list:
             x = enc(x, x_mask)

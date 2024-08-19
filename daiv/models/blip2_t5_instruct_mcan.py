@@ -167,9 +167,12 @@ class Blip2T5Instruct(Blip2Base):
         # MCAN output
         # print('feats:', feats.shape)
         # print('ques:', ques.shape)
+        # exit()
 
-        image_embeds = self.net(feats, ques)
-        print('image_embeds:', image_embeds.shape)
+        _, image_embeds = self.net(feats, ques)#(bs, 2048)
+        # image_embeds = image_embeds.unsqueeze(1)
+        print('image_embeds:', image_embeds.shape) 
+
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
 
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)

@@ -74,7 +74,7 @@ class AOKVQADataset(VQADataset):
 
         # image = self.vis_processor(image)
         question = self.text_processor(ann["question"])
-        ques_ix_iter = proc_ques(question, self.token_to_ix, max_token=14)
+        ques_ix_iter = proc_ques(ann["question"], self.token_to_ix, max_token=14)
 
         answer_key = "direct_answers"
         choice = np.random.choice(len(self.prompts))

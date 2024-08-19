@@ -80,7 +80,7 @@ class COCOVQADataset(VQADataset):
         feats = feats['x']#.transpose((1,0))
 
         question = self.text_processor(ann["question"])
-        ques_ix_iter = proc_ques(question, self.token_to_ix, max_token=14)
+        ques_ix_iter = proc_ques(ann["question"], self.token_to_ix, max_token=14)
 
         choice = np.random.choice(len(self.prompts))
         text_input = self.prompts[choice].format(question)

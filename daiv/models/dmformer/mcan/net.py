@@ -95,15 +95,18 @@ class Net(nn.Module):
     def forward(self, img_feat, ques_ix):
 
         # Make mask
-        lang_feat_mask = self.make_mask(ques_ix.unsqueeze(2))
-        img_feat_mask = self.make_mask(img_feat)
-
+        lang_feat_mask = self.make_mask(ques_ix.unsqueeze(2)) #[64, 1, 1, 14]
+        # lang_feat_mask = self.make_mask(ques_ix)
+        img_feat_mask = self.make_mask(img_feat) #[64, 1, 1]
+        if len(img_feat_mask.shape) == 3:
+            img_feat_mask = img_feat_mask.unsqueeze(2)  # [64, 1, 1, 1]
+        
         # Pre-process Language Feature
-        lang_feat = self.embedding(ques_ix)
-        lang_feat, _ = self.lstm(lang_feat)
+        lang_feat = self.embedding(ques_ix) 
+        lang_feat, _ = self.lstm(lang_feat) #[64, 14, 1024]
 
         # Pre-process Image Feature
-        img_feat = self.img_feat_linear(img_feat)
+        img_feat = self.img_feat_linear(img_feat) #[64, 1024]
 
         # Backbone Framework
         lang_feat, img_feat = self.backbone(
@@ -127,7 +130,7 @@ class Net(nn.Module):
         proj_feat = self.proj_norm(proj_feat)
         proj_feat = torch.sigmoid(self.proj(proj_feat))
 
-        return proj_feat
+        return proj_feat, img_feat
 
 
     # Masking
