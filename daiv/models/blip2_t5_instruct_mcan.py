@@ -125,7 +125,7 @@ class Blip2T5Instruct(Blip2Base):
     def init_mcan(self, pretrained_emb):
         # Load preatrained MCAN
         mcan_cfg = "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/models/dmformer/mcan/cfgs/large_model.yml"
-        mcan_weight = "/root/workspace/24s-VQA-MLLM/hankyeol/mcan-vqa/ckpts/ckpt_95115802/epoch13.pkl"
+        mcan_weight = "/root/workspace/24s-VQA-MLLM/hankyeol/mcan-vqa/ckpts/ckpt_50634269/epoch13.pkl"
 
         __C = Cfgs() 
         with open(mcan_cfg, 'r') as f:
@@ -138,7 +138,7 @@ class Blip2T5Instruct(Blip2Base):
         self.net = Net(
             __C,
             pretrained_emb=pretrained_emb,
-            token_size=pretrained_emb.shape[0],
+            token_size=pretrained_emb.shape[0], # 19879
             answer_size=4931
         )
 
@@ -146,7 +146,7 @@ class Blip2T5Instruct(Blip2Base):
             param.requires_grad = False
 
         print('Loading MCAN ckpt {}'.format(mcan_weight))
-        ckpt = torch.load(mcan_weight, map_location='cpu')
+        ckpt = torch.load(mcan_weight)
         self.net.load_state_dict(ckpt['state_dict'])
 
     def forward(self, samples):
@@ -155,22 +155,18 @@ class Blip2T5Instruct(Blip2Base):
         # print(samples["text_output"])
         # print('-----------------')
 
-        # 첫 번째 forward 시점에서만 MCAN을 초기화
-        # pretrained_emb = samples['pretrained_emb']
-        # if self.net is None or not torch.equal(pretrained_emb, self.prev_pretrained_emb):
-        #     self.init_mcan(pretrained_emb)
-        #     self.prev_pretrained_emb = pretrained_emb.clone()  
-
-        if self.net is None:
-            self.init_mcan(samples['pretrained_emb'])
-
         # MCAN input
         feats = samples['feats'] #(bs, 1024)
         ques = samples['question'] #(bs, 14)
 
+        # 첫 번째 forward 시점에서만 MCAN을 초기화
+        if self.net is None:
+            self.init_mcan(samples['pretrained_emb'])
+            self.net.to(feats.device)
+
         # MCAN output
         # print('feats:', feats.shape)
-        print('ques:', ques.shape)
+        # print('ques:', ques.shape)
 
         image_embeds = self.net(feats, ques)
         print('image_embeds:', image_embeds.shape)

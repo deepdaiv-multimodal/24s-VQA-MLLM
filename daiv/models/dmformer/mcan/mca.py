@@ -6,10 +6,9 @@
 
 from daiv.models.dmformer.mcan.net_utils import FC, MLP, LayerNorm
 
-import torch, math
 import torch.nn as nn
 import torch.nn.functional as F
-
+import torch, math
 
 
 # ------------------------------
@@ -30,11 +29,6 @@ class MHAtt(nn.Module):
 
     def forward(self, v, k, q, mask):
         n_batches = q.size(0)
-
-        v=v.float()
-        k=k.float()
-        q=q.float()
-
 
         v = self.linear_v(v).view(
             n_batches,
@@ -76,7 +70,7 @@ class MHAtt(nn.Module):
         ) / math.sqrt(d_k)
 
         if mask is not None:
-            scores = scores.masked_fill(mask, -1e4) #-1e9
+            scores = scores.masked_fill(mask, -1e9)
 
         att_map = F.softmax(scores, dim=-1)
         att_map = self.dropout(att_map)
@@ -122,7 +116,6 @@ class SA(nn.Module):
         self.norm2 = LayerNorm(__C.HIDDEN_SIZE)
 
     def forward(self, x, x_mask):
-        #print("MCA에서 ENCODER 통과합니다...text..")
         x = self.norm1(x + self.dropout1(
             self.mhatt(x, x, x, x_mask)
         ))
@@ -156,7 +149,6 @@ class SGA(nn.Module):
         self.norm3 = LayerNorm(__C.HIDDEN_SIZE)
 
     def forward(self, x, y, x_mask, y_mask):
-        #print("MCA에서 DECODER 통과합니다...text + img fusion..")
         x = self.norm1(x + self.dropout1(
             self.mhatt1(x, x, x, x_mask)
         ))
@@ -185,7 +177,6 @@ class MCA_ED(nn.Module):
 
     def forward(self, x, y, x_mask, y_mask):
         # Get hidden vector
-        #print("MCA LAYER 통과합니다...")
         for enc in self.enc_list:
             x = enc(x, x_mask)
 
