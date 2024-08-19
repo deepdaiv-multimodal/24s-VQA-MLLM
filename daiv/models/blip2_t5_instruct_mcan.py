@@ -121,10 +121,11 @@ class Blip2T5Instruct(Blip2Base):
         # MCAN 
         self.net = None 
         self.prev_pretrained_emb = None
+        self.qformer_proj = nn.Linear(2048, 1408)
     
     def init_mcan(self, pretrained_emb):
         # Load preatrained MCAN
-        mcan_cfg = "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/models/dmformer/mcan/cfgs/large_model.yml"
+        mcan_cfg = "/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan/VQA-MLLM-stage2/daiv/models/dmformer/mcan/cfgs/large_model.yml"
         mcan_weight = "/root/workspace/24s-VQA-MLLM/hankyeol/mcan-vqa/ckpts/ckpt_50634269/epoch13.pkl"
 
         __C = Cfgs() 
@@ -170,8 +171,10 @@ class Blip2T5Instruct(Blip2Base):
         # exit()
 
         _, image_embeds = self.net(feats, ques)#(bs, 2048)
-        # image_embeds = image_embeds.unsqueeze(1)
-        print('image_embeds:', image_embeds.shape) 
+        image_embeds = self.qformer_proj(image_embeds)#(bs, 1408)
+        image_embeds = image_embeds.unsqueeze(1)
+        # print('Qformer hidden shape', self.Qformer.config.hidden_size)
+        # print('image_embeds:', image_embeds.shape) 
 
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
 
