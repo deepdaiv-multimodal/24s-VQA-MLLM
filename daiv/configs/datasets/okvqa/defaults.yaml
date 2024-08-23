@@ -40,7 +40,7 @@ datasets:
               - /root/datasets/okvqa/data/okvqa/mscoco_val2014_annotations.json
       
       features:
-          storage: /root/workspace/24s-VQA-MLLM/features
+          storage: /root/workspace/24s-VQA-MLLM/dataset/coco/images_feats
 
       images:
           storage: /root/datasets/okvqa/data

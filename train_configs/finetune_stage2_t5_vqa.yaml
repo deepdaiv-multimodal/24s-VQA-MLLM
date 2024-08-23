@@ -7,18 +7,17 @@ model:
   arch: blip2_t5_instruct_mcan
   model_type: flant5xl
   load_pretrained: True
-  # pretrained: "/root/workspace/24s-VQA-MLLM/BEiT3/stage2/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240731025/checkpoint_9.pth"
   freeze_vit: True
 
 datasets:
-  coco_vqa: 
-    vis_processor:
-        train:
-          name: "blip2_image_train"
-          image_size: 224
-    text_processor:
-        train:
-          name: "blip_caption"
+  # coco_vqa: 
+  #   vis_processor:
+  #       train:
+  #         name: "blip2_image_train"
+  #         image_size: 224
+  #   text_processor:
+  #       train:
+  #         name: "blip_caption"
 
   ok_vqa:
     vis_processor:
@@ -29,14 +28,14 @@ datasets:
         train:
           name: "blip_caption"
 
-  aok_vqa:
-    vis_processor:
-        train:
-          name: "blip2_image_train"
-          image_size: 224
-    text_processor:
-        train:
-          name: "blip_caption"
+  # aok_vqa:
+  #   vis_processor:
+  #       train:
+  #         name: "blip2_image_train"
+  #         image_size: 224
+  #   text_processor:
+  #       train:
+  #         name: "blip_caption"
 
 run:
   task: image_text_pretrain
@@ -48,9 +47,9 @@ run:
 
   weight_decay: 0.05
   max_epoch: 10
-  batch_size_train: 2
+  batch_size_train: 8
   batch_size_eval: 64 #64
-  num_workers: 64
+  num_workers: 16
   warmup_steps: 2000
 
   seed: 42
@@ -65,4 +64,4 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: False
+  distributed: True

@@ -55,8 +55,10 @@ python evaluate.py --cfg-path train_configs/pretrain_stage2_eval.yaml
 python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
 ```
 
-# Training w/ mcan output
-vqav2, okvqa, aokvqa
+# Training w/ mcan output(prophet)
+okvqa
 ```
 python train.py --cfg-path train_configs/finetune_stage2_t5_vqa.yaml
 ```
+1. answer_latent = self.proj_norm(proj_feat)
+2. img_feat

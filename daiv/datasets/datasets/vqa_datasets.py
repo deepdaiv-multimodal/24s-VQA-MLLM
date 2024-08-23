@@ -20,23 +20,13 @@ class VQADataset(BaseDataset):
         num_answers = []
 
         #print(f'samples : {samples}')
-        '''
-        samples : {
-        image : tensor([[[]]])
-        text_input : str (question)
-        text_output : str (best_answer) .. only one
-        weights : dict {cand1 : conf1 , cand2 : conf2 ...} .. 이미지마다 개수 다름 (conf합이 1)
-
-        }
-        '''
         
         for sample in samples:
-            image_list.append(torch.tensor(sample["feats"]))
-            question_list.append(torch.tensor(sample["question"]))
+            image_list.append(sample["feats"])
+            question_list.append(sample["question"])
             prompt_list.append(sample["text_input"])
             # weight_list.append(sample["weights"][sample['text_output']])
             answer_list.append(sample['text_output'])
-            pretrained_emb = sample['pretrained_emb']
             # num_answers.append(len(list(sample["weights"].values())))
 
         return {
@@ -44,7 +34,6 @@ class VQADataset(BaseDataset):
             "question": torch.stack(question_list, dim=0),
             "text_input": prompt_list,
             "text_output": answer_list,
-            "pretrained_emb": pretrained_emb,
             # "weight": torch.Tensor(weight_list),
             # "n_answers": torch.LongTensor(num_answers),
         }
