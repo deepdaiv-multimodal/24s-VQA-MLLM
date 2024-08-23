@@ -64,5 +64,6 @@ python train.py --cfg-path train_configs/finetune_stage2_t5_vqa.yaml
 python evaluate.py --cfg-path train_configs/eval_stage2_vqa.yaml
 ```
 1. answer_latent = self.proj_norm(proj_feat)
-/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823055
+/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823063
 2. img_feat
+/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823073

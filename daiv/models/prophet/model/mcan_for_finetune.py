@@ -28,13 +28,13 @@ class MCANForFinetune(MCAN):
         self.proj1.bias.data = self.proj.bias.data.mean() + torch.zeros(self.proj1.bias.data.shape)
 
     def forward(self, input_tuple, output_answer_latent=False):
-        proj_feat, answer_latent = super().forward(input_tuple, output_answer_latent=True)
+        proj_feat, answer_latent, img_feat = super().forward(input_tuple, output_answer_latent=True)
         proj_feat = torch.cat([
             proj_feat,
             self.proj1(answer_latent)
         ], dim=1)
         
         if output_answer_latent:
-            return proj_feat, answer_latent
+            return proj_feat, img_feat
 
         return proj_feat

@@ -121,6 +121,7 @@ class Blip2T5Instruct(Blip2Base):
 
         # MCAN 
         self.net = None 
+        self.ln_layer = LayerNorm(2048)
         self.qformer_proj = nn.Linear(2048, 1408)
     
     def init_mcan(self):
@@ -165,6 +166,7 @@ class Blip2T5Instruct(Blip2Base):
         # exit()
 
         _, image_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
+        # image_embeds = self.ln_layer(image_embeds)
         image_embeds = self.qformer_proj(image_embeds)#(bs, 1408)
         image_embeds = image_embeds.unsqueeze(1)
         # print('Qformer hidden shape', self.Qformer.config.hidden_size)
@@ -843,3 +845,11 @@ class Blip2T5Instruct(Blip2Base):
         model.load_checkpoint_from_config(cfg)
 
         return model
+    
+class LayerNorm(nn.LayerNorm):
+    """Subclass torch's LayerNorm to handle fp16."""
+
+    def forward(self, x: torch.Tensor):
+        orig_type = x.dtype
+        ret = super().forward(x.type(torch.float32))
+        return ret.type(orig_type)

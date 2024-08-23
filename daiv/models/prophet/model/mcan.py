@@ -116,7 +116,7 @@ class MCAN(nn.Module):
         proj_feat = self.proj(answer_latent)
 
         if output_answer_latent:
-            return proj_feat, answer_latent
+            return proj_feat, answer_latent, img_feat
 
         return proj_feat
 

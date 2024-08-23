@@ -8,7 +8,7 @@ model:
   model_type: flant5xl
   # model_type: okvqa
   load_pretrained: True
-  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823055/checkpoint_9.pth'
+  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823082/checkpoint_9.pth'
   freeze_vit: True
   add_dat: False
 
@@ -54,7 +54,7 @@ run:
   weight_decay: 0.05
   max_epoch: 10
   batch_size_train: 8 #64
-  batch_size_eval: 8 #64
+  batch_size_eval: 64 #64
   num_workers: 8
   warmup_steps: 2000
 
