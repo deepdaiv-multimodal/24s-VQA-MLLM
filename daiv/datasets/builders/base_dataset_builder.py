@@ -173,7 +173,13 @@ class BaseDatasetBuilder:
         build_info = self.config.build_info
 
         ann_info = build_info.annotations
-        vis_info = build_info.get(self.data_type)
+        if len(self.data_type) != 1:
+            vis_info = {}
+            for data_type in self.data_type:
+                vis_info[data_type] = build_info.get(data_type)
+        else:
+            vis_info = build_info.get(self.data_type)
+        # print('vis_info:', vis_info)
 
         datasets = dict()
         for split in ann_info.keys():
@@ -207,14 +213,22 @@ class BaseDatasetBuilder:
             ann_paths = abs_ann_paths
 
             # visual data storage path
-            vis_path = vis_info.storage
+            if len(vis_info) != 1:
+                vis_path = {}
+                for vis in vis_info:
+                    value = vis_info[vis]
+                    vis_path[vis] = value.storage
+            else:
+                vis_path = vis_info.storage
+            
+            print('vis_path:', vis_path)
 
-            if not os.path.isabs(vis_path):
-                # vis_path = os.path.join(utils.get_cache_path(), vis_path)
-                vis_path = utils.get_cache_path(vis_path)
+            # if not os.path.isabs(vis_path):
+            #     # vis_path = os.path.join(utils.get_cache_path(), vis_path)
+            #     vis_path = utils.get_cache_path(vis_path)
 
-            if not os.path.exists(vis_path):
-                warnings.warn("storage path {} does not exist.".format(vis_path))
+            # if not os.path.exists(vis_path):
+            #     warnings.warn("storage path {} does not exist.".format(vis_path))
 
             # create datasets
             dataset_cls = self.train_dataset_cls if is_train else self.eval_dataset_cls

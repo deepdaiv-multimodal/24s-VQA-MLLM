@@ -119,10 +119,13 @@ class Blip2T5Instruct(Blip2Base):
 
         self.qformer_text_input = qformer_text_input
 
+        # self.vis_proj = nn.Linear(2048, 1408)
+
         # MCAN 
         self.net = None 
         self.ln_layer = LayerNorm(2048)
         self.qformer_proj = nn.Linear(2048, 1408)
+        
     
     def init_mcan(self):
         # Load preatrained MCAN
@@ -173,6 +176,13 @@ class Blip2T5Instruct(Blip2Base):
         # print('image_embeds:', image_embeds.shape) 
 
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
+
+        # Generate image_embeds_llm as in BLIVA
+        image = samples['image']
+        image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # [batch_size, 257, 1408]
+        image_features = image_features[:, 1:]  # Remove CLS token
+        image_embeds_llm = self.vis_proj(image_features)  # Project to LLM dimension
+        image_atts_llm = torch.ones(image_embeds_llm.size()[:-1], dtype=torch.long).to(image.device)
 
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
 
