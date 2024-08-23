@@ -32,12 +32,12 @@ class AttFlat(nn.Module):
     def forward(self, x, x_mask):
         att = self.mlp(x)
         if x_mask is not None:
-            att = att.to(torch.float32)
+            # att = att.to(torch.float32)
             att = att.masked_fill(
                 x_mask.squeeze(1).squeeze(1).unsqueeze(2),
-                -1e9
+                -1e4
             )
-            att = att.to(torch.float16)
+            # att = att.to(torch.float16)
         att = F.softmax(att, dim=1)
 
         att_list = []
@@ -98,9 +98,9 @@ class MHAtt(nn.Module):
         ) / math.sqrt(d_k)
 
         if mask is not None:
-            scores = scores.to(torch.float32)
-            scores = scores.masked_fill(mask, -1e9)
-            scores = scores.to(torch.float16) # 다시 half로 변환 
+            # scores = scores.to(torch.float32)
+            scores = scores.masked_fill(mask, -1e4)
+            # scores = scores.to(torch.float16) # 다시 half로 변환 
 
         att_map = F.softmax(scores, dim=-1)
         att_map = self.dropout(att_map)

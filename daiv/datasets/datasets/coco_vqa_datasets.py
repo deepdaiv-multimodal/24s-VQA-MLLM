@@ -231,7 +231,7 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
         # image = Image.open(image_path).convert("RGB")
 
         # Process image feature
-        feat_filename = f"val2014/COCO_train2014_{ann['image_id']:012d}.npz"
+        feat_filename = f"val2014/COCO_val2014_{ann['image_id']:012d}.npz"
         feat_path = os.path.join(self.vis_root, feat_filename)
         feats = np.load(feat_path)['x']
         assert feats.shape == (16, 16, 4096)
@@ -247,8 +247,8 @@ class COCOVQAEvalDataset(VQAEvalDataset, __DisplMixin):
 
         return {
             # "image": image,
-            "feats": feats,
-            "question": ques_ids,
+            "feats": torch.tensor(feats, dtype=torch.float),
+            "question": torch.tensor(ques_ids, dtype=torch.long),
             "text_input": text_input,
             "question_id": ann["question_id"],
             "instance_id": ann["instance_id"],
