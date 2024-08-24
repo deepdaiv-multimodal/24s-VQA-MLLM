@@ -372,6 +372,7 @@ class Blip2T5Instruct(Blip2Base):
         #     prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
 
         query_tokens = self.query_tokens.expand(bs, -1, -1)
+
         if self.qformer_text_input:
             # remove ocr tokens in q_former (for eval textvqa)
             # qformer_prompt = prompt
@@ -428,8 +429,14 @@ class Blip2T5Instruct(Blip2Base):
             _, image_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
             image_embeds = self.qformer_proj(image_embeds)#(bs, 1408)
             image_embeds = image_embeds.unsqueeze(1)
-
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
+            
+            # Generate image_embeds_llm as in BLIVA
+            image = samples['image']
+            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # [batch_size, 257, 1408]
+            image_features = image_features[:, 1:]  #(bs, 256, 1408)
+            add_feature_llm = self.vision_project(image_features) #(bs, 256, 2048)
+            atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(image.device) #(bs, 256)
 
             if self.qformer_text_input:
                 query_output = self.Qformer.bert(
@@ -457,11 +464,11 @@ class Blip2T5Instruct(Blip2Base):
             return_tensors="pt"
         ).to(feats.device)
 
-        encoder_atts = torch.cat([atts_t5, input_tokens.attention_mask], dim=1)
+        encoder_atts = torch.cat([atts_add_feature_llm, atts_t5, input_tokens.attention_mask], dim=1)
 
         with self.maybe_autocast(dtype=torch.bfloat16):
             inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
-            inputs_embeds = torch.cat([inputs_t5, inputs_embeds], dim=1)
+            inputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
 
             outputs = self.t5_model.generate(
                 inputs_embeds=inputs_embeds,
