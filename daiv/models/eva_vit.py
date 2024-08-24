@@ -52,12 +52,14 @@ class Mlp(nn.Module):
         self.drop = nn.Dropout(drop)
 
     def forward(self, x):
+        x = x.half()
         x = self.fc1(x)
         x = self.act(x)
         # x = self.drop(x)
         # commit this for the orignal BERT implement 
         x = self.fc2(x)
         x = self.drop(x)
+        x = x.float()
         return x
 
 
@@ -121,7 +123,9 @@ class Attention(nn.Module):
         if self.q_bias is not None:
             qkv_bias = torch.cat((self.q_bias, torch.zeros_like(self.v_bias, requires_grad=False), self.v_bias))
         # qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
-        qkv = F.linear(input=x, weight=self.qkv.weight, bias=qkv_bias)
+        x = x.half()
+        qkv = F.linear(input=x, weight=self.qkv.weight.half(), bias=qkv_bias.half())
+        x = x.float()
         qkv = qkv.reshape(B, N, 3, self.num_heads, -1).permute(2, 0, 3, 1, 4)
         q, k, v = qkv[0], qkv[1], qkv[2]   # make torchscript happy (cannot use tensor as tuple)
 
@@ -200,7 +204,9 @@ class PatchEmbed(nn.Module):
         # FIXME look at relaxing size constraints
         assert H == self.img_size[0] and W == self.img_size[1], \
             f"Input image size ({H}*{W}) doesn't match model ({self.img_size[0]}*{self.img_size[1]})."
+        x = x.half()
         x = self.proj(x).flatten(2).transpose(1, 2)
+        x = x.float()
         return x
 
 
