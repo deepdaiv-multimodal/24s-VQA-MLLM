@@ -5,8 +5,13 @@ from typing import Iterable
 from torch.utils.data import Dataset
 from collections import Counter
 from PIL import Image
+import numpy as np
 
 from daiv.datasets.datasets.base_dataset import BaseDataset_H
+from daiv.datasets.data_utils import tokenize, proc_ques
+from transformers import AutoTokenizer
+
+import torch
 
 def ok_score(gt_answers):
     gt_answers = [a['answer'] for a in gt_answers]
@@ -34,6 +39,11 @@ class HEURISTICDataset(BaseDataset_H):
         ann_root (string): Directory to store the annotation file
         """
         self.vis_root = vis_root
+
+        # load bert tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained('bert-large-uncased')
+        self.token_size = self.tokenizer.vocab_size
+        print(f'== BertTokenizer loaded, vocab size: {self.token_size}')
 
         # annotations 
         with open(ann_paths[0], "r") as f:
@@ -110,10 +120,14 @@ class HEURISTICDataset(BaseDataset_H):
         
         # load image 
         iid = int(data['image_id'])
-        image_filename = f"train2014/COCO_train2014_{iid:012d}.jpg"
-        image_path = os.path.join(self.vis_root, image_filename)
-        image = Image.open(image_path).convert("RGB")
-        image = self.vis_processor(image)
+        image_filename = f"train2014/COCO_train2014_{iid:012d}.npz"
+        # image_path = os.path.join(self.vis_root, image_filename)
+        # image = Image.open(image_path).convert("RGB")
+        # image = self.vis_processor(image)
+        feat_path = os.path.join(self.vis_root, image_filename)
+        feats = np.load(feat_path)['x']
+        assert feats.shape == (16, 16, 4096)
+        feats = feats.reshape(-1, 4096)
 
         # text_input: answer heuristic
         question = self.text_processor(data['question'])
@@ -123,15 +137,33 @@ class HEURISTICDataset(BaseDataset_H):
         text_input = prompt_in_ctx + prompt_query
         # text_input = self.text_processor(text_input)
 
+        # Process question
+        ques_str = data["question"]
+        ques_ids = self.bert_tokenize(ques_str, 32)
+
         # text_output
         text_output = data['most_answer']
 
         return {
-            "image": image,
+            # "image": image,
+            "feats": torch.tensor(feats, dtype=torch.float),
+            "question": torch.tensor(ques_ids, dtype=torch.long),
             "text_input": text_input,
             "text_output": text_output,
             # 'weights':answer_weight
         }
+    
+    def bert_tokenize(self, text, max_token):
+        text = text.lower().replace('?', '')
+        tokens = self.tokenizer.tokenize(text)
+        if len(tokens) > max_token - 2:
+            tokens = tokens[:max_token-2]
+        tokens = ['[CLS]'] + tokens + ['[SEP]']
+        ids = self.tokenizer.convert_tokens_to_ids(tokens)
+        ids = ids + [0] * (max_token - len(ids))
+        ids = np.array(ids, np.int64)
+
+        return ids
     
     def sample_make(self, ques, capt, cands, ans=None):
         line_prefix = "===\n"
@@ -177,6 +209,11 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         ann_root (string): Directory to store the annotation file
         """
         self.vis_root = vis_root
+
+        # load bert tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained('bert-large-uncased')
+        self.token_size = self.tokenizer.vocab_size
+        print(f'== BertTokenizer loaded, vocab size: {self.token_size}')
 
         # annotations 
         with open(ann_paths[0], "r") as f:
@@ -229,7 +266,6 @@ class HEURISTICEvalCDataset(BaseDataset_H):
             # heuristic prompt 생성
             similar_examples = self.qid_to_ex_id[qid]
             prompt_text = self.get_context(similar_examples[:20])
-            print()
 
             qid_to_data[qid] = {
                 'question_id': qid,
@@ -256,10 +292,14 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         
         # load image 
         iid = int(data['image_id'])
-        image_filename = f"val2014/COCO_val2014_{iid:012d}.jpg"
-        image_path = os.path.join(self.vis_root, image_filename)
-        image = Image.open(image_path).convert("RGB")
-        image = self.vis_processor(image)
+        image_filename = f"val2014/COCO_val2014_{iid:012d}.npz"
+        # image_path = os.path.join(self.vis_root, image_filename)
+        # image = Image.open(image_path).convert("RGB")
+        # image = self.vis_processor(image)
+        feat_path = os.path.join(self.vis_root, image_filename)
+        feats = np.load(feat_path)['x']
+        assert feats.shape == (16, 16, 4096)
+        feats = feats.reshape(-1, 4096)
 
         # text_input: answer heuristic
         question = self.text_processor(data['question'])
@@ -275,13 +315,31 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         # question_id
         question_id = data['question_id']
 
+        # Process question
+        ques_str = ann["question"]
+        ques_ids = self.bert_tokenize(ques_str, 32)
+
         return {
-            "image": image,
+            # "image": image,
+            "feats": torch.tensor(feats, dtype=torch.float),
+            "question": torch.tensor(ques_ids, dtype=torch.long),
             "text_input": text_input,
             "text_output": text_output,
             # 'weights':answer_weight
             "question_id": question_id
         }
+    
+    def bert_tokenize(self, text, max_token):
+        text = text.lower().replace('?', '')
+        tokens = self.tokenizer.tokenize(text)
+        if len(tokens) > max_token - 2:
+            tokens = tokens[:max_token-2]
+        tokens = ['[CLS]'] + tokens + ['[SEP]']
+        ids = self.tokenizer.convert_tokens_to_ids(tokens)
+        ids = ids + [0] * (max_token - len(ids))
+        ids = np.array(ids, np.int64)
+
+        return ids
     
     def sample_make(self, ques, capt, cands, ans=None):
         line_prefix = "===\n"
