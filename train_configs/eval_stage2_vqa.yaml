@@ -8,7 +8,7 @@ model:
   model_type: flant5xl
   # model_type: okvqa
   load_pretrained: True
-  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240824052/checkpoint_9.pth'
+  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240823073/checkpoint_9.pth'
   freeze_vit: True
   add_dat: False
 

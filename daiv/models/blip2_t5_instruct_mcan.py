@@ -125,6 +125,7 @@ class Blip2T5Instruct(Blip2Base):
         self.net = None 
         self.ln_layer = LayerNorm(2048)
         self.qformer_proj = nn.Linear(2048, 1408)
+        self.feat_proj = nn.Linear(2048, self.t5_model.config.hidden_size)
         
     
     def init_mcan(self):
@@ -168,19 +169,20 @@ class Blip2T5Instruct(Blip2Base):
         # print('ques:', ques.shape)
         # exit()
 
-        _, image_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
+        _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
         # image_embeds = self.ln_layer(image_embeds)
-        image_embeds = self.qformer_proj(image_embeds)#(bs, 1408)
-        image_embeds = image_embeds.unsqueeze(1)#(bs, 1, 1408)
-        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device) #(bs,1)
+        mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 1408)
+        add_feature_llm = mcan_embeds.unsqueeze(1)#(bs, 1, 2048)
+        atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device) #(bs, 256)
+
+        # image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device) #(bs,1)
 
         # Generate image_embeds_llm as in BLIVA
         image = samples['image']
-        image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # [batch_size, 257, 1408]
-        image_features = image_features[:, 1:]  #(bs, 256, 1408)
-        add_feature_llm = self.vision_project(image_features) #(bs, 256, 2048)
-        atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(image.device) #(bs, 256)
-
+        with self.maybe_autocast():
+            image_embeds = self.ln_vision(self.visual_encoder(image))
+        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
+    
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
 
         if self.qformer_text_input:
@@ -241,6 +243,8 @@ class Blip2T5Instruct(Blip2Base):
 
             inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
             inputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
+            # print('inputs_embeds:', inputs_embeds.shape)
+            # print('encoder_atts:', encoder_atts.shape)
 
             if fs_embeds is not None:
                 inputs_embeds = torch.cat([fs_embeds, inputs_embeds], dim=1)
@@ -426,17 +430,17 @@ class Blip2T5Instruct(Blip2Base):
             # image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
 
             # MCAN output
-            _, image_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
-            image_embeds = self.qformer_proj(image_embeds)#(bs, 1408)
-            image_embeds = image_embeds.unsqueeze(1)
-            image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
+            _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
+            # image_embeds = self.ln_layer(image_embeds)
+            mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 2048)
+            add_feature_llm = mcan_embeds.unsqueeze(1)#(bs, 1, 2048)
+            atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device) #(bs, 256)
             
             # Generate image_embeds_llm as in BLIVA
             image = samples['image']
-            image_features = self.visual_encoder.get_intermediate_layers(image)[-2]  # [batch_size, 257, 1408]
-            image_features = image_features[:, 1:]  #(bs, 256, 1408)
-            add_feature_llm = self.vision_project(image_features) #(bs, 256, 2048)
-            atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(image.device) #(bs, 256)
+            with self.maybe_autocast():
+                image_embeds = self.ln_vision(self.visual_encoder(image))
+            image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
                 query_output = self.Qformer.bert(
@@ -468,7 +472,7 @@ class Blip2T5Instruct(Blip2Base):
 
         with self.maybe_autocast(dtype=torch.bfloat16):
             inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
-            inputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
+            iinputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
 
             outputs = self.t5_model.generate(
                 inputs_embeds=inputs_embeds,
