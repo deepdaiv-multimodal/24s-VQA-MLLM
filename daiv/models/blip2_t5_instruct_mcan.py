@@ -472,7 +472,7 @@ class Blip2T5Instruct(Blip2Base):
 
         with self.maybe_autocast(dtype=torch.bfloat16):
             inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
-            iinputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
+            inputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
 
             outputs = self.t5_model.generate(
                 inputs_embeds=inputs_embeds,
