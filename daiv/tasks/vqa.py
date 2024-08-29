@@ -139,7 +139,8 @@ class VQATask(BaseTask):
             model_to_use = model.module
         else:
             model_to_use = model
-        answers = model_to_use.module.predict_answers(
+
+        answers = model_to_use.predict_answers(
             samples=samples,
             answer_list=self.answer_list,
             # inference_method=self.inference_method,
