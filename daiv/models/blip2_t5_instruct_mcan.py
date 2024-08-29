@@ -171,7 +171,7 @@ class Blip2T5Instruct(Blip2Base):
 
         _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
         # image_embeds = self.ln_layer(image_embeds)
-        mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 1408)
+        # mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 2048)
         add_feature_llm = mcan_embeds.unsqueeze(1)#(bs, 1, 2048)
         atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device) #(bs, 256)
 

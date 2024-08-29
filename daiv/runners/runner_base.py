@@ -313,6 +313,9 @@ class RunnerBase:
     def test_splits(self):
         test_splits = self.config.run_cfg.get("test_splits", [])
 
+        if len(test_splits) == 0:
+            logging.info("No test splits found.")
+
         return test_splits
 
     @property
@@ -419,8 +422,13 @@ class RunnerBase:
                 dist.barrier()
 
         # testing phase
-        test_epoch = "best" if len(self.valid_splits) > 0 else cur_epoch
-        self.evaluate(cur_epoch=test_epoch, skip_reload=self.evaluate_only)
+        # test_epoch = "best" if len(self.valid_splits) > 0 else cur_epoch
+        # self.evaluate(cur_epoch=test_epoch, skip_reload=self.evaluate_only)
+
+        if len(self.test_splits) > 0:
+            # self.evaluate(skip_reload=self.evaluate_only)
+            print('start evaluate ...')
+            self.evaluate(skip_reload=True)
 
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
@@ -467,6 +475,7 @@ class RunnerBase:
         """
         data_loader = self.dataloaders.get(split_name, None)
         assert data_loader, "data_loader for split {} is None.".format(split_name)
+        print('data_loader:', data_loader)
 
         # model = self.eval_load_checkpoint(self.resume_ckpt_path)
         model = self.model
@@ -478,6 +487,7 @@ class RunnerBase:
         # )
         
         results = self.task.evaluation(model, data_loader)
+        print('results:', results)
 
         if results is not None:
             return self.task.after_evaluation(
