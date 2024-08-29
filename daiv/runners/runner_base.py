@@ -487,7 +487,6 @@ class RunnerBase:
         # )
         
         results = self.task.evaluation(model, data_loader)
-        print('results:', results)
 
         if results is not None:
             return self.task.after_evaluation(
@@ -495,7 +494,6 @@ class RunnerBase:
                 split_name=split_name,
                 epoch=cur_epoch,
             )
-
 
     def unwrap_dist_model(self, model):
         if self.use_distributed:
