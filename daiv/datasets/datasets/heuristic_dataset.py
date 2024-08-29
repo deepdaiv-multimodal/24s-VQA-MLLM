@@ -120,11 +120,13 @@ class HEURISTICDataset(BaseDataset_H):
         
         # load image 
         iid = int(data['image_id'])
-        image_filename = f"train2014/COCO_train2014_{iid:012d}.npz"
-        # image_path = os.path.join(self.vis_root, image_filename)
-        # image = Image.open(image_path).convert("RGB")
-        # image = self.vis_processor(image)
-        feat_path = os.path.join(self.vis_root, image_filename)
+        image_filename = f"train2014/COCO_train2014_{iid:012d}.jpg"
+        image_path = os.path.join(self.vis_root['images'], image_filename)
+        image = Image.open(image_path).convert("RGB")
+        image = self.vis_processor(image)
+
+        feat_filename = f"train2014/COCO_train2014_{iid:012d}.npz"
+        feat_path = os.path.join(self.vis_root['features'], feat_filename)
         feats = np.load(feat_path)['x']
         assert feats.shape == (16, 16, 4096)
         feats = feats.reshape(-1, 4096)
@@ -145,7 +147,7 @@ class HEURISTICDataset(BaseDataset_H):
         text_output = data['most_answer']
 
         return {
-            # "image": image,
+            "image": image,
             "feats": torch.tensor(feats, dtype=torch.float),
             "question": torch.tensor(ques_ids, dtype=torch.long),
             "text_input": text_input,
@@ -292,11 +294,13 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         
         # load image 
         iid = int(data['image_id'])
-        image_filename = f"val2014/COCO_val2014_{iid:012d}.npz"
-        # image_path = os.path.join(self.vis_root, image_filename)
-        # image = Image.open(image_path).convert("RGB")
-        # image = self.vis_processor(image)
-        feat_path = os.path.join(self.vis_root, image_filename)
+        image_filename = f"val2014/COCO_val2014_{iid:012d}.jpg"
+        image_path = os.path.join(self.vis_root['images'], image_filename)
+        image = Image.open(image_path).convert("RGB")
+        image = self.vis_processor(image)
+
+        feat_filename = f"val2014/COCO_val2014_{iid:012d}.npz"
+        feat_path = os.path.join(self.vis_root['features'], feat_filename)
         feats = np.load(feat_path)['x']
         assert feats.shape == (16, 16, 4096)
         feats = feats.reshape(-1, 4096)
@@ -316,11 +320,11 @@ class HEURISTICEvalCDataset(BaseDataset_H):
         question_id = data['question_id']
 
         # Process question
-        ques_str = ann["question"]
+        ques_str = data["question"]
         ques_ids = self.bert_tokenize(ques_str, 32)
 
         return {
-            # "image": image,
+            "image": image,
             "feats": torch.tensor(feats, dtype=torch.float),
             "question": torch.tensor(ques_ids, dtype=torch.long),
             "text_input": text_input,

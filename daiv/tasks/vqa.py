@@ -135,7 +135,11 @@ class VQATask(BaseTask):
         return datasets
 
     def valid_step(self, model, samples):
-        answers = model.predict_answers(
+        if isinstance(model, torch.nn.parallel.DistributedDataParallel):
+            model_to_use = model.module
+        else:
+            model_to_use = model
+        answers = model_to_use.module.predict_answers(
             samples=samples,
             answer_list=self.answer_list,
             # inference_method=self.inference_method,

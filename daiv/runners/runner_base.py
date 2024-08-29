@@ -472,10 +472,10 @@ class RunnerBase:
         model = self.model
         model.eval()
 
-        self.task.before_evaluation(
-            model=model,
-            dataset=self.datasets[split_name],
-        )
+        # self.task.before_evaluation(
+        #     model=model,
+        #     dataset=self.datasets[split_name],
+        # )
         
         results = self.task.evaluation(model, data_loader)
 
