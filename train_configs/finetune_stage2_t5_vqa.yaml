@@ -7,6 +7,7 @@ model:
   arch: blip2_t5_instruct_mcan
   model_type: flant5xl
   load_pretrained: True
+  pretrained: '/root/workspace/24s-VQA-MLLM/BEiT3/stage2-mcan-prophet-linear/VQA-MLLM-stage2/daiv/output/BLIP2/Finetune_stage2/20240829102/checkpoint_2.pth'
   freeze_vit: True
 
 datasets:
@@ -19,7 +20,7 @@ datasets:
   #       train:
   #         name: "blip_caption"
 
-  ok_vqa:
+  heuristic_vqa:
     vis_processor:
         train:
           name: "blip2_image_train"
@@ -52,7 +53,7 @@ run:
 
   weight_decay: 0.05
   max_epoch: 10
-  batch_size_train: 64
+  batch_size_train: 16
   batch_size_eval: 16 #64
   num_workers: 64
   warmup_steps: 2000
