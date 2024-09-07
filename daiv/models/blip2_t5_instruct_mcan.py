@@ -160,12 +160,15 @@ class Blip2T5Instruct(Blip2Base):
             self.net.to(feats.device)
 
         # MCAN output
-        _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)  # (bs, 2048)
-        mcan_embeds = self.ln_layer(mcan_embeds)
-        add_feature_llm = mcan_embeds.unsqueeze(1)  # (bs, 1, 2048)
-        atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device)
+        _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
+        # image_embeds = self.ln_layer(image_embeds)
+        # mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 2048)
+        add_feature_llm = mcan_embeds.unsqueeze(1)#(bs, 1, 2048)
+        atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device) #(bs, 256)
 
-        # Visual feature 추가
+        # image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device) #(bs,1)
+
+        # Generate image_embeds_llm as in BLIVA
         image = samples['image']
         with self.maybe_autocast():
             image_embeds = self.ln_vision(self.visual_encoder(image))
@@ -345,11 +348,10 @@ class Blip2T5Instruct(Blip2Base):
             prompt = samples["prompt"]
         else:
             prompt = samples['text_input']
-
+        
         # MCAN input
-        feats = samples['feats']  # (bs, 256, 4096)
-        ques = samples['question']  # (bs, 32)
-        image = samples['image']
+        feats = samples['feats'] #(bs, 256, 4096)
+        ques = samples['question'] #(bs, 32)
 
         # 첫 번째 forward 시점에서만 MCAN을 초기화
         if self.net is None:
@@ -363,22 +365,17 @@ class Blip2T5Instruct(Blip2Base):
         else:
             assert len(prompt) == bs, "The number of prompts must be equal to the batch size."
 
-        # MCAN output
-        _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)  # (bs, 2048)
-        mcan_embeds = self.ln_layer(mcan_embeds)
-        add_feature_llm = mcan_embeds.unsqueeze(1)  # (bs, 1, 2048)
-        atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device)
+        # # For TextCaps
+        # if "ocr_tokens" in samples.keys() and "{}" in prompt[0]:
+        #     prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
 
-        
-        with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.visual_encoder(image))
-
-        # image_atts 
-        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
-        
-        query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
+        query_tokens = self.query_tokens.expand(bs, -1, -1)
 
         if self.qformer_text_input:
+            # remove ocr tokens in q_former (for eval textvqa)
+            # qformer_prompt = prompt
+            # qformer_prompt = ['Question: ' + qp.split(' Question: ')[1] for qp in qformer_prompt]
+
             text_Qformer = self.tokenizer(
                 prompt,
                 padding='longest',
@@ -387,26 +384,77 @@ class Blip2T5Instruct(Blip2Base):
                 return_tensors="pt",
             ).to(feats.device)
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(feats.device)
-            Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask], dim=1)
+            Qformer_atts = torch.cat([query_atts,text_Qformer.attention_mask],dim=1)
 
-            query_output = self.Qformer.bert(
-                text_Qformer.input_ids,
-                attention_mask=Qformer_atts,
-                query_embeds=query_tokens,
-                encoder_hidden_states=image_embeds,
-                encoder_attention_mask=image_atts,
-                return_dict=True,
-            )
+        # For video data
+        if feats.dim() == 5:
+            inputs_t5, atts_t5 = [], []
+            for j in range(feats.size(2)):
+                this_frame = feats[:,:,j,:,:]
+                with self.maybe_autocast():
+                    frame_embeds = self.ln_vision(self.visual_encoder(this_frame))
+                    frame_atts = torch.ones(frame_embeds.size()[:-1], dtype=torch.long).to(feats.device)
+
+                if self.qformer_text_input:
+                    frame_query_output = self.Qformer.bert(
+                        text_Qformer.input_ids,
+                        attention_mask = Qformer_atts,
+                        query_embeds=query_tokens,
+                        encoder_hidden_states=frame_embeds,
+                        encoder_attention_mask=frame_atts,
+                        return_dict=True,
+                    )
+                else:
+                    frame_query_output = self.Qformer.bert(
+                        query_embeds=query_tokens,
+                        encoder_hidden_states=frame_embeds,
+                        encoder_attention_mask=frame_atts,
+                        return_dict=True,
+                    )
+
+                frame_inputs_t5 = self.t5_proj(frame_query_output.last_hidden_state[:,:query_tokens.size(1),:])
+                frame_atts_t5 = torch.ones(frame_inputs_t5.size()[:-1], dtype=torch.long).to(feats.device)
+                inputs_t5.append(frame_inputs_t5)
+                atts_t5.append(frame_atts_t5)
+            inputs_t5 = torch.cat(inputs_t5, dim=1)
+            atts_t5 = torch.cat(atts_t5, dim=1)
         else:
-            query_output = self.Qformer.bert(
-                query_embeds=query_tokens,
-                encoder_hidden_states=image_embeds,
-                encoder_attention_mask=image_atts,
-                return_dict=True,
-            )
+            # with self.maybe_autocast():
+            #     image_embeds = self.ln_vision(self.visual_encoder(feats))
+            # image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(feats.device)
 
-        inputs_t5 = self.t5_proj(query_output.last_hidden_state[:, :query_tokens.size(1), :])
-        atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(feats.device)
+            # MCAN output
+            _, mcan_embeds = self.net([feats, ques], output_answer_latent=True)#(bs, 2048)
+            # image_embeds = self.ln_layer(image_embeds)
+            mcan_embeds = self.feat_proj(mcan_embeds)#(bs, 2048)
+            add_feature_llm = mcan_embeds.unsqueeze(1)#(bs, 1, 2048)
+            atts_add_feature_llm = torch.ones(add_feature_llm.size()[:-1], dtype=torch.long).to(mcan_embeds.device) #(bs, 256)
+            
+            # Generate image_embeds_llm as in BLIVA
+            image = samples['image']
+            with self.maybe_autocast():
+                image_embeds = self.ln_vision(self.visual_encoder(image))
+            image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
+
+            if self.qformer_text_input:
+                query_output = self.Qformer.bert(
+                    text_Qformer.input_ids,
+                    attention_mask=Qformer_atts,
+                    query_embeds=query_tokens,
+                    encoder_hidden_states=image_embeds,
+                    encoder_attention_mask=image_atts,
+                    return_dict=True,
+                )
+            else:
+                query_output = self.Qformer.bert(
+                    query_embeds=query_tokens,
+                    encoder_hidden_states=image_embeds,
+                    encoder_attention_mask=image_atts,
+                    return_dict=True,
+                )
+
+            inputs_t5 = self.t5_proj(query_output.last_hidden_state[:,:query_tokens.size(1),:])
+            atts_t5 = torch.ones(inputs_t5.size()[:-1], dtype=torch.long).to(feats.device)
 
         input_tokens = self.t5_tokenizer(
             prompt,
@@ -419,7 +467,6 @@ class Blip2T5Instruct(Blip2Base):
         with self.maybe_autocast(dtype=torch.bfloat16):
             inputs_embeds = self.t5_model.encoder.embed_tokens(input_tokens.input_ids)
             inputs_embeds = torch.cat([add_feature_llm, inputs_t5, inputs_embeds], dim=1)
-
 
             outputs = self.t5_model.generate(
                 inputs_embeds=inputs_embeds,
@@ -437,55 +484,6 @@ class Blip2T5Instruct(Blip2Base):
             output_text = self.t5_tokenizer.batch_decode(
                 outputs, skip_special_tokens=True
             )
-
-        return output_text
-
-
-    def predict_answers(
-        self,
-        samples,
-        num_beams=5,
-        inference_method="generate",
-        max_len=10,
-        min_len=1,
-        num_ans_candidates=128,
-        answer_list=None,
-        prompt="",
-        length_penalty=-1,
-        **kwargs
-    ):
-        if isinstance(samples["text_input"], str):
-            samples["text_input"] = [samples["text_input"]]
-
-        if prompt:
-            if prompt.count("{}") == 2:
-                if 'ocr_tokens' in samples:
-                    text_input = [
-                        prompt.format(', '.join(samples['ocr_tokens'][i][:30]), samples["text_input"][i])
-                    for i in range(len(samples["text_input"]))]
-                elif 'choices' in samples:
-                    text_input = []
-                    for i in range(len(samples["text_input"])):
-                        this_choices = [f"({string.ascii_lowercase[j]}) {ch}" for j, ch in enumerate(samples["choices"][i])]
-                        this_choices = " ".join(this_choices)
-                        text_input.append(prompt.format(samples["text_input"][i], this_choices))
-            else:
-                text_input = [prompt.format(question) for question in samples["text_input"]]
-        else:
-            text_input = samples["text_input"]
-
-        samples["prompt"] = text_input
-
-        output_text = self.generate(
-            samples,
-            num_beams=num_beams,
-            max_length=max_len,
-            min_length=min_len,
-            length_penalty=length_penalty
-        )
-
-        if self._apply_lemmatizer or ("apply_lemmatizer" in samples.keys() and samples["apply_lemmatizer"]):
-            output_text = self._lemmatize(output_text)
 
         return output_text
 
