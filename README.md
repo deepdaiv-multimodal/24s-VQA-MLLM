@@ -24,6 +24,111 @@ The base architecture uses **Q-Former** to model the initial interaction between
 
 During fine-tuning, we enhance the model’s ability to comprehend the question by incorporating **Question-Aware Prompts**. These prompts provide additional background knowledge or possible answer candidates, allowing the model to better understand the question's context. This leads to improved performance, especially on complex questions where deeper reasoning is required.
 
+이미지를 리드미에 삽입하는 방법은 다음과 같습니다. **Markdown** 형식에서 이미지를 삽입하려면 아래 형식을 사용하면 됩니다:
+
+```markdown
+![Alt text](image_url_or_path)
+```
+
+아래는 위에서 제공한 리드미에 이미지를 삽입한 포맷입니다.
+
+---
+
+# Multimodal Learning with Q-Former and MCAN for Visual Question Answering
+
+This repository contains the implementation of **"Multimodal Learning with Q-Former and MCAN for Visual Question Answering"**. Our proposed model addresses the limitations of Q-Former by integrating the **Multimodal Co-Attention Network (MCAN)** and introducing a **Question-Aware Prompt** during the fine-tuning process to improve the model's performance on Visual Question Answering (VQA) tasks.
+
+## Introduction
+
+Visual Question Answering (VQA) is a challenging task that requires a model to understand and reason over both textual (questions) and visual (images) information to generate accurate answers. **Q-Former** has been widely used for VQA, utilizing **Cross-Attention** to model the interaction between questions and images. However, Q-Former’s **single-layer attention mechanism** struggles to capture complex and detailed relationships, limiting its performance in tasks requiring deeper reasoning.
+
+To overcome these limitations, we propose a model that integrates **Q-Former** with the **Multimodal Co-Attention Network (MCAN)**, a multi-layer attention mechanism capable of capturing deeper interactions between questions and images. Furthermore, during the fine-tuning phase, we introduce a **Question-Aware Prompt** that provides additional context to the questions, further enhancing the model’s understanding and performance.
+
+## Model Overview
+
+The proposed model integrates **Q-Former** and **MCAN** to effectively capture complex interactions between questions and images. Additionally, we introduce a **Question-Aware Prompt** in the fine-tuning phase to improve question comprehension and overall model performance.
+
+### Model Architecture
+
+![Model Architecture](path_to_training_image)  
+*Figure 1. Training Phase*
+
+![Model Architecture](path_to_finetuning_image)  
+*Figure 2. Fine-tuning Phase*
+
+## Model Method
+
+### Q-Former and MCAN Integration
+
+The proposed model starts by using **Q-Former** to process initial question-image interactions. The outputs from this stage are then fed into **MCAN**, which further refines the representation across multiple layers of **Self-Attention** and **Cross-Attention**. This multi-layered approach allows the model to capture both high-level relationships and fine-grained details, improving overall reasoning capability.
+
+### Fine-tuning with Question-Aware Prompts
+
+During fine-tuning, we enhance the model’s ability to comprehend the question by incorporating **Question-Aware Prompts**. These prompts provide additional background knowledge or possible answer candidates, allowing the model to better understand the question's context. This leads to improved performance, especially on complex questions where deeper reasoning is required.
+
+
+<details>
+  <summary>Train & Eval</summary>
+  
+  ## Training & Inference
+  
+  ### Train
+  After downloading the training datasets and specifying their path in [dataset configs](daiv/configs/datasets/), we are ready for training!
+  
+  #### 0. Setting Environments
+  ```Shell
+  conda create -n fusion python=3.9
+  ```
+  ```Shell
+  git clone 
+  ```
+  ```Shell
+  cd BLIVA
+  ```
+  ```Shell
+  pip install -e .
+  ```
+  if packaging error occurs, then:
+  ```Shell
+  pip install setuptools==69.5.1
+  ```
+
+  ### Training
+  
+  #### 1. Pretraining of Dm-Former
+  ```Shell
+  python train.py --cfg-path train_configs/pretrain_stage1.yaml
+  ```
+  #### 2. Pretraining of visual assistant branch
+  
+  ```Shell
+  python train.py --cfg-path train_configs/pretrain_stage2.yaml
+  ```
+  #### 3. Instruction Finetuning 
+  ```Shell
+  python train.py --cfg-path train_configs/finetune_stage2.yaml
+  ```
+  ### Evaluation
+  
+  #### Evaluation of Stage2 
+  ```Shell
+  python evaluate.py --cfg-path train_configs/pretrain_stage2_eval.yaml
+  ```
+  
+  ```Shell
+  python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
+  ```
+  
+  #### Training with MCAN output (prophet) - okvqa
+  ```Shell
+  python train.py --cfg-path train_configs/finetune_stage2_t5_vqa.yaml
+  ```
+  ```Shell
+  python evaluate.py --cfg-path train_configs/eval_stage2_vqa.yaml
+  ```
+
+</details>
+
 ## Results
 
 We evaluated our model on standard VQA datasets such as **OK-VQA** and **AOK-VQA**, with pre-training performed on **COCO** and **Visual Genome** datasets. The following table presents the accuracy results comparing different models and the impact of incorporating **Question-Aware Prompts**.
