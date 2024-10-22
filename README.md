@@ -17,7 +17,7 @@ Our approach enhances **Q-Former** by combining it with **MCAN**, a multi-layere
 We introduce **Question-Aware Prompts** during fine-tuning to provide additional contextual information, such as past answers (**Answer-Aware Examples**) and candidate answers (**Answer Candidates**). These prompts help the model better interpret the intent of the question and select more accurate answers, especially for complex or knowledge-dependent queries.
 
 #### Question-Aware Prompt Structure
-![image](imgs/question_aware_prompt_structure.png)
+![image](https://github.com/user-attachments/assets/5874d055-d8ab-4b88-8e89-a438da9cc81b)
 
 The **Question-Aware Prompt** structure provides a framework for the model to combine context from multiple sources. It includes:
 - **Answer Candidates**: A list of possible answers, each with a confidence score.
