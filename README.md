@@ -1,37 +1,35 @@
-# Enhancing Q-Former for Visual Question Answering with Multi-layer Co-Attention and Question-Aware Prompts
+# Enhancing Q-Former for Knowledge-Based Visual Question Answering with Multi-Layer Co-Attention and Question-Aware Prompts
 
-We propose a model that enhances Q-Former’s performance by integrating the **Modular Co-Attention Network (MCAN)** and introducing a **Question-Aware Prompt** during fine-tuning, improving Visual Question Answering (VQA) tasks.
+We propose a novel approach to improve Knowledge-Based Visual Question Answering (KB-VQA) by integrating **Q-Former** with the **Multimodal Co-Attention Network (MCAN)** and introducing **Question-Aware Prompts** during fine-tuning. This enhances the model's ability to handle complex multimodal reasoning tasks, requiring both visual and external knowledge.
 
-## Model Architecture Overview
+## Model Overview
 ![image](imgs/model_Architecture_train.png)
-Visual Question Answering (VQA) involves generating accurate answers by reasoning over both textual (questions) and visual (images) data. While **Q-Former** effectively models question-image interactions through Cross-Attention, it struggles with complex relationships due to its single-layer attention. To address this, we combine Q-Former with the **Modular Co-Attention Network (MCAN)**, introducing a multi-layer attention mechanism for deeper interactions. Additionally, **Question-Aware Prompts** during fine-tuning provide richer contextual information to further boost performance.
+In **Knowledge-Based Visual Question Answering (KB-VQA)**, generating accurate answers requires the model to reason over both visual data (images) and external knowledge sources. Our approach builds upon **Q-Former**, a model known for extracting visual features using Cross-Attention, by addressing its limitations in handling complex question-image relationships with a single-layer attention mechanism. By integrating **MCAN**'s multi-layered attention, we capture deeper interactions between the image and the question. Additionally, **Question-Aware Prompts** during fine-tuning allow the model to incorporate more context, improving overall reasoning and answer accuracy.
 
 ### Q-Former and MCAN Integration
+Our approach enhances **Q-Former** by combining it with **MCAN**, a multi-layered attention network that applies **Self-Attention** and **Cross-Attention** to better capture the intricate relationships between images and questions. **MCAN** progressively refines both visual and textual inputs, leading to a significant improvement in the model's reasoning capabilities, especially for questions that require external knowledge and complex reasoning.
 
-We enhance **Q-Former** by integrating **MCAN**, a multi-layered network that uses both **Self-Attention** and **Cross-Attention** to refine question-image interactions. While Q-Former's single-layer structure struggles with complex relationships, MCAN progressively captures both high-level semantics and detailed information, significantly improving the model's reasoning ability.
-
-### Fine-tuning with Question-Aware Prompts
-
+### Fine-Tuning with Question-Aware Prompts
 ![image](imgs/model_finetuning.png)
 
-During fine-tuning, **Question-Aware Prompts** are introduced to provide additional context, such as background knowledge and answer candidates. This helps the model better interpret the question's intent, enabling more accurate and informed answers, especially for complex queries. The combination of **MCAN** and **Question-Aware Prompts** results in significant improvements in handling challenging VQA tasks.
+We introduce **Question-Aware Prompts** during fine-tuning to provide additional contextual information, such as past answers (**Answer-Aware Examples**) and candidate answers (**Answer Candidates**). These prompts help the model better interpret the intent of the question and select more accurate answers, especially for complex or knowledge-dependent queries.
 
 ## Experiment Results
 
 ### 1. Environment Setup
 ```bash
-conda create -n fusion python=3.9
+conda create -n kbvqa python=3.9
 ```
 
 ### 2. Dataset Preparation
-Download COCO and Visual Genome datasets, and specify their path in [dataset configs](daiv/configs/datasets/).
+Download COCO, OK-VQA, and AOK-VQA datasets. Specify their paths in [dataset configs](daiv/configs/datasets/).
 
 ### 3. Training the Model
 ```bash
 python train.py --cfg-path train_configs/pretrain_stage1.yaml
 ```
 
-### 4. Fine-tuning with Question-Aware Prompts
+### 4. Fine-Tuning with Question-Aware Prompts
 ```bash
 python train.py --cfg-path train_configs/finetune_stage2.yaml
 ```
@@ -41,9 +39,9 @@ python train.py --cfg-path train_configs/finetune_stage2.yaml
 python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
 ```
 
-### Results on VQA Datasets
+### Results on OK-VQA and AOK-VQA Datasets
 
-We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets, using **COCO** and **Visual Genome** for pre-training. The table below compares the baseline **Q-Former**, **MCAN**, and our enhanced model with and without **Question-Aware Prompts**.
+We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets using **COCO** and **Visual Genome** for pre-training. The table below shows a comparison of the baseline **Q-Former**, **MCAN**, and our enhanced model with and without **Question-Aware Prompts**.
 
 | Model           | Accuracy (Only-Question) | Accuracy (Question-Aware Prompt) |
 |-----------------|--------------------------|----------------------------------|
@@ -51,8 +49,8 @@ We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets, using **COCO*
 | MCAN            | **52.56%**                | -                                |
 | Ours            | 50%                       | **56.1%**                        |
 
-Our enhanced model, which integrates **MCAN** and **Question-Aware Prompts**, achieved a **6.1% accuracy improvement** when using the prompts compared to the baseline Q-Former. This demonstrates that **Question-Aware Prompts** provide valuable context, enabling the model to better interpret the question’s intent and make more informed predictions. Moreover, **MCAN’s** multi-layer attention mechanism consistently outperformed the single-layer **Q-Former**, especially for complex questions requiring deeper reasoning. These results validate the effectiveness of our approach in improving VQA performance.
+Our model, enhanced with **MCAN** and **Question-Aware Prompts**, shows a **6.9% improvement in accuracy** compared to the baseline **Q-Former**. This demonstrates the effectiveness of multi-layer attention and prompt-based fine-tuning for handling complex VQA tasks.
 
 ## Conclusion
 
-Our enhanced model for **Visual Question Answering (VQA)** significantly improves performance by integrating **MCAN** for deeper attention and introducing **Question-Aware Prompts** during fine-tuning. These enhancements allow the model to better capture complex interactions between questions and images, leading to more accurate and context-aware answers. Experimental results show a **6.1% increase in accuracy**, demonstrating the effectiveness of this approach in handling complex VQA tasks without extensive fine-tuning.
+By integrating **MCAN** with **Q-Former** and introducing **Question-Aware Prompts**, our model significantly improves its ability to reason over complex question-image relationships and utilize external knowledge sources for more accurate answers. The results demonstrate a **6.9% increase in accuracy**, validating the effectiveness of our approach in enhancing performance for Knowledge-Based Visual Question Answering (KB-VQA) tasks.
