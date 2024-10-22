@@ -4,15 +4,26 @@ We propose a novel approach to improve Knowledge-Based Visual Question Answering
 
 ## Model Overview
 ![image](imgs/model_Architecture_train.png)
+
 In **Knowledge-Based Visual Question Answering (KB-VQA)**, generating accurate answers requires the model to reason over both visual data (images) and external knowledge sources. Our approach builds upon **Q-Former**, a model known for extracting visual features using Cross-Attention, by addressing its limitations in handling complex question-image relationships with a single-layer attention mechanism. By integrating **MCAN**'s multi-layered attention, we capture deeper interactions between the image and the question. Additionally, **Question-Aware Prompts** during fine-tuning allow the model to incorporate more context, improving overall reasoning and answer accuracy.
 
 ### Q-Former and MCAN Integration
+
 Our approach enhances **Q-Former** by combining it with **MCAN**, a multi-layered attention network that applies **Self-Attention** and **Cross-Attention** to better capture the intricate relationships between images and questions. **MCAN** progressively refines both visual and textual inputs, leading to a significant improvement in the model's reasoning capabilities, especially for questions that require external knowledge and complex reasoning.
 
 ### Fine-Tuning with Question-Aware Prompts
 ![image](imgs/model_finetuning.png)
 
 We introduce **Question-Aware Prompts** during fine-tuning to provide additional contextual information, such as past answers (**Answer-Aware Examples**) and candidate answers (**Answer Candidates**). These prompts help the model better interpret the intent of the question and select more accurate answers, especially for complex or knowledge-dependent queries.
+
+#### Question-Aware Prompt Structure
+![image](imgs/question_aware_prompt_structure.png)
+
+The **Question-Aware Prompt** structure provides a framework for the model to combine context from multiple sources. It includes:
+- **Answer Candidates**: A list of possible answers, each with a confidence score.
+- **Answer-Aware Examples**: Previous cases with similar questions, answers, and contexts.
+
+The prompt enables the model to integrate background knowledge, helping the model generate answers that are more contextually relevant and informed.
 
 ## Experiment Results
 
@@ -41,7 +52,7 @@ python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
 
 ### Results on OK-VQA and AOK-VQA Datasets
 
-We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets. The table below shows a comparison of the baseline **Q-Former**, **MCAN**, and our enhanced model with and without our **Question-Aware Prompts**.
+We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets. The table below shows a comparison of the baseline **Q-Former**, **MCAN**, and our enhanced model with and without Our **Question-Aware Prompts**.
 
 | Model           | Accuracy (Only-Question) | Accuracy (Question-Aware Prompt) |
 |-----------------|--------------------------|----------------------------------|
