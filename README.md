@@ -41,7 +41,7 @@ python evaluate.py --cfg-path train_configs/finetune_stage2_eval.yaml
 
 ### Results on OK-VQA and AOK-VQA Datasets
 
-We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets using **COCO** and **Visual Genome** for pre-training. The table below shows a comparison of the baseline **Q-Former**, **MCAN**, and our enhanced model with and without **Question-Aware Prompts**.
+We evaluated our model on the **OK-VQA** and **AOK-VQA** datasets. The table below shows a comparison of the baseline **Q-Former**, **MCAN**, and our enhanced model with and without our **Question-Aware Prompts**.
 
 | Model           | Accuracy (Only-Question) | Accuracy (Question-Aware Prompt) |
 |-----------------|--------------------------|----------------------------------|
