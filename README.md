@@ -3,7 +3,7 @@
 We propose a novel approach to improve Knowledge-Based Visual Question Answering (KB-VQA) by integrating **Q-Former** with the **Multimodal Co-Attention Network (MCAN)** and introducing **Question-Aware Prompts** during fine-tuning. This enhances the model's ability to handle complex multimodal reasoning tasks, requiring both visual and external knowledge.
 
 ## Model Overview
-![image](imgs/model_Architecture_train.png)
+![image](https://github.com/user-attachments/assets/f3f6f41f-1ac4-43b8-b4d7-f99369a655ea)
 
 In **Knowledge-Based Visual Question Answering (KB-VQA)**, generating accurate answers requires the model to reason over both visual data (images) and external knowledge sources. Our approach builds upon **Q-Former**, a model known for extracting visual features using Cross-Attention, by addressing its limitations in handling complex question-image relationships with a single-layer attention mechanism. By integrating **MCAN**'s multi-layered attention, we capture deeper interactions between the image and the question. Additionally, **Question-Aware Prompts** during fine-tuning allow the model to incorporate more context, improving overall reasoning and answer accuracy.
 
